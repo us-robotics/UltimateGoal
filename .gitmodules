@@ -1,0 +1,3 @@
+[submodule "TeamCode/src/main/java/FTCEngine"]
+	path = TeamCode/src/main/java/FTCEngine
+	url = https://github.com/us-robotics/FTCEngine.git
