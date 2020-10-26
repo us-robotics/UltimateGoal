@@ -50,24 +50,21 @@ public class MecanumDrivetrain extends Behavior
 		super.update();
 		Input input = opMode.getHelper(Input.class);
 
-		Vector2 movementInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK).normalize();
+		Vector2 movementInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 		float rotationInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 		//Process input for smoother control
-		movementInput = movementInput.mul(movementInput.getMagnitude());
+		movementInput = movementInput.normalize().mul(movementInput.getMagnitude());
 		rotationInput *= Math.abs(rotationInput);
 
-		Vector2 velocity = movementInput;
-		float angularVelocity = rotationInput;
-
 		//Set zero power behavior
-		boolean hasMovement = !velocity.equals(Vector2.zero) || !Mathf.almostEquals(angularVelocity, 0f);
+		boolean hasMovement = !movementInput.equals(Vector2.zero) || !Mathf.almostEquals(rotationInput, 0f);
 		setZeroPowerBehavior(hasMovement ? DcMotor.ZeroPowerBehavior.FLOAT : DcMotor.ZeroPowerBehavior.BRAKE);
 
-		frontRight.setPower(-velocity.y + velocity.x + angularVelocity);
-		frontLeft.setPower(-velocity.y - velocity.x - angularVelocity);
-		backRight.setPower(-velocity.y - velocity.x + angularVelocity);
-		backLeft.setPower(-velocity.y + velocity.x - angularVelocity);
+		frontRight.setPower(-movementInput.y + movementInput.x + rotationInput);
+		frontLeft.setPower(-movementInput.y - movementInput.x - rotationInput);
+		backRight.setPower(-movementInput.y - movementInput.x + rotationInput);
+		backLeft.setPower(-movementInput.y + movementInput.x - rotationInput);
 	}
 
 	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior)
