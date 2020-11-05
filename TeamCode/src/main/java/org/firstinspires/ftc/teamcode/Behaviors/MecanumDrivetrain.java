@@ -25,30 +25,24 @@ public class MecanumDrivetrain extends Behavior
 	{
 		super.awake(hardwareMap);
 
-		frontLeft = hardwareMap.dcMotor.get("frontLeft");
+		//frontLeft = hardwareMap.dcMotor.get("frontLeft");
 		frontRight = hardwareMap.dcMotor.get("frontRight");
 		backLeft = hardwareMap.dcMotor.get("backLeft");
 		backRight = hardwareMap.dcMotor.get("backRight");
 
-		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+		//frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		frontLeft.setPower(0d);
+		//frontLeft.setPower(0d);
 		frontRight.setPower(0d);
 		backLeft.setPower(0d);
 		backRight.setPower(0d);
-
-		launcher = hardwareMap.dcMotor.get("launcher");
-
-		launcher.setPower(0d);
 	}
 
 	private DcMotor frontRight;
 	private DcMotor frontLeft;
 	private DcMotor backRight;
 	private DcMotor backLeft;
-
-	private DcMotor launcher;
 
 	@Override
 	public void update()
@@ -67,16 +61,10 @@ public class MecanumDrivetrain extends Behavior
 		boolean hasMovement = !movementInput.equals(Vector2.zero) || !Mathf.almostEquals(rotationInput, 0f);
 		setZeroPowerBehavior(hasMovement ? DcMotor.ZeroPowerBehavior.FLOAT : DcMotor.ZeroPowerBehavior.BRAKE);
 
-		boolean launcherInput = input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.A);
-
 		frontRight.setPower(-movementInput.y + movementInput.x + rotationInput);
 		frontLeft.setPower(-movementInput.y - movementInput.x - rotationInput);
 		backRight.setPower(-movementInput.y - movementInput.x + rotationInput);
 		backLeft.setPower(-movementInput.y + movementInput.x - rotationInput);
-
-		if (launcherInput){
-			launcher.setPower(1d); //double btwn -1.0 and 1.0
-		}
 	}
 
 	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) //what does this do?
@@ -85,6 +73,5 @@ public class MecanumDrivetrain extends Behavior
 		frontLeft.setZeroPowerBehavior(behavior);
 		backRight.setZeroPowerBehavior(behavior);
 		backLeft.setZeroPowerBehavior(behavior);
-		launcher.setZeroPowerBehavior(behavior);
 	}
 }
