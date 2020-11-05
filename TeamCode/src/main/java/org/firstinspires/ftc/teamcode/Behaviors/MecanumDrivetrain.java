@@ -59,7 +59,7 @@ public class MecanumDrivetrain extends Behavior
 		Vector2 movementInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 		float rotationInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
-		//Process input for smoother control
+		//Process input for smoother contro
 		movementInput = movementInput.normalize().mul(movementInput.getMagnitude());
 		rotationInput *= Math.abs(rotationInput);
 
