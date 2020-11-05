@@ -75,7 +75,7 @@ public class MecanumDrivetrain extends Behavior
 		backLeft.setPower(-movementInput.y + movementInput.x - rotationInput);
 
 		if (launcherInput){
-			launcher.setPower(1d); //doubloe btwn -1.0 and 1.0
+			launcher.setPower(1d); //double btwn -1.0 and 1.0
 		}
 	}
 
