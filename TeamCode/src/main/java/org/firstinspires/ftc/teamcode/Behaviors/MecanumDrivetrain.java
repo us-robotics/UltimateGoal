@@ -37,12 +37,18 @@ public class MecanumDrivetrain extends Behavior
 		frontRight.setPower(0d);
 		backLeft.setPower(0d);
 		backRight.setPower(0d);
+
+		launcher = hardwareMap.dcMotor.get("launcher");
+
+		launcher.setPower(0d);
 	}
 
 	private DcMotor frontRight;
 	private DcMotor frontLeft;
 	private DcMotor backRight;
 	private DcMotor backLeft;
+
+	private DcMotor launcher;
 
 	@Override
 	public void update()
@@ -61,17 +67,24 @@ public class MecanumDrivetrain extends Behavior
 		boolean hasMovement = !movementInput.equals(Vector2.zero) || !Mathf.almostEquals(rotationInput, 0f);
 		setZeroPowerBehavior(hasMovement ? DcMotor.ZeroPowerBehavior.FLOAT : DcMotor.ZeroPowerBehavior.BRAKE);
 
+		boolean launcherInput = input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.A);
+
 		frontRight.setPower(-movementInput.y + movementInput.x + rotationInput);
 		frontLeft.setPower(-movementInput.y - movementInput.x - rotationInput);
 		backRight.setPower(-movementInput.y - movementInput.x + rotationInput);
 		backLeft.setPower(-movementInput.y + movementInput.x - rotationInput);
+
+		if (launcherInput){
+			launcher.setPower(1d); //doubloe btwn -1.0 and 1.0
+		}
 	}
 
-	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior)
+	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) //what does this do?
 	{
 		frontRight.setZeroPowerBehavior(behavior);
 		frontLeft.setZeroPowerBehavior(behavior);
 		backRight.setZeroPowerBehavior(behavior);
 		backLeft.setZeroPowerBehavior(behavior);
+		launcher.setZeroPowerBehavior(behavior);
 	}
 }
