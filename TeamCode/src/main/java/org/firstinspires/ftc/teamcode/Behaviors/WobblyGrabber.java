@@ -44,7 +44,8 @@ public class WobblyGrabber extends Behavior
 		super.update();
 		Input input = opMode.getHelper(Input.class);
 
-		float armInput = (touch.isPressed() ? 0 : input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y);
+		float controllerInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
+		float armInput = (touch.isPressed() && controllerInput<0f ? 0f : input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y);
 		boolean grabberInput = input.getButton(Input.Source.CONTROLLER_2, Input.Button.A);
 
 		//Process input for smoother control

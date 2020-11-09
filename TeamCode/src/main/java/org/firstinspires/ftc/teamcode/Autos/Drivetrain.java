@@ -41,11 +41,14 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job> {
         Job job = getCurrentJob();
 
 
+
     }
 
     static class Job extends FTCEngine.Core.Auto.Job{
 
+        public Job(){
 
+        }
 
     }
 
