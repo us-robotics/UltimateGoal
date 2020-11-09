@@ -18,8 +18,8 @@ public class MecanumI3 extends TeleOpModeBase
 	@Override //add teleop behaviors in here
 	public void addBehaviors(List<Behavior> behaviorList)
 	{
-//		behaviorList.add(new MecanumDrivetrain(this));
-//		behaviorList.add(new Launcher(this));
+		behaviorList.add(new MecanumDrivetrain(this));
+		behaviorList.add(new Launcher(this));
 		behaviorList.add(new WobblyGrabber(this));
 	}
 }

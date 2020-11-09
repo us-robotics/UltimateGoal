@@ -6,7 +6,7 @@ import java.util.List;
 import FTCEngine.Core.Auto.AutoOpModeBase;
 import FTCEngine.Core.Behavior;
 
-@Autonomous(name = "Test Auto")
+@Autonomous(name = "Test Auto") //name
 public class TestAuto extends AutoOpModeBase 
 {
 

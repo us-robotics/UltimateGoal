@@ -25,15 +25,15 @@ public class MecanumDrivetrain extends Behavior
 	{
 		super.awake(hardwareMap);
 
-		//frontLeft = hardwareMap.dcMotor.get("frontLeft");
+		frontLeft = hardwareMap.dcMotor.get("frontLeft");
 		frontRight = hardwareMap.dcMotor.get("frontRight");
 		backLeft = hardwareMap.dcMotor.get("backLeft");
 		backRight = hardwareMap.dcMotor.get("backRight");
 
-		//frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+		frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 		backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		//frontLeft.setPower(0d);
+		frontLeft.setPower(0d);
 		frontRight.setPower(0d);
 		backLeft.setPower(0d);
 		backRight.setPower(0d);

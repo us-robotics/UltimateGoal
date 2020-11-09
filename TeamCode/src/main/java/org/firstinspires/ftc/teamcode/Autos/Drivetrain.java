@@ -14,7 +14,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job> {
     }
 
     @Override
-    public void awake(HardwareMap hardwareMap) { //initialize all the crap
+    public void awake(HardwareMap hardwareMap) { //initialize all the stuff
         super.awake(hardwareMap);
 
         frontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
