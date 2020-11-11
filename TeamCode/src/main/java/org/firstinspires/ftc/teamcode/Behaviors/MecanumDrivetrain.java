@@ -9,6 +9,7 @@ import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
+import FTCEngine.Math.Vector3;
 
 public class MecanumDrivetrain extends Behavior
 {
@@ -43,22 +44,35 @@ public class MecanumDrivetrain extends Behavior
 	private DcMotor backLeft;
 
 	private InternalMeasurementUnit imu;
+	private float lastAngle;
+
 	private final float[] powers = new float[4];
+
+	@Override
+	public void start()
+	{
+		super.start();
+
+		if (imu == null) return;
+		lastAngle = getZAngle();
+	}
 
 	@Override
 	public void update()
 	{
 		super.update();
 
-		if (getIsAuto()) return; //Temporary, TODO: Add auto mode processing
+		if (getIsAuto()) return; //Auto will be controlled through another behavior
 		Input input = opMode.getHelper(Input.class);
 
-		Vector2 positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK).normalize();
+		Vector2 positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 		float rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
-		//Process input for smoother control by interpolating a polynomial curve (can use higher power if more precision is needed)
-		positionalInput = positionalInput.mul(positionalInput.getMagnitude());
-		rotationalInput *= Math.abs(rotationalInput);
+		//Process input for smoother control by interpolating a polynomial curve
+		final float exponential = 2f; //Can use higher power if more precision is needed
+
+		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponential));
+		rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponential);
 
 		setMovements(positionalInput, rotationalInput);
 	}
@@ -68,14 +82,19 @@ public class MecanumDrivetrain extends Behavior
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (imu != null && Mathf.almostEquals(rotationalMovement, 0f))
 		{
-			//TODO: IMU correction
+			float deviation = getZAngle() - lastAngle;
+			setRawVelocities(positionalMovement, deviation);
 		}
-		else setRawVelocities(positionalMovement, rotationalMovement);
+		else
+		{
+			setRawVelocities(positionalMovement, rotationalMovement);
+			if (imu != null) lastAngle = getZAngle();
+		}
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
 	{
-		localDirection = localDirection.normalize();
+		localDirection = localDirection.clampMagnitude(0f, 1f);
 		angularDelta = Mathf.clamp(angularDelta, -1f, 1f);
 
 		powers[0] = localDirection.y - localDirection.x - angularDelta;
@@ -112,5 +131,10 @@ public class MecanumDrivetrain extends Behavior
 		frontLeft.setZeroPowerBehavior(behavior);
 		backRight.setZeroPowerBehavior(behavior);
 		backLeft.setZeroPowerBehavior(behavior);
+	}
+
+	private float getZAngle()
+	{
+		return imu.getAngles().z;
 	}
 }
