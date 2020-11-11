@@ -9,7 +9,6 @@ import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
-import FTCEngine.Math.Vector3;
 
 public class MecanumDrivetrain extends Behavior
 {
@@ -34,7 +33,7 @@ public class MecanumDrivetrain extends Behavior
 		frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 		backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		imu = opMode.getBehavior(InternalMeasurementUnit.class);
+		imu = opMode.getBehavior(InertialMeasurementUnit.class);
 		setRawVelocities(Vector2.zero, 0f);
 	}
 
@@ -43,7 +42,7 @@ public class MecanumDrivetrain extends Behavior
 	private DcMotor backRight;
 	private DcMotor backLeft;
 
-	private InternalMeasurementUnit imu;
+	private InertialMeasurementUnit imu;
 	private float lastAngle;
 
 	private final float[] powers = new float[4];

@@ -13,14 +13,14 @@ import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Vector3;
 
-public class InternalMeasurementUnit extends Behavior
+public class InertialMeasurementUnit extends Behavior
 {
 	/**
 	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method!
 	 *
 	 * @param opMode
 	 */
-	public InternalMeasurementUnit(OpModeBase opMode)
+	public InertialMeasurementUnit(OpModeBase opMode)
 	{
 		super(opMode);
 	}
