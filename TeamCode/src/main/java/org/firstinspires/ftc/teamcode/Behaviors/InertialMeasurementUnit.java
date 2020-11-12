@@ -51,7 +51,7 @@ public class InertialMeasurementUnit extends Behavior
 
 	private Vector3 getAnglesRaw()
 	{
-		Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+		Orientation orientation = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 		return new Vector3(orientation.firstAngle, orientation.secondAngle, orientation.thirdAngle);
 	}
 }

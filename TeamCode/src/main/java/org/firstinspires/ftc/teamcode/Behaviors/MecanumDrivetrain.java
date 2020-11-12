@@ -4,11 +4,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Arrays;
+
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
+import FTCEngine.Math.Vector3;
 
 public class MecanumDrivetrain extends Behavior
 {
@@ -44,6 +48,7 @@ public class MecanumDrivetrain extends Behavior
 
 	private InertialMeasurementUnit imu;
 	private float lastAngle;
+	private Vector3 angels;
 
 	private final float[] powers = new float[4];
 
@@ -53,7 +58,8 @@ public class MecanumDrivetrain extends Behavior
 		super.start();
 
 		if (imu == null) return;
-		lastAngle = getZAngle();
+		lastAngle = getAngle();
+		angels = imu.getAngles();
 	}
 
 	@Override
@@ -67,27 +73,32 @@ public class MecanumDrivetrain extends Behavior
 		Vector2 positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 		float rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
-		//Process input for smoother control by interpolating a polynomial curve
-		final float exponential = 2f; //Can use higher power if more precision is needed
+		positionalInput = new Vector2(0f, positionalInput.y);
 
-		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponential));
-		rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponential);
+		//Process input for smoother control by interpolating a polynomial curve
+		final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
+
+		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
+		rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent);
 
 		setMovements(positionalInput, rotationalInput);
 	}
 
-	private void setMovements(Vector2 positionalMovement, float rotationalMovement)
+	public void setMovements(Vector2 positionalMovement, float rotationalMovement)
 	{
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (imu != null && Mathf.almostEquals(rotationalMovement, 0f))
 		{
-			float deviation = getZAngle() - lastAngle;
-			setRawVelocities(positionalMovement, deviation);
+			float deviation = Mathf.toSignedAngle(lastAngle - getAngle()) / 60f;
+			setRawVelocities(positionalMovement, 0f);
+
+			opMode.getHelper(Telemetry.class).addData("devi", deviation);
+			opMode.getHelper(Telemetry.class).addData("curr", imu.getAngles());
 		}
 		else
 		{
 			setRawVelocities(positionalMovement, rotationalMovement);
-			if (imu != null) lastAngle = getZAngle();
+			if (imu != null) lastAngle = getAngle();
 		}
 	}
 
@@ -122,6 +133,8 @@ public class MecanumDrivetrain extends Behavior
 		frontLeft.setPower(powers[1]);
 		backRight.setPower(powers[2]);
 		backLeft.setPower(powers[3]);
+
+		opMode.getHelper(Telemetry.class).addData("powers", Arrays.toString(powers));
 	}
 
 	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) //what does this do?
@@ -132,8 +145,8 @@ public class MecanumDrivetrain extends Behavior
 		backLeft.setZeroPowerBehavior(behavior);
 	}
 
-	private float getZAngle()
+	private float getAngle()
 	{
-		return imu.getAngles().z;
+		return Mathf.toSignedAngle(imu.getAngles().y);
 	}
 }
