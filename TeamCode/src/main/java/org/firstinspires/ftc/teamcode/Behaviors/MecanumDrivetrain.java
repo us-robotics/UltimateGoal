@@ -48,7 +48,6 @@ public class MecanumDrivetrain extends Behavior
 
 	private InertialMeasurementUnit imu;
 	private float lastAngle;
-	private Vector3 angels;
 
 	private final float[] powers = new float[4];
 
@@ -59,7 +58,6 @@ public class MecanumDrivetrain extends Behavior
 
 		if (imu == null) return;
 		lastAngle = getAngle();
-		angels = imu.getAngles();
 	}
 
 	@Override
@@ -72,8 +70,6 @@ public class MecanumDrivetrain extends Behavior
 
 		Vector2 positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 		float rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
-
-		positionalInput = new Vector2(0f, positionalInput.y);
 
 		//Process input for smoother control by interpolating a polynomial curve
 		final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
@@ -89,11 +85,8 @@ public class MecanumDrivetrain extends Behavior
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (imu != null && Mathf.almostEquals(rotationalMovement, 0f))
 		{
-			float deviation = Mathf.toSignedAngle(lastAngle - getAngle()) / 60f;
-			setRawVelocities(positionalMovement, 0f);
-
-			opMode.getHelper(Telemetry.class).addData("devi", deviation);
-			opMode.getHelper(Telemetry.class).addData("curr", imu.getAngles());
+			float deviation = Mathf.toSignedAngle(getAngle() - lastAngle) / 60f;
+			setRawVelocities(positionalMovement, deviation);
 		}
 		else
 		{
@@ -147,6 +140,6 @@ public class MecanumDrivetrain extends Behavior
 
 	private float getAngle()
 	{
-		return Mathf.toSignedAngle(imu.getAngles().y);
+		return Mathf.toSignedAngle(imu.getAngles().z);
 	}
 }

@@ -19,7 +19,7 @@ public class MecanumI4 extends AutoOpModeBase
 	{
 		behaviorList.add(new MecanumDrivetrain(this));
 		behaviorList.add(new DrivetrainAuto(this));
-		behaviorList.add(new InertialMeasurementUnit(this));
+//		behaviorList.add(new InertialMeasurementUnit(this));
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class MecanumI4 extends AutoOpModeBase
 		DrivetrainAuto drivetrain = getBehavior(DrivetrainAuto.class);
 
 		execute(drivetrain, new DrivetrainAuto.Job(Vector2.up, 0f));
-		wait(1f);
+		wait(1.2f);
 		execute(drivetrain, new DrivetrainAuto.Job(Vector2.zero, 0f));
 	}
 }

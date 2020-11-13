@@ -33,7 +33,10 @@ public class WobblyGrabber extends Behavior
 		grabber.setPosition(0);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.A);
+
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//		arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 	}
 
 	private DcMotor arm;
@@ -55,7 +58,10 @@ public class WobblyGrabber extends Behavior
 		//Set zero power behavior
 		arm.setZeroPowerBehavior(Mathf.almostEquals(armInput, 0f) ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
 
-		arm.setPower(armInput);
+		arm.setPower(armInput * 0.75f);
 		grabber.setPosition(grabberInput ? 1f : 0f);
+
+		opMode.getHelper(Telemetry.class).addData("Wobble", arm.getCurrentPosition());
+		opMode.getHelper(Telemetry.class).addData("Touch", touch.getValue());
 	}
 }

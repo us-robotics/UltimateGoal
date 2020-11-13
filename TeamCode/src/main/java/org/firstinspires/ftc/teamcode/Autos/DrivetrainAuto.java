@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Behaviors.MecanumDrivetrain;
 
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Vector2;
 
 public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
@@ -33,8 +35,6 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		switch (job.type)
 		{
 			case DIRECT_DRIVE:
-
-				System.out.println(job.positionalMovement);
 
 				drivetrain.setMovements(job.positionalMovement, job.rotationalMovement);
 				job.finishJob();
