@@ -11,15 +11,15 @@ import FTCEngine.Core.Auto.AutoOpModeBase;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Math.Vector2;
 
-@Autonomous(name = "Mecanum I4 Auto")
-public class MecanumI4 extends AutoOpModeBase
+@Autonomous(name = "MecanumI4 Auto")
+public class MecanumI4Auto extends AutoOpModeBase
 {
 	@Override
 	public void addBehaviors(List<Behavior> behaviorList)
 	{
 		behaviorList.add(new MecanumDrivetrain(this));
 		behaviorList.add(new DrivetrainAuto(this));
-//		behaviorList.add(new InertialMeasurementUnit(this));
+		behaviorList.add(new InertialMeasurementUnit(this));
 	}
 
 	@Override

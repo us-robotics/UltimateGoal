@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import java.util.Arrays;
-
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
@@ -39,6 +37,8 @@ public class MecanumDrivetrain extends Behavior
 
 		imu = opMode.getBehavior(InertialMeasurementUnit.class);
 		setRawVelocities(Vector2.zero, 0f);
+
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
 	}
 
 	private DcMotor frontRight;
@@ -47,9 +47,13 @@ public class MecanumDrivetrain extends Behavior
 	private DcMotor backLeft;
 
 	private InertialMeasurementUnit imu;
-	private float lastAngle;
+	private float targetAngle;
+	private Vector3 lastPosition;//Temp
 
 	private final float[] powers = new float[4];
+
+	private Vector2 positionalInput;
+	private float rotationalInput;
 
 	@Override
 	public void start()
@@ -57,7 +61,7 @@ public class MecanumDrivetrain extends Behavior
 		super.start();
 
 		if (imu == null) return;
-		lastAngle = getAngle();
+		targetAngle = getAngle();
 	}
 
 	@Override
@@ -65,34 +69,39 @@ public class MecanumDrivetrain extends Behavior
 	{
 		super.update();
 
-		if (getIsAuto()) return; //Auto will be controlled through another behavior
-		Input input = opMode.getHelper(Input.class);
-
-		Vector2 positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
-		float rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
-
-		//Process input for smoother control by interpolating a polynomial curve
-		final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
-
-		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-		rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent);
-
-		setMovements(positionalInput, rotationalInput);
-	}
-
-	public void setMovements(Vector2 positionalMovement, float rotationalMovement)
-	{
-		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
-		if (imu != null && Mathf.almostEquals(rotationalMovement, 0f))
+		if (getIsAuto())
 		{
-			float deviation = Mathf.toSignedAngle(getAngle() - lastAngle) / 60f;
-			setRawVelocities(positionalMovement, deviation);
+			//TODO: Handle more precise auto code
 		}
 		else
 		{
-			setRawVelocities(positionalMovement, rotationalMovement);
-			if (imu != null) lastAngle = getAngle();
+			//Process input if is not in auto
+			Input input = opMode.getHelper(Input.class);
+
+			positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
+			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
+
+			//Process input for smoother control by interpolating a polynomial curve
+			final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
+
+			positionalInput = positionalInput.normalize().mul((float) Math.pow(positionalInput.getMagnitude(), exponent));
+			rotationalInput = Mathf.normalize(rotationalInput) * (float) Math.pow(Math.abs(rotationalInput), exponent);
 		}
+
+		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
+		if (imu != null && Mathf.almostEquals(rotationalInput, 0f))
+		{
+			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 60f;
+			setRawVelocities(positionalInput, deviation);
+		}
+		else
+		{
+			setRawVelocities(positionalInput, rotationalInput);
+			if (imu != null) targetAngle = getAngle();
+		}
+
+		if (opMode.getHelper(Input.class).getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) lastPosition = imu.getPosition();
+		opMode.getHelper(Telemetry.class).addData("Position", imu.getPosition().sub(lastPosition));
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -122,12 +131,18 @@ public class MecanumDrivetrain extends Behavior
 		boolean hasPower = !Mathf.almostEquals(max, 0f); //Switches between the two zero power behaviors to brake
 		setZeroPowerBehavior(hasPower ? DcMotor.ZeroPowerBehavior.FLOAT : DcMotor.ZeroPowerBehavior.BRAKE);
 
+		//TODO: Try to always set zero power behavior to brake
+
 		frontRight.setPower(powers[0]);
 		frontLeft.setPower(powers[1]);
 		backRight.setPower(powers[2]);
 		backLeft.setPower(powers[3]);
+	}
 
-		opMode.getHelper(Telemetry.class).addData("powers", Arrays.toString(powers));
+	public void setDirectInputs(Vector2 positionalInput, float rotationalInput)
+	{
+		this.positionalInput = positionalInput;
+		this.rotationalInput = rotationalInput;
 	}
 
 	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) //what does this do?

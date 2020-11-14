@@ -13,9 +13,9 @@ import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 
-public class WobblyGrabber extends Behavior
+public class WobbleGrabber extends Behavior
 {
-	public WobblyGrabber(OpModeBase opMode)
+	public WobbleGrabber(OpModeBase opMode)
 	{
 		super(opMode);
 	}
@@ -53,12 +53,12 @@ public class WobblyGrabber extends Behavior
 
 		//Process input for smoother/better control
 		if (touch.getValue() > 0.2d && armInput > 0f) armInput = 0f;
-		armInput = Mathf.normalize(armInput) * (float)Math.abs(Math.pow(armInput, 3f));
+		armInput = Mathf.normalize(armInput) * (float) Math.abs(Math.pow(armInput, 1.7f));
 
 		//Set zero power behavior
 		arm.setZeroPowerBehavior(Mathf.almostEquals(armInput, 0f) ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
 
-		arm.setPower(armInput * 0.75f);
+		arm.setPower(Mathf.clamp(armInput, -0.8f, 0.8f));
 		grabber.setPosition(grabberInput ? 1f : 0f);
 
 		opMode.getHelper(Telemetry.class).addData("Wobble", arm.getCurrentPosition());

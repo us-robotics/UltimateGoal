@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Behaviors.MecanumDrivetrain;
 
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Vector2;
 
 public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
@@ -36,7 +34,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			case DIRECT_DRIVE:
 
-				drivetrain.setMovements(job.positionalMovement, job.rotationalMovement);
+				drivetrain.setDirectInputs(job.positionalInput, job.rotationalInput);
 				job.finishJob();
 
 				break;
@@ -45,18 +43,18 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 	static class Job extends FTCEngine.Core.Auto.Job
 	{
-		public Job(Vector2 positionalMovement, float rotationalMovement)
+		public Job(Vector2 positionalInput, float rotationalInput)
 		{
 			type = JobType.DIRECT_DRIVE;
 
-			this.positionalMovement = positionalMovement;
-			this.rotationalMovement = rotationalMovement;
+			this.positionalInput = positionalInput;
+			this.rotationalInput = rotationalInput;
 		}
 
 		public final JobType type;
 
-		public final Vector2 positionalMovement;
-		public final float rotationalMovement;
+		public final Vector2 positionalInput;
+		public final float rotationalInput;
 	}
 
 	enum JobType
