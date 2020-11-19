@@ -10,6 +10,7 @@ import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Core.Telemetry;
+import FTCEngine.Core.Time;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 
@@ -43,6 +44,8 @@ public class WobbleGrabber extends Behavior
 	private Servo grabber;
 	private TouchSensor touch;
 
+	private float maxPower = 0.75f;
+
 	public void update()
 	{
 		super.update();
@@ -50,18 +53,20 @@ public class WobbleGrabber extends Behavior
 
 		float armInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
 		boolean grabberInput = input.getButton(Input.Source.CONTROLLER_2, Input.Button.A);
+		float powerInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y;
+
+		maxPower = Mathf.clamp01(maxPower + powerInput * opMode.getHelper(Time.class).getDeltaTime());
 
 		//Process input for smoother/better control
 		if (touch.getValue() > 0.2d && armInput > 0f) armInput = 0f;
-		armInput = Mathf.normalize(armInput) * (float) Math.abs(Math.pow(armInput, 1.7f));
 
-		//Set zero power behavior
-		arm.setZeroPowerBehavior(Mathf.almostEquals(armInput, 0f) ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT);
+		float armDirection = Mathf.normalize(armInput);
+		armInput = (float) Math.sin(armInput * Math.PI - Math.PI / 2d) / 2f + 0.5f;
 
-		arm.setPower(Mathf.clamp(armInput, -0.8f, 0.8f));
+		arm.setPower(armInput * armDirection * maxPower);
 		grabber.setPosition(grabberInput ? 1f : 0f);
 
 		opMode.getHelper(Telemetry.class).addData("Wobble", arm.getCurrentPosition());
-		opMode.getHelper(Telemetry.class).addData("Touch", touch.getValue());
+		opMode.getHelper(Telemetry.class).addData("MaxPower", maxPower);
 	}
 }
