@@ -32,10 +32,18 @@ public class MecanumDrivetrain extends Behavior
 		backLeft = hardwareMap.dcMotor.get("backLeft");
 		backRight = hardwareMap.dcMotor.get("backRight");
 
+		frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 		frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 		backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		imu = opMode.getBehavior(InertialMeasurementUnit.class);
+
+		setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		setMotorModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		setRawVelocities(Vector2.zero, 0f);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
@@ -48,12 +56,11 @@ public class MecanumDrivetrain extends Behavior
 
 	private InertialMeasurementUnit imu;
 	private float targetAngle;
-	private Vector3 lastPosition;//Temp
 
 	private final float[] powers = new float[4];
 
-	private Vector2 positionalInput;
-	private float rotationalInput;
+	private Vector2 positionalInput = Vector2.zero;
+	private float rotationalInput = 0f;
 
 	@Override
 	public void start()
@@ -84,8 +91,8 @@ public class MecanumDrivetrain extends Behavior
 			//Process input for smoother control by interpolating a polynomial curve
 			final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
 
-			positionalInput = positionalInput.normalize().mul((float) Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float) Math.pow(Math.abs(rotationalInput), exponent);
+			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent);
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
@@ -100,8 +107,15 @@ public class MecanumDrivetrain extends Behavior
 			if (imu != null) targetAngle = getAngle();
 		}
 
-		if (opMode.getHelper(Input.class).getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) lastPosition = imu.getPosition();
-		opMode.getHelper(Telemetry.class).addData("Position", imu.getPosition().sub(lastPosition));
+		opMode.getHelper(Telemetry.class).addData("Front Right", frontRight.getCurrentPosition());
+		opMode.getHelper(Telemetry.class).addData("Front Left", frontLeft.getCurrentPosition());
+		opMode.getHelper(Telemetry.class).addData("Back Right", backRight.getCurrentPosition());
+		opMode.getHelper(Telemetry.class).addData("Back Left", backLeft.getCurrentPosition());
+
+		if (opMode.getHelper(Input.class).getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X))
+		{
+			setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		}
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -128,11 +142,6 @@ public class MecanumDrivetrain extends Behavior
 			for (int i = 0; i < powers.length; i++) powers[i] /= max;
 		}
 
-		boolean hasPower = !Mathf.almostEquals(max, 0f); //Switches between the two zero power behaviors to brake
-		setZeroPowerBehavior(hasPower ? DcMotor.ZeroPowerBehavior.FLOAT : DcMotor.ZeroPowerBehavior.BRAKE);
-
-		//TODO: Try to always set zero power behavior to brake
-
 		frontRight.setPower(powers[0]);
 		frontLeft.setPower(powers[1]);
 		backRight.setPower(powers[2]);
@@ -145,12 +154,12 @@ public class MecanumDrivetrain extends Behavior
 		this.rotationalInput = rotationalInput;
 	}
 
-	private void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) //what does this do?
+	private void setMotorModes(DcMotor.RunMode mode)
 	{
-		frontRight.setZeroPowerBehavior(behavior);
-		frontLeft.setZeroPowerBehavior(behavior);
-		backRight.setZeroPowerBehavior(behavior);
-		backLeft.setZeroPowerBehavior(behavior);
+		frontRight.setMode(mode);
+		frontLeft.setMode(mode);
+		backRight.setMode(mode);
+		backLeft.setMode(mode);
 	}
 
 	private float getAngle()

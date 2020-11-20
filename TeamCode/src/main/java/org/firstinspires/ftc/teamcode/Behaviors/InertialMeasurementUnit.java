@@ -56,6 +56,6 @@ public class InertialMeasurementUnit extends Behavior
 	public Vector3 getPosition()
 	{
 		Position position = imu.getPosition().toUnit(DistanceUnit.CM);
-		return new Vector3((float) position.x, (float) position.y, (float) position.z);
+		return new Vector3((float)position.x, (float)position.y, (float)position.z);
 	}
 }

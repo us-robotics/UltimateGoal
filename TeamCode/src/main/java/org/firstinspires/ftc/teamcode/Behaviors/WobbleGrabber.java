@@ -34,39 +34,51 @@ public class WobbleGrabber extends Behavior
 		grabber.setPosition(0);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.A);
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.B);
 
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//		arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//		arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+		arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
 
 	private DcMotor arm;
 	private Servo grabber;
 	private TouchSensor touch;
 
-	private float maxPower = 0.75f;
-
 	public void update()
 	{
 		super.update();
 		Input input = opMode.getHelper(Input.class);
 
-		float armInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
-		boolean grabberInput = input.getButton(Input.Source.CONTROLLER_2, Input.Button.A);
-		float powerInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y;
+		boolean positionToggle = input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.B);
 
-		maxPower = Mathf.clamp01(maxPower + powerInput * opMode.getHelper(Time.class).getDeltaTime());
+		if (arm.isBusy())
+		{
+			if (positionToggle) arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		}
+		else
+		{
+			float armInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
 
-		//Process input for smoother/better control
-		if (touch.getValue() > 0.2d && armInput > 0f) armInput = 0f;
+			final float maxPower = 0.366f;
 
-		float armDirection = Mathf.normalize(armInput);
-		armInput = (float) Math.sin(armInput * Math.PI - Math.PI / 2d) / 2f + 0.5f;
+			//Process input for smoother/better control
+			if (touch.getValue() > 0.2d && armInput > 0f) armInput = maxPower;
 
-		arm.setPower(armInput * armDirection * maxPower);
-		grabber.setPosition(grabberInput ? 1f : 0f);
+			float armDirection = Mathf.normalize(armInput);
+			armInput = (float)Math.sin(Math.abs(armInput) * Math.PI - Math.PI / 2d) / 2f + 0.5f;
 
-		opMode.getHelper(Telemetry.class).addData("Wobble", arm.getCurrentPosition());
-		opMode.getHelper(Telemetry.class).addData("MaxPower", maxPower);
+			arm.setPower(armInput * armDirection * maxPower);
+
+			if (positionToggle)
+			{
+				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+				arm.setTargetPosition(335);
+			}
+		}
+
+		grabber.setPosition(input.getButton(Input.Source.CONTROLLER_2, Input.Button.A) ? 1f : 0f);
+		opMode.getHelper(Telemetry.class).addData("Wobble Arm Position", arm.getCurrentPosition());
 	}
 }
