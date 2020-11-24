@@ -12,12 +12,12 @@ import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 import FTCEngine.Math.Vector3;
 
-public class MecanumDrivetrain extends Behavior
+public class Drivetrain extends Behavior
 {
 	/**
 	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method!
 	 */
-	public MecanumDrivetrain(OpModeBase opMode)
+	public Drivetrain(OpModeBase opMode)
 	{
 		super(opMode);
 	}
@@ -42,8 +42,7 @@ public class MecanumDrivetrain extends Behavior
 
 		imu = opMode.getBehavior(InertialMeasurementUnit.class);
 
-		setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		setMotorModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		resetMotorPositions();
 		setRawVelocities(Vector2.zero, 0f);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
@@ -75,16 +74,11 @@ public class MecanumDrivetrain extends Behavior
 	public void update()
 	{
 		super.update();
+		Input input = opMode.getHelper(Input.class);
 
-		if (getIsAuto())
-		{
-			//TODO: Handle more precise auto code
-		}
-		else
+		if (!getIsAuto())
 		{
 			//Process input if is not in auto
-			Input input = opMode.getHelper(Input.class);
-
 			positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
 			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
@@ -107,15 +101,8 @@ public class MecanumDrivetrain extends Behavior
 			if (imu != null) targetAngle = getAngle();
 		}
 
-		opMode.getHelper(Telemetry.class).addData("Front Right", frontRight.getCurrentPosition());
-		opMode.getHelper(Telemetry.class).addData("Front Left", frontLeft.getCurrentPosition());
-		opMode.getHelper(Telemetry.class).addData("Back Right", backRight.getCurrentPosition());
-		opMode.getHelper(Telemetry.class).addData("Back Left", backLeft.getCurrentPosition());
-
-		if (opMode.getHelper(Input.class).getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X))
-		{
-			setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		}
+		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
+		opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -154,12 +141,24 @@ public class MecanumDrivetrain extends Behavior
 		this.rotationalInput = rotationalInput;
 	}
 
+	public void resetMotorPositions()
+	{
+		setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		setMotorModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+	}
+
 	private void setMotorModes(DcMotor.RunMode mode)
 	{
 		frontRight.setMode(mode);
 		frontLeft.setMode(mode);
 		backRight.setMode(mode);
 		backLeft.setMode(mode);
+	}
+
+	public float averagePosition()
+	{
+		return (Math.abs(frontRight.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition()) +
+		        Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
 	}
 
 	private float getAngle()
