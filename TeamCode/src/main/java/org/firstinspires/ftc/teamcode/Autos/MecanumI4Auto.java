@@ -28,6 +28,6 @@ public class MecanumI4Auto extends AutoOpModeBase
 		DrivetrainAuto drivetrain = getBehavior(DrivetrainAuto.class);
 
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 48f)));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(48f, 0f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(2000f, 0f)));
 	}
 }

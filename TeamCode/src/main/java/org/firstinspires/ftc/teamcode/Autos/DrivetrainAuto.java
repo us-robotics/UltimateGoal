@@ -49,7 +49,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 			float difference = move.distance - drivetrain.averagePosition();
 
-			if (Math.abs(difference) < Threshold)
+			if (Math.abs(difference) < Threshold) //Yes I am also surprised by this threshold value. Might have to do more tests.
 			{
 				difference = 0f;
 				move.finishJob();
@@ -71,26 +71,29 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 	static class Move extends Job
 	{
+		/**
+		 * Creates a move job. Only the most significant axis will be used (Can only move perpendicular to the axes)
+		 * @param movement Movement in inches; the less significant component will be discarded.
+		 */
 		public Move(Vector2 movement)
 		{
-			//Can only move perpendicular to the axes
 			if (Math.abs(movement.x) > Math.abs(movement.y))
 			{
 				direction = new Vector2(Mathf.normalize(movement.x), 0f);
-				distance = Math.abs(Math.round(movement.x * InchToTickStrafe));
+				distance = Math.abs(movement.x * InchToTickStrafe);
 			}
 			else
 			{
 				direction = new Vector2(0f, Mathf.normalize(movement.y));
-				distance = Math.abs(Math.round(movement.y * InchToTickForward));
+				distance = Math.abs(movement.y * InchToTickForward);
 			}
 		}
 
 		public final Vector2 direction;
-		public final float distance; //Distance in inches
+		public final float distance; //Distance in encoder ticks
 
-		final float InchToTickForward = 28.169f;
-		final float InchToTickStrafe = 0f;
+		final float InchToTickForward = 2000f / 73f;
+		final float InchToTickStrafe = 1f;
 	}
 
 	static class Rotate extends Job
