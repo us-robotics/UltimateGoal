@@ -83,7 +83,7 @@ public class Drivetrain extends Behavior
 			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 			//Process input for smoother control by interpolating a polynomial curve
-			final float exponent = 1.3f; //Can use a higher exponent power if more precision is needed
+			final float exponent = 2.2f; //Can use a higher exponent power if more precision is needed
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
 			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent);

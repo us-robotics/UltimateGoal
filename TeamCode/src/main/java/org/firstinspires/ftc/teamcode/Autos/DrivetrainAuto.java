@@ -44,8 +44,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Move move = (Move)job;
 
-			final float Cushion = 100;
-			final float Threshold = 0.08f;
+			final float Cushion = 180;
+			final float Threshold = 18.2f;
 
 			float difference = move.distance - drivetrain.averagePosition();
 
@@ -93,7 +93,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		public final float distance; //Distance in encoder ticks
 
 		final float InchToTickForward = 2000f / 73f;
-		final float InchToTickStrafe = 1f;
+		final float InchToTickStrafe = 2000f / 60f;
 	}
 
 	static class Rotate extends Job
