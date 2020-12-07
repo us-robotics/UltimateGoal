@@ -45,7 +45,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 			Move move = (Move)job;
 
 			final float Cushion = 180;
-			final float Threshold = 18.2f;
+			final float Threshold = Cushion * 0.15f;
 
 			float difference = move.distance - drivetrain.averagePosition();
 
@@ -73,6 +73,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 	{
 		/**
 		 * Creates a move job. Only the most significant axis will be used (Can only move perpendicular to the axes)
+		 *
 		 * @param movement Movement in inches; the less significant component will be discarded.
 		 */
 		public Move(Vector2 movement)

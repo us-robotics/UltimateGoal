@@ -31,8 +31,8 @@ public class Launcher extends Behavior
 		launcher.setPower(0d);
 		trigger.setPosition(0d);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 	}
 
 	private DcMotor launcher;
@@ -47,8 +47,8 @@ public class Launcher extends Behavior
 
 		Input input = opMode.getHelper(Input.class);
 
-		if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.X)) primed = !primed;
-		boolean pressed = input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y);
+		if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
+		boolean pressed = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 		launcher.setPower(primed ? 1d : 0d);
 		trigger.setPosition(pressed ? 1d : 0d);

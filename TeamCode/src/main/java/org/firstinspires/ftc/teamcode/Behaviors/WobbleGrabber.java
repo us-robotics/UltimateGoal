@@ -91,11 +91,11 @@ public class WobbleGrabber extends Behavior
 			}
 
 			setReleased(input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y));
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER)) resetEncoder();
+			if (input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.2f) resetEncoder();
 		}
 
 		grabber.setPosition(released ? 0.45f : 0f);
-		opMode.getHelper(Telemetry.class).addData("Wobble Arm Position", arm.getCurrentPosition());
+		//opMode.getHelper(Telemetry.class).addData("Wobble Arm Position", arm.getCurrentPosition());
 	}
 
 	public void setReleased(boolean released)

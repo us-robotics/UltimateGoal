@@ -29,36 +29,49 @@ public class WobbleGrabberAuto extends AutoBehavior<WobbleGrabberAuto.Job>
 		Job job = getCurrentJob();
 		if (job == null) return;
 
-		switch (job.pushing)
+		if (job instanceof Reset)
 		{
-			case -1:
-			{
-				grabber.setPushDown();
-				break;
-			}
-			case 0:
+			grabber.resetEncoder();
+		}
+		else if (job instanceof Move)
+		{
+			Move move = (Move)job;
+
+			if (move.pushing == 0)
 			{
 				grabber.clearPush();
-				break;
 			}
-			case 1:
-			{
-				grabber.setPushUp();
-				break;
-			}
+			else if (move.pushing > 0) grabber.setPushUp();
+			else if (move.pushing < 0) grabber.setPushDown();
+
+			grabber.setReleased(move.released);
 		}
 
-		grabber.setReleased(job.released);
 		job.finishJob();
 	}
 
-	public static class Job extends FTCEngine.Core.Auto.Job
+	public abstract static class Job extends FTCEngine.Core.Auto.Job
 	{
-		public Job(int pushing, boolean released)
+	}
+
+	public static class Reset extends Job
+	{
+	}
+
+	public static class Move extends Job
+	{
+		public Move(int pushing, boolean released)
 		{
 			this.pushing = pushing;
 			this.released = released;
 		}
+
+
+		public Move(int pushing)
+		{
+			this(pushing, false);
+		}
+
 		public final int pushing;
 		public final boolean released;
 	}

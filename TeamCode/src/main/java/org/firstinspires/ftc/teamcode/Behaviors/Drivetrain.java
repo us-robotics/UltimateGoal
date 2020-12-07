@@ -102,7 +102,7 @@ public class Drivetrain extends Behavior
 		}
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
-		opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
+		//opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)

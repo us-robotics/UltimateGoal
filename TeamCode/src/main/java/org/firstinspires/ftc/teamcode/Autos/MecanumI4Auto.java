@@ -31,22 +31,41 @@ public class MecanumI4Auto extends AutoOpModeBase
 		DrivetrainAuto drivetrain = getBehavior(DrivetrainAuto.class);
 		WobbleGrabberAuto wobbleGrabber = getBehavior(WobbleGrabberAuto.class);
 
-		execute(wobbleGrabber, new WobbleGrabberAuto.Job(1, false));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(78f, 0f)));
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-12f, 0f)));
 
-		execute(wobbleGrabber, new WobbleGrabberAuto.Job(-1, false));
-		wait(1f);
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Reset());
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(1));
 
-		execute(wobbleGrabber, new WobbleGrabberAuto.Job(-1, true));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-78f, 0f)));
+		wait(0.4f);
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(0, true));
 
-		//Back to start
+		wait(0.5f);
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(8f, 0f)));
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(0));
+
+		wait(0.3f);
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(1));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 84f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(12f, 0f)));
+
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
+		wait(0.5f);
+
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1, true));
+		wait(0.3f);
+
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, -75f)));
+
+		if (true) return;
+
+		//Returned back to start
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, -15f)));
-		execute(wobbleGrabber, new WobbleGrabberAuto.Job(1, true));
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(1, true));
 
 		wait(0.1f);
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(10f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabberAuto.Job(1, false));
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(1));
 
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(64f, 0f)));
 	}
