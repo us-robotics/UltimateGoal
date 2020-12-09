@@ -92,7 +92,7 @@ public class Drivetrain extends Behavior
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (imu != null && Mathf.almostEquals(rotationalInput, 0f))
 		{
-			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 60f;
+			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 45f;
 			setRawVelocities(positionalInput, deviation);
 		}
 		else

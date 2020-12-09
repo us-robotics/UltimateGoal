@@ -49,14 +49,22 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 			float difference = move.distance - drivetrain.averagePosition();
 
-			if (Math.abs(difference) < Threshold) //Yes I am also surprised by this threshold value. Might have to do more tests.
+			if (Math.abs(difference) < Threshold)
 			{
 				difference = 0f;
 				move.finishJob();
 			}
 
-			difference = Mathf.clamp(difference / Cushion, -1f, 1f);
+			difference = Mathf.clamp(difference / Cushion, -move.maxPower, move.maxPower);
 			drivetrain.setDirectInputs(move.direction.mul(difference), 0f);
+		}
+
+		if (job instanceof Drive)
+		{
+			Drive drive = (Drive)job;
+
+			drivetrain.setDirectInputs(drive.direction.mul(drive.maxPower), 0f);
+			drive.finishJob();
 		}
 
 		if (job instanceof Rotate)
@@ -78,6 +86,16 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		 */
 		public Move(Vector2 movement)
 		{
+			this(movement, 1f);
+		}
+
+		/**
+		 * Creates a move job. Only the most significant axis will be used (Can only move perpendicular to the axes)
+		 *
+		 * @param movement Movement in inches; the less significant component will be discarded.
+		 */
+		public Move(Vector2 movement, float maxPower)
+		{
 			if (Math.abs(movement.x) > Math.abs(movement.y))
 			{
 				direction = new Vector2(Mathf.normalize(movement.x), 0f);
@@ -88,13 +106,33 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 				direction = new Vector2(0f, Mathf.normalize(movement.y));
 				distance = Math.abs(movement.y * InchToTickForward);
 			}
+
+			this.maxPower = Mathf.clamp01(maxPower);
 		}
 
 		public final Vector2 direction;
 		public final float distance; //Distance in encoder ticks
+		public final float maxPower;
 
 		final float InchToTickForward = 2000f / 73f;
 		final float InchToTickStrafe = 2000f / 60f;
+	}
+
+	static class Drive extends Job //Set drive direction without encoders
+	{
+		public Drive(Vector2 direction)
+		{
+			this(direction, 1f);
+		}
+
+		public Drive(Vector2 direction, float maxPower)
+		{
+			this.direction = direction;
+			this.maxPower = maxPower;
+		}
+
+		public final Vector2 direction;
+		public final float maxPower;
 	}
 
 	static class Rotate extends Job
