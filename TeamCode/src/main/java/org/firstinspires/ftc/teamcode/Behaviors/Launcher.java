@@ -51,6 +51,6 @@ public class Launcher extends Behavior
 		boolean pressed = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 		launcher.setPower(primed ? 1d : 0d);
-		trigger.setPosition(pressed ? 1d : 0d);
+		trigger.setPosition(pressed ? 0d : 0.5d);
 	}
 }
