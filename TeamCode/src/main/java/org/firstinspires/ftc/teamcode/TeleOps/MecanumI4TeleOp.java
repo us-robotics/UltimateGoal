@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOps;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
+import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
@@ -22,5 +23,6 @@ public class MecanumI4TeleOp extends TeleOpModeBase
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new Launcher(this));
 		behaviorList.add(new WobbleGrabber(this));
+		behaviorList.add(new Intake(this));
 	}
 }

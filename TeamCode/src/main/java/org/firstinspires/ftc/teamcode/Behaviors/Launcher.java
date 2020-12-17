@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Mathf;
 
 public class Launcher extends Behavior
 {
@@ -29,7 +30,8 @@ public class Launcher extends Behavior
 		trigger = hardwareMap.servo.get("trigger");
 
 		launcher.setPower(0d);
-		trigger.setPosition(0d);
+		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		trigger.setPosition(0.435d);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
@@ -45,12 +47,15 @@ public class Launcher extends Behavior
 	{
 		super.update();
 
+		if (opMode.getIsAuto()) return;
 		Input input = opMode.getHelper(Input.class);
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
-		boolean pressed = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
-		launcher.setPower(primed ? 1d : 0d);
-		trigger.setPosition(pressed ? 0d : 0.5d);
+		boolean pressed = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+		boolean reduced = !Mathf.almostEquals(input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER), 0);
+
+		launcher.setPower(primed ? (reduced ? 0.2d : 0.8d) : 0d);
+		trigger.setPosition(pressed ? 0.1d : 0.435d);
 	}
 }

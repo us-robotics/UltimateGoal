@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
+import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
 
 import java.security.KeyStore;
@@ -23,6 +24,7 @@ public class MecanumI4Auto extends AutoOpModeBase
 		behaviorList.add(new DrivetrainAuto(this));
 		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new WobbleGrabberAuto(this));
+		behaviorList.add(new Launcher(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 	}
 

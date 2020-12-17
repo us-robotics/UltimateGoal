@@ -86,7 +86,7 @@ public class Drivetrain extends Behavior
 			final float exponent = 2.2f; //Can use a higher exponent power if more precision is needed
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent);
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.3f;
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
