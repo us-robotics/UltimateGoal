@@ -44,8 +44,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Move move = (Move)job;
 
-			final float Cushion = 180;
-			final float Threshold = Cushion * 0.15f;
+			final float Cushion = 150;
+			final float Threshold = Cushion * 0.24f;
 
 			float difference = move.distance - drivetrain.averagePosition();
 

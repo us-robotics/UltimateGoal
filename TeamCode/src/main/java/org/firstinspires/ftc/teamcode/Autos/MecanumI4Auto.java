@@ -37,7 +37,7 @@ public class MecanumI4Auto extends AutoOpModeBase
 		grabWobble(10f, 9f);
 
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 94f)));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(8f, 0f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(16f, 0f)));
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
 
 		wait(0.6f);
@@ -57,20 +57,24 @@ public class MecanumI4Auto extends AutoOpModeBase
 		wait(1.2f); //Returned back to start
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Drive(Vector2.zero));
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(12f, 0f), 0.65f));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 15f), 0.65f));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 12f), 0.65f));
 
-		grabWobble(5f, 15f);
+		grabWobble(5f, 10f);
 
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-18f, 0f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-10f, 0f)));
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 80)));
 
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(6f, 0f)));
 
-		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1, true));
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(0, true));
 		wait(0.5f);
 
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, -20f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-4f, 0f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, -22f)));
+
+		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(16f, 0f)));
 	}
 
 	private void grabWobble(float leftDistance, float rightDistance)
