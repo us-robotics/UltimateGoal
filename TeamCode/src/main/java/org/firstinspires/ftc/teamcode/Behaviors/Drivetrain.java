@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Arrays;
+
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
@@ -27,10 +29,10 @@ public class Drivetrain extends Behavior
 	{
 		super.awake(hardwareMap);
 
-		frontLeft = hardwareMap.dcMotor.get("frontLeft");
 		frontRight = hardwareMap.dcMotor.get("frontRight");
-		backLeft = hardwareMap.dcMotor.get("backLeft");
+		frontLeft = hardwareMap.dcMotor.get("frontLeft");
 		backRight = hardwareMap.dcMotor.get("backRight");
+		backLeft = hardwareMap.dcMotor.get("backLeft");
 
 		frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -86,7 +88,7 @@ public class Drivetrain extends Behavior
 			final float exponent = 2.2f; //Can use a higher exponent power if more precision is needed
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.3f;
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.75f;
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
@@ -102,7 +104,7 @@ public class Drivetrain extends Behavior
 		}
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
-		//opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
+		opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -120,7 +122,9 @@ public class Drivetrain extends Behavior
 		for (int i = 0; i < powers.length; i++)
 		{
 			float power = Math.abs(powers[i]);
-			max = Math.max(max, power);
+
+			if (power < 0.05f) powers[i] = 0f;
+			else max = Math.max(max, power);
 		}
 
 		if (max > 1f)
@@ -133,6 +137,8 @@ public class Drivetrain extends Behavior
 		frontLeft.setPower(powers[1]);
 		backRight.setPower(powers[2]);
 		backLeft.setPower(powers[3]);
+
+		opMode.getHelper(Telemetry.class).addData("Powers", Arrays.toString(powers));
 	}
 
 	public void setDirectInputs(Vector2 positionalInput, float rotationalInput)

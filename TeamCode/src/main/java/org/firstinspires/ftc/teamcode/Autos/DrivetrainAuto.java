@@ -114,8 +114,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		public final float distance; //Distance in encoder ticks
 		public final float maxPower;
 
-		final float InchToTickForward = 2000f / 73f;
-		final float InchToTickStrafe = 2000f / 60f;
+		final float InchToTickForward = 26.6567937801f;
+		final float InchToTickStrafe = 32.8767123288f;
 	}
 
 	static class Drive extends Job //Set drive direction without encoders
