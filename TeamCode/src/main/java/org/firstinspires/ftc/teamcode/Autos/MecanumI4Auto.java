@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
 import java.security.KeyStore;
 import java.util.List;
 
+import FTCEngine.Core.Auto.Alliance;
 import FTCEngine.Core.Auto.AutoOpModeBase;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Math.Vector2;
@@ -34,10 +35,16 @@ public class MecanumI4Auto extends AutoOpModeBase
 		DrivetrainAuto drivetrain = getBehavior(DrivetrainAuto.class);
 		WobbleGrabberAuto wobbleGrabber = getBehavior(WobbleGrabberAuto.class);
 
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Drive(0.8f));
+		wait(1f);
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Drive(0f));
+
+		if (true) return;
+
 		grabWobble(10f, 9f);
 
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 94f)));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(16f, 0f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 106f)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(4f, 0f)));
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
 
 		wait(0.6f);
@@ -57,12 +64,12 @@ public class MecanumI4Auto extends AutoOpModeBase
 		wait(1.2f); //Returned back to start
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Drive(Vector2.zero));
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(13f, 0f), 0.65f));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 13f), 0.65f));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 12f), 0.65f));
 
-		grabWobble(5f, 9f);
+		grabWobble(5f, 10f);
 
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(-18f, 0f)));
-		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 80)));
+		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(0f, 82f)));
 
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(-1));
 		execute(drivetrain, (DrivetrainAuto.Job)new DrivetrainAuto.Move(new Vector2(6f, 0f)));
@@ -88,7 +95,7 @@ public class MecanumI4Auto extends AutoOpModeBase
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Reset());
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(1));
 
-		wait(0.38f);
+		wait(0.36f);
 		execute(wobbleGrabber, (WobbleGrabberAuto.Job)new WobbleGrabberAuto.Move(0, true));
 
 		wait(0.5f);
