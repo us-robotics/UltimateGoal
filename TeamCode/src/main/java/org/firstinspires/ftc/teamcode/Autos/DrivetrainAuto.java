@@ -71,7 +71,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Drive drive = (Drive)job;
 
-			drivetrain.setDirectInputs(drive.direction.mul(drive.maxPower), drive.rotation * drive.maxPower);
+			drivetrain.setDirectInputs(drive.direction.mul(drive.maxPower), 0f);
 			drive.finishJob();
 		}
 
@@ -82,7 +82,6 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 			if (getTime() - rotateStartTime >= 1f)
 			{
 				//Rotation end
-
 				drivetrain.setDirectInputs(Vector2.zero, 0f);
 				rotate.finishJob();
 			}
@@ -146,26 +145,10 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			this.direction = direction;
 			this.maxPower = maxPower;
-
-			rotation = 0f;
-		}
-
-		public Drive(float rotation)
-		{
-			this(rotation, 1f);
-		}
-
-		public Drive(float rotation, float maxPower)
-		{
-			this.rotation = rotation;
-			this.maxPower = maxPower;
-
-			direction = Vector2.zero;
 		}
 
 		public final Vector2 direction;
 		public final float maxPower;
-		public final float rotation;
 	}
 
 	static class Rotate extends Job
