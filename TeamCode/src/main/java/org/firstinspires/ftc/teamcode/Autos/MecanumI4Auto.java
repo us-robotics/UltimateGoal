@@ -26,6 +26,7 @@ public class MecanumI4Auto extends AutoOpModeBase
 		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new WobbleGrabberAuto(this));
 		behaviorList.add(new Launcher(this));
+		behaviorList.add(new LauncherAuto(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 	}
 
@@ -34,8 +35,9 @@ public class MecanumI4Auto extends AutoOpModeBase
 	{
 		DrivetrainAuto drivetrain = getBehavior(DrivetrainAuto.class);
 		WobbleGrabberAuto wobbleGrabber = getBehavior(WobbleGrabberAuto.class);
+		LauncherAuto launcher = getBehavior(LauncherAuto.class);
 
-		execute(drivetrain, new DrivetrainAuto.Rotate(180f));
+		execute(drivetrain, new DrivetrainAuto.Rotate(90f));
 
 		if (true) return;
 
@@ -50,6 +52,7 @@ public class MecanumI4Auto extends AutoOpModeBase
 		execute(wobbleGrabber, new WobbleGrabberAuto.Move(1));
 		wait(0.4f);
 
+		//Hit wall to Reset Y
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, -36f)));
 		execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(0f, -1f), 0.5f));
 		wait(1f);
@@ -59,31 +62,38 @@ public class MecanumI4Auto extends AutoOpModeBase
 
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f)));
 		execute(wobbleGrabber, new WobbleGrabberAuto.Move(1, true));
+		execute(launcher, new LauncherAuto.Prime(0.5f));
 
 		wait(0.5f);
 
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 12f)));
 		execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1));
 
-		if (true) return;
+		for (int i = 0; i < 3; i++)
+		{
+			execute(launcher, new LauncherAuto.Hit(true));
+			wait(1f);
 
-		wait(0.6f);
+			execute(launcher, new LauncherAuto.Hit(false));
+			wait(1f);
+		}
 
-		execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1, true));
-		wait(0.4f);
+		execute(launcher, new LauncherAuto.Prime(0f));
+		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 36f)));
+		execute(drivetrain, new DrivetrainAuto.Rotate(180f));
 
-		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, -16f)));
-		execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1));
+		//Reset X
+		execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(-1f, 0f), 0.5f));
+		wait(1f);
 
-		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(8f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabberAuto.Move(0));
+		execute(drivetrain, new DrivetrainAuto.Drive(Vector2.zero));
 
-		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, -64f)));
+		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, -48f)));
 		execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(0f, -1f), 0.5f));
 
-		wait(1.2f); //Returned back to start
+		wait(1.2f); //Returned back to start and Reset Y
 		execute(drivetrain, new DrivetrainAuto.Drive(Vector2.zero));
-		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(13f, 0f), 0.65f));
+		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(36f, 0f), 0.65f));
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 12f), 0.65f));
 
 		grabWobble(5f, 10f);

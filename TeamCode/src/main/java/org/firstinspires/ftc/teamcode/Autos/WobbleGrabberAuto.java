@@ -50,7 +50,7 @@ public class WobbleGrabberAuto extends AutoBehavior<WobbleGrabberAuto.Job>
 		job.finishJob();
 	}
 
-	public abstract static class Job extends FTCEngine.Core.Auto.Job
+	abstract static class Job extends FTCEngine.Core.Auto.Job
 	{
 	}
 

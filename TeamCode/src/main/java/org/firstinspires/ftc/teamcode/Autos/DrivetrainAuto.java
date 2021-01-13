@@ -74,7 +74,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 45f;
+			final float Cushion = 30f;
 			final float Threshold = Cushion * 0.25f;
 
 			float difference = Mathf.toSignedAngle(targetAngle - drivetrain.getAngle());
@@ -83,6 +83,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 			{
 				difference = 0f;
 				rotate.finishJob();
+
+				//TODO: Set drivetrain's current angle to the target angle
 			}
 
 			difference = Mathf.clamp(difference / Cushion, -rotate.power, rotate.power);
@@ -135,7 +137,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		final float InchToTickStrafe = 32.8767123288f;
 	}
 
-	static class Drive extends Job //Set drive direction without encoders
+	public static class Drive extends Job //Set drive direction without encoders
 	{
 		public Drive(Vector2 direction)
 		{
@@ -152,7 +154,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		public final float maxPower;
 	}
 
-	static class Rotate extends Job
+	public static class Rotate extends Job
 	{
 		public Rotate(float angle)
 		{
