@@ -38,6 +38,6 @@ public class Intake extends Behavior
 		if (opMode.getIsAuto()) return;
 		Input input = opMode.getHelper(Input.class);
 
-		intake.setPower(input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER));
+		intake.setPower(input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
 	}
 }
