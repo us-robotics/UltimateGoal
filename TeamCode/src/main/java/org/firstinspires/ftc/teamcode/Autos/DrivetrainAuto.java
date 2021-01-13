@@ -26,12 +26,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 	//following Gary's syntax and declaring down here to separate methods
 	private Drivetrain drivetrain;
-	private float rotateStartTime;
-
-	private float getTime()
-	{
-		return opMode.getHelper(Time.class).getTime();
-	}
+	private float targetAngle;
 
 	@Override
 	public void onJobAdded()
@@ -40,7 +35,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		Job job = getCurrentJob();
 
 		if (job instanceof Move) drivetrain.resetMotorPositions();
-		else if (job instanceof Rotate) rotateStartTime = getTime();
+		if (job instanceof Rotate) targetAngle = drivetrain.getAngle() + ((Rotate)job).angle;
 	}
 
 	@Override
@@ -52,10 +47,10 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Move move = (Move)job;
 
-			final float Cushion = 150;
+			final float Cushion = 150f;
 			final float Threshold = Cushion * 0.24f;
 
-			float difference = move.distance - drivetrain.averagePosition();
+			float difference = move.distance - drivetrain.getAveragePosition();
 
 			if (Math.abs(difference) < Threshold)
 			{
@@ -79,13 +74,19 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			if (getTime() - rotateStartTime >= 1f)
+			final float Cushion = 45f;
+			final float Threshold = Cushion * 0.25f;
+
+			float difference = Mathf.toSignedAngle(targetAngle - drivetrain.getAngle());
+
+			if (Math.abs(difference) < Threshold)
 			{
-				//Rotation end
-				drivetrain.setDirectInputs(Vector2.zero, 0f);
+				difference = 0f;
 				rotate.finishJob();
 			}
-			else drivetrain.setDirectInputs(Vector2.zero, 0.8f);
+
+			difference = Mathf.clamp(difference / Cushion, -rotate.power, rotate.power);
+			drivetrain.setDirectInputs(Vector2.zero, difference);
 		}
 	}
 
@@ -93,7 +94,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 	{
 	}
 
-	static class Move extends Job
+	public static class Move extends Job
 	{
 		/**
 		 * Creates a move job. Only the most significant axis will be used (Can only move perpendicular to the axes)
@@ -153,6 +154,18 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 	static class Rotate extends Job
 	{
+		public Rotate(float angle)
+		{
+			this(angle, 0.65f);
+		}
 
+		public Rotate(float angle, float power)
+		{
+			this.angle = angle;
+			this.power = power;
+		}
+
+		public final float angle;
+		public final float power;
 	}
 }

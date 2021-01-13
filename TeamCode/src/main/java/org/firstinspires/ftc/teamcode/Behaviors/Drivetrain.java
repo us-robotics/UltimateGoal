@@ -12,7 +12,6 @@ import FTCEngine.Core.OpModeBase;
 import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
-import FTCEngine.Math.Vector3;
 
 public class Drivetrain extends Behavior
 {
@@ -104,7 +103,7 @@ public class Drivetrain extends Behavior
 		}
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
-		opMode.getHelper(Telemetry.class).addData("Motor Average", averagePosition());
+		opMode.getHelper(Telemetry.class).addData("Motor Average", getAveragePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -161,13 +160,13 @@ public class Drivetrain extends Behavior
 		backLeft.setMode(mode);
 	}
 
-	public float averagePosition()
+	public float getAveragePosition()
 	{
 		return (Math.abs(frontRight.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition()) +
 		        Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
 	}
 
-	private float getAngle()
+	public float getAngle()
 	{
 		return Mathf.toSignedAngle(imu.getAngles().z);
 	}
