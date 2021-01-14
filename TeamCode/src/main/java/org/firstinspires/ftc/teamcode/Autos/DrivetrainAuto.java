@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Core.Telemetry;
 import FTCEngine.Core.Time;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
@@ -75,7 +76,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 			Rotate rotate = (Rotate)job;
 
 			final float Cushion = 30f;
-			final float Threshold = Cushion * 0.25f;
+			final float Threshold = 6f;
 
 			float difference = Mathf.toSignedAngle(targetAngle - drivetrain.getAngle());
 
@@ -87,8 +88,10 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 				//TODO: Set drivetrain's current angle to the target angle
 			}
 
-			difference = Mathf.clamp(difference / Cushion, -rotate.power, rotate.power);
-			drivetrain.setDirectInputs(Vector2.zero, difference);
+			int direction = -Mathf.normalize(difference);
+
+			difference = (float)Math.pow(Mathf.clamp01(Math.abs(difference) / Cushion), 1.2f);
+			drivetrain.setDirectInputs(Vector2.zero, difference * rotate.power * direction);
 		}
 	}
 

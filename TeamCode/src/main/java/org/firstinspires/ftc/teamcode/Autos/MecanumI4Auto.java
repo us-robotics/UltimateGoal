@@ -37,10 +37,6 @@ public class MecanumI4Auto extends AutoOpModeBase
 		WobbleGrabberAuto wobbleGrabber = getBehavior(WobbleGrabberAuto.class);
 		LauncherAuto launcher = getBehavior(LauncherAuto.class);
 
-		execute(drivetrain, new DrivetrainAuto.Rotate(90f));
-
-		if (true) return;
-
 		grabWobble(10f, 9f);
 
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 80f)));
