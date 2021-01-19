@@ -75,8 +75,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 30f;
-			final float Threshold = 6f;
+			final float Cushion = 24f;
+			final float Threshold = 8f;
 
 			float difference = Mathf.toSignedAngle(targetAngle - drivetrain.getAngle());
 

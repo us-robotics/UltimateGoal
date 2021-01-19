@@ -11,7 +11,7 @@ import FTCEngine.Core.OpModeBase;
 public class Launcher extends Behavior
 {
 	/**
-	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method!
+	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method
 	 *
 	 * @param opMode
 	 */
@@ -55,7 +55,7 @@ public class Launcher extends Behavior
 			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 		}
 
-		launcher.setPower(power);
+		launcher.setPower(power * 0.745d);
 		trigger.setPosition(hit ? 0.1d : 0.435d);
 	}
 
