@@ -33,7 +33,6 @@ public class WobbleGrabber extends Behavior
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 		resetEncoder();
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -84,16 +84,16 @@ public class Drivetrain extends Behavior
 			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 			//Process input for smoother control by interpolating a polynomial curve
-			final float exponent = 2.2f; //Can use a higher exponent power if more precision is needed
+			final float exponent = 1.9f; //Can use a higher exponent power if more precision is needed
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.75f;
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.65f;
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (imu != null && Mathf.almostEquals(rotationalInput, 0f))
 		{
-			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 30f;
+			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 26f;
 			setRawVelocities(positionalInput, deviation);
 		}
 		else
@@ -103,7 +103,7 @@ public class Drivetrain extends Behavior
 		}
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
-		opMode.getHelper(Telemetry.class).addData("Motor Average", getAveragePosition());
+//		opMode.getHelper(Telemetry.class).addData("Motor Average", getAveragePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -137,7 +137,7 @@ public class Drivetrain extends Behavior
 		backRight.setPower(powers[2]);
 		backLeft.setPower(powers[3]);
 
-		opMode.getHelper(Telemetry.class).addData("Powers", Arrays.toString(powers));
+//		opMode.getHelper(Telemetry.class).addData("Powers", Arrays.toString(powers));
 	}
 
 	public void setDirectInputs(Vector2 positionalInput, float rotationalInput)

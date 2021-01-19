@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Core.Telemetry;
 
 public class Launcher extends Behavior
 {
@@ -28,12 +29,16 @@ public class Launcher extends Behavior
 		launcher = hardwareMap.dcMotor.get("launcher");
 		trigger = hardwareMap.servo.get("trigger");
 
-		launcher.setPower(0d);
 		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		trigger.setPosition(0.435d);
+
+		setLauncherPower();
+		setTriggerPosition();
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
 	}
 
 	private DcMotor launcher;
@@ -41,6 +46,8 @@ public class Launcher extends Behavior
 
 	private float power;
 	private boolean hit;
+
+	private float maxPower = 0.745f;
 
 	@Override
 	public void update()
@@ -53,9 +60,26 @@ public class Launcher extends Behavior
 
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) power = 1f - power;
 			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+
+			float MaxPowerChangeRate = 0.005f;
+
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) maxPower += MaxPowerChangeRate;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) maxPower -= MaxPowerChangeRate;
+
+			opMode.getHelper(Telemetry.class).addData("Launcher Max Power", maxPower);
 		}
 
-		launcher.setPower(power * 0.745d);
+		setLauncherPower();
+		setTriggerPosition();
+	}
+
+	private void setLauncherPower()
+	{
+		launcher.setPower(power * maxPower);
+	}
+
+	private void setTriggerPosition()
+	{
 		trigger.setPosition(hit ? 0.1d : 0.435d);
 	}
 
