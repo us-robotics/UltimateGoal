@@ -160,6 +160,11 @@ public class Drivetrain extends Behavior
 		backLeft.setMode(mode);
 	}
 
+	public void setTargetAngle(float targetAngle)
+	{
+		this.targetAngle = targetAngle;
+	}
+
 	public float getAveragePosition()
 	{
 		return (Math.abs(frontRight.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition()) +

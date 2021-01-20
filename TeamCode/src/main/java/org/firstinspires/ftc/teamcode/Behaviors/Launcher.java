@@ -47,7 +47,7 @@ public class Launcher extends Behavior
 	private float power;
 	private boolean hit;
 
-	private float maxPower = 0.745f;
+	private float maxPower = 0.7375f;
 
 	@Override
 	public void update()
@@ -61,7 +61,7 @@ public class Launcher extends Behavior
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) power = 1f - power;
 			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
-			float MaxPowerChangeRate = 0.005f;
+			float MaxPowerChangeRate = 0.0025f;
 
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) maxPower += MaxPowerChangeRate;
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) maxPower -= MaxPowerChangeRate;
@@ -80,7 +80,7 @@ public class Launcher extends Behavior
 
 	private void setTriggerPosition()
 	{
-		trigger.setPosition(hit ? 0.1d : 0.435d);
+		trigger.setPosition(hit ? 0d : 0.45d);
 	}
 
 	public void setPower(float power)

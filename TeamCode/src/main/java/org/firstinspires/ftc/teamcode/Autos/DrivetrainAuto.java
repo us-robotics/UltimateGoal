@@ -82,10 +82,10 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 			if (Math.abs(difference) < Threshold)
 			{
+				drivetrain.setTargetAngle(targetAngle);
+
 				difference = 0f;
 				rotate.finishJob();
-
-				//TODO: Set drivetrain's current angle to the target angle
 			}
 
 			int direction = -Mathf.normalize(difference);
