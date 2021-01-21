@@ -8,6 +8,7 @@ import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Core.Telemetry;
+import FTCEngine.Math.Mathf;
 
 public class Launcher extends Behavior
 {
@@ -28,24 +29,28 @@ public class Launcher extends Behavior
 
 		launcher = hardwareMap.dcMotor.get("launcher");
 		trigger = hardwareMap.servo.get("trigger");
+		jeff = hardwareMap.servo.get("jeff");
 
 		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-		setLauncherPower();
-		setTriggerPosition();
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
+
+		setLauncherPower();
+		setTriggerPosition();
+		setJeffJeffing();
 	}
 
 	private DcMotor launcher;
 	private Servo trigger;
+	private Servo jeff;
 
 	private float power;
 	private boolean hit;
+	private float jeffing;
 
 	private float maxPower = 0.7375f;
 
@@ -59,7 +64,9 @@ public class Launcher extends Behavior
 			Input input = opMode.getHelper(Input.class);
 
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) power = 1f - power;
+
 			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+			jeffing = input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER);
 
 			float MaxPowerChangeRate = 0.0025f;
 
@@ -71,6 +78,7 @@ public class Launcher extends Behavior
 
 		setLauncherPower();
 		setTriggerPosition();
+		setJeffJeffing();
 	}
 
 	private void setLauncherPower()
@@ -80,7 +88,12 @@ public class Launcher extends Behavior
 
 	private void setTriggerPosition()
 	{
-		trigger.setPosition(hit ? 0d : 0.45d);
+		trigger.setPosition(hit ? 0d : 0.52d);
+	}
+
+	private void setJeffJeffing()
+	{
+		jeff.setPosition(Mathf.lerp(0.4f, 0f, jeffing));
 	}
 
 	public void setPower(float power)
