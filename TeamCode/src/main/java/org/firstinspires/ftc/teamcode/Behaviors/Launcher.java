@@ -39,6 +39,9 @@ public class Launcher extends Behavior
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
 
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT);
+		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT);
+
 		setLauncherPower();
 		setTriggerPosition();
 		setJeffJeffing();
@@ -48,11 +51,14 @@ public class Launcher extends Behavior
 	private Servo trigger;
 	private Servo jeff;
 
-	private float power;
+	private boolean primed;
 	private boolean hit;
 	private float jeffing;
 
-	private float maxPower = 0.7375f;
+	private static final float HIGH_POWER = 0.735f; //Power for high goal
+	private static final float SHOT_POWER = 0.695f; //Power for power shots
+
+	private float power = HIGH_POWER;
 
 	@Override
 	public void update()
@@ -63,17 +69,20 @@ public class Launcher extends Behavior
 		{
 			Input input = opMode.getHelper(Input.class);
 
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) power = 1f - power;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
 
 			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 			jeffing = input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER);
 
-			float MaxPowerChangeRate = 0.0025f;
+			final float POWER_CHANGE_RATE = 0.0025f;
 
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) maxPower += MaxPowerChangeRate;
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) maxPower -= MaxPowerChangeRate;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) power += POWER_CHANGE_RATE;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) power -= POWER_CHANGE_RATE;
 
-			opMode.getHelper(Telemetry.class).addData("Launcher Max Power", maxPower);
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power -= SHOT_POWER;
+
+			opMode.getHelper(Telemetry.class).addData("Launcher Power", power);
 		}
 
 		setLauncherPower();
@@ -83,7 +92,7 @@ public class Launcher extends Behavior
 
 	private void setLauncherPower()
 	{
-		launcher.setPower(power * maxPower);
+		launcher.setPower(primed ? power : 0d);
 	}
 
 	private void setTriggerPosition()
@@ -96,9 +105,9 @@ public class Launcher extends Behavior
 		jeff.setPosition(Mathf.lerp(0.4f, 0f, jeffing));
 	}
 
-	public void setPower(float power)
+	public void setPrimed(boolean primed)
 	{
-		this.power = power;
+		this.primed = primed;
 	}
 
 	public void setHit(boolean hit)

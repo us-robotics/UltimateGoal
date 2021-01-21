@@ -32,7 +32,7 @@ public class LauncherAuto extends AutoBehavior<LauncherAuto.Job>
 		{
 			Prime prime = (Prime)job;
 
-			launcher.setPower(prime.power);
+			launcher.setPrimed(prime.primed);
 			prime.finishJob();
 		}
 
@@ -51,12 +51,12 @@ public class LauncherAuto extends AutoBehavior<LauncherAuto.Job>
 
 	public static class Prime extends Job
 	{
-		public Prime(float power)
+		public Prime(boolean primed)
 		{
-			this.power = power;
+			this.primed = primed;
 		}
 
-		public final float power;
+		public final boolean primed;
 	}
 
 	public static class Hit extends Job

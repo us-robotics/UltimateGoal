@@ -61,26 +61,36 @@ public class MecanumI4Auto extends AutoOpModeBase
 		execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1));
 
 		//Forward to launch position
-		execute(launcher, new LauncherAuto.Prime(1f));
+		execute(launcher, new LauncherAuto.Prime(true));
 
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 60f)));
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(24f, 0f)));
 
-		execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(1f, 0f), 0.5f));
+		execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(1f, 0f), 0.55f));
 
 		wait(0.7f);
 		execute(drivetrain, new DrivetrainAuto.Drive(Vector2.zero));
 
-		for (int i = 0; i < 3; i++)
-		{
-			execute(launcher, new LauncherAuto.Hit(true));
-			wait(0.75f);
+		//Launch ring 1
+		execute(launcher, new LauncherAuto.Hit(true));
+		wait(0.75f);
 
-			execute(launcher, new LauncherAuto.Hit(false));
-			if (i != 2) wait(0.75f);
-		}
+		execute(launcher, new LauncherAuto.Hit(false));
+		wait(0.75f);
 
-		execute(launcher, new LauncherAuto.Prime(0f));
+		//Launch ring 2
+		execute(launcher, new LauncherAuto.Hit(true));
+		wait(0.75f);
+
+		execute(launcher, new LauncherAuto.Hit(false));
+		wait(0.75f);
+
+		//Launch ring 3
+		execute(launcher, new LauncherAuto.Hit(true));
+		wait(0.75f);
+
+		execute(launcher, new LauncherAuto.Hit(false));
+		execute(launcher, new LauncherAuto.Prime(false));
 
 		//Move to grab second wobble
 		execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-86f, 0f)));
