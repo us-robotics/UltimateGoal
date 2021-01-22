@@ -80,7 +80,7 @@ public class Launcher extends Behavior
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) power -= POWER_CHANGE_RATE;
 
 			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power -= SHOT_POWER;
+			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
 
 			opMode.getHelper(Telemetry.class).addData("Launcher Power", power);
 		}
