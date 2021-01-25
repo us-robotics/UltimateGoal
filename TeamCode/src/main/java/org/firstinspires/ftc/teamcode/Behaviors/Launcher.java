@@ -31,6 +31,7 @@ public class Launcher extends Behavior
 		trigger = hardwareMap.servo.get("trigger");
 		jeff = hardwareMap.servo.get("jeff");
 
+		launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
@@ -55,8 +56,8 @@ public class Launcher extends Behavior
 	private boolean hit;
 	private float jeffing;
 
-	private static final float HIGH_POWER = 0.735f; //Power for high goal
-	private static final float SHOT_POWER = 0.695f; //Power for power shots
+	private static final float HIGH_POWER = 0.7325f; //Power for high goal
+	private static final float SHOT_POWER = 0.6925f; //Power for power shots
 
 	private float power = HIGH_POWER;
 

@@ -84,22 +84,22 @@ public class Drivetrain extends Behavior
 			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 			//Process input for smoother control by interpolating a polynomial curve
-			final float exponent = 1.9f; //Can use a higher exponent power if more precision is needed
+			final float exponent = 0.72f;
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.65f;
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.72f;
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
-		if (imu != null && Mathf.almostEquals(rotationalInput, 0f))
-		{
-			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle) / 26f;
-			setRawVelocities(positionalInput, deviation);
-		}
+		if (imu == null) setRawVelocities(positionalInput, rotationalInput);
 		else
 		{
-			setRawVelocities(positionalInput, rotationalInput);
-			if (imu != null) targetAngle = getAngle();
+			if (!Mathf.almostEquals(rotationalInput, 0f) || positionalInput.equals(Vector2.zero))
+			{
+				targetAngle = getAngle();
+				setRawVelocities(positionalInput, rotationalInput);
+			}
+			else setRawVelocities(positionalInput, Mathf.toSignedAngle(getAngle() - targetAngle) / 25f);
 		}
 
 		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
