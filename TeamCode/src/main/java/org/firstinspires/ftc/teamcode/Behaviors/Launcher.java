@@ -43,23 +43,21 @@ public class Launcher extends Behavior
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT);
 
-		setLauncherPower();
-		setTriggerPosition();
-		setJeffJeffing();
+		apply();
 	}
 
 	private DcMotor launcher;
 	private Servo trigger;
 	private Servo jeff;
 
+	public static final float HIGH_POWER = 0.7325f; //Power for high goal
+	public static final float SHOT_POWER = 0.6725f; //Power for power shots
+
+	private float power = HIGH_POWER;
+
 	private boolean primed;
 	private boolean hit;
 	private float jeffing;
-
-	private static final float HIGH_POWER = 0.7325f; //Power for high goal
-	private static final float SHOT_POWER = 0.6925f; //Power for power shots
-
-	private float power = HIGH_POWER;
 
 	@Override
 	public void update()
@@ -84,24 +82,19 @@ public class Launcher extends Behavior
 			opMode.debug.addData("Launcher Power", power);
 		}
 
-		setLauncherPower();
-		setTriggerPosition();
-		setJeffJeffing();
+		apply();
 	}
 
-	private void setLauncherPower()
+	private void apply()
 	{
 		launcher.setPower(primed ? power : 0d);
-	}
-
-	private void setTriggerPosition()
-	{
 		trigger.setPosition(hit ? 0d : 0.52d);
+		jeff.setPosition(Mathf.lerp(0.4f, 0f, jeffing));
 	}
 
-	private void setJeffJeffing()
+	public void setPower(float power)
 	{
-		jeff.setPosition(Mathf.lerp(0.4f, 0f, jeffing));
+		this.power = power;
 	}
 
 	public void setPrimed(boolean primed)

@@ -25,17 +25,32 @@ public class Intake extends Behavior
 		super.awake(hardwareMap);
 
 		intake = hardwareMap.dcMotor.get("intake");
-		intake.setPower(0d);
+		apply();
 	}
 
 	private DcMotor intake;
+	private float power;
 
 	@Override
 	public void update()
 	{
 		super.update();
 
-		if (opMode.hasSequence()) return;
-		intake.setPower(opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
+		if (!opMode.hasSequence())
+		{
+			setPower(opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
+		}
+
+		apply();
+	}
+
+	public void setPower(float power)
+	{
+		this.power = power;
+	}
+
+	private void apply()
+	{
+		intake.setPower(power);
 	}
 }

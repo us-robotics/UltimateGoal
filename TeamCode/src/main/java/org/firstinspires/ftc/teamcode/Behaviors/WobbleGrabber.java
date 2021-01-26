@@ -26,14 +26,13 @@ public class WobbleGrabber extends Behavior
 		grabber = hardwareMap.servo.get("grabber");
 		touch = hardwareMap.touchSensor.get("touch");
 
-		arm.setPower(0d);
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
+		arm.setPower(-MAX_POWER);
 		grabber.setPosition(0);
 
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
 
-		resetEncoder();
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 	}
 
@@ -44,18 +43,26 @@ public class WobbleGrabber extends Behavior
 	private boolean released;
 	private int pushing; //Zero = no pushing, one = pushing up, negative one = pushing down
 
+	final float MAX_POWER = 0.38f;
+	final int GRAB_TARGET_POSITION = 335;
+
+	@Override
+	public void start()
+	{
+		super.start();
+		resetEncoder();
+		arm.setPower(0f);
+	}
+
 	public void update()
 	{
 		super.update();
-
-		final float MaxPower = 0.38f;
-		final int GrabTargetPosition = 335;
 
 		if (opMode.hasSequence())
 		{
 			final float PushDownPower = 0.1f;
 
-			if (pushing > 0) arm.setPower(MaxPower);
+			if (pushing > 0) arm.setPower(MAX_POWER);
 			else if (pushing < 0) arm.setPower(-PushDownPower);
 			else arm.setPower(0f);
 		}
@@ -66,7 +73,7 @@ public class WobbleGrabber extends Behavior
 			if (arm.isBusy())
 			{
 				if (positionToggle) arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-				arm.setPower(MaxPower);
+				arm.setPower(MAX_POWER);
 			}
 			else
 			{
@@ -78,13 +85,13 @@ public class WobbleGrabber extends Behavior
 
 				if (positionToggle)
 				{
+					arm.setTargetPosition(GRAB_TARGET_POSITION);
 					arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-					arm.setTargetPosition(GrabTargetPosition);
 				}
 				else arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-				if (touch.getValue() > 0.2d && direction >= 0) arm.setPower(MaxPower);
-				else arm.setPower(armInput * direction * MaxPower);
+				if (touch.getValue() > 0.2d && direction >= 0) arm.setPower(MAX_POWER);
+				else arm.setPower(armInput * direction * MAX_POWER);
 			}
 
 			setReleased(opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y));
