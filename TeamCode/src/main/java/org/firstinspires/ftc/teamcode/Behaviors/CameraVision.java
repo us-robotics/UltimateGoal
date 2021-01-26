@@ -50,21 +50,21 @@ public class CameraVision extends Behavior
 	{
 		super.update();
 
-		Telemetry telemetry = opMode.getHelper(Telemetry.class);
-
-		if (pipeline == null) telemetry.addData("No Pipeline", 0);
+		if (pipeline == null) opMode.debug.addData("No Pipeline", 0);
 		else
 		{
 			Scalar mean = pipeline.getMean();
 
-			if (mean == null) telemetry.addData("No Mean", 1);
-			else telemetry.addData("Mean", mean);
+			if (mean == null) opMode.debug.addData("No Mean", 1);
+			else opMode.debug.addData("Mean", mean);
 		}
 	}
 
 	private static class CameraPipeline extends OpenCvPipeline
 	{
-		public CameraPipeline() {}
+		public CameraPipeline()
+		{
+		}
 
 		private Scalar mean;
 

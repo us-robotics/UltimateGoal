@@ -4,12 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import java.util.Arrays;
-
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 
@@ -46,7 +43,7 @@ public class Drivetrain extends Behavior
 		resetMotorPositions();
 		setRawVelocities(Vector2.zero, 0f);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
+		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
 	}
 
 	private DcMotor frontRight;
@@ -75,13 +72,12 @@ public class Drivetrain extends Behavior
 	public void update()
 	{
 		super.update();
-		Input input = opMode.getHelper(Input.class);
 
-		if (!getIsAuto())
+		if (!opMode.hasSequence())
 		{
 			//Process input if is not in auto
-			positionalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
-			rotationalInput = input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
+			positionalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
+			rotationalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 			//Process input for smoother control by interpolating a polynomial curve
 			final float exponent = 0.72f;
@@ -102,8 +98,7 @@ public class Drivetrain extends Behavior
 			else setRawVelocities(positionalInput, Mathf.toSignedAngle(getAngle() - targetAngle) / 25f);
 		}
 
-		if (input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) resetMotorPositions();
-//		opMode.getHelper(Telemetry.class).addData("Motor Average", getAveragePosition());
+//		opMode.debug.addData("Motor Average", getAveragePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -168,7 +163,7 @@ public class Drivetrain extends Behavior
 	public float getAveragePosition()
 	{
 		return (Math.abs(frontRight.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition()) +
-		        Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
+				Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
 	}
 
 	public float getAngle()

@@ -35,9 +35,7 @@ public class Intake extends Behavior
 	{
 		super.update();
 
-		if (opMode.getIsAuto()) return;
-		Input input = opMode.getHelper(Input.class);
-
-		intake.setPower(input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
+		if (opMode.hasSequence()) return;
+		intake.setPower(opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
 	}
 }

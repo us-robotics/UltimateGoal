@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Core.Telemetry;
+import FTCEngine.Core.Debug;
 import FTCEngine.Math.Mathf;
 
 public class Launcher extends Behavior
@@ -34,14 +34,14 @@ public class Launcher extends Behavior
 		launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT);
 
 		setLauncherPower();
 		setTriggerPosition();
@@ -66,24 +66,22 @@ public class Launcher extends Behavior
 	{
 		super.update();
 
-		if (!opMode.getIsAuto())
+		if (!opMode.hasSequence())
 		{
-			Input input = opMode.getHelper(Input.class);
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
 
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
-
-			hit = input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
-			jeffing = input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER);
+			hit = opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+			jeffing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER);
 
 			final float POWER_CHANGE_RATE = 0.0025f;
 
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) power += POWER_CHANGE_RATE;
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) power -= POWER_CHANGE_RATE;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) power += POWER_CHANGE_RATE;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) power -= POWER_CHANGE_RATE;
 
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
-			if (input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
 
-			opMode.getHelper(Telemetry.class).addData("Launcher Power", power);
+			opMode.debug.addData("Launcher Power", power);
 		}
 
 		setLauncherPower();

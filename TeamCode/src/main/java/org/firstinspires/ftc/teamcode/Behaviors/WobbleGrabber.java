@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Core.Telemetry;
 import FTCEngine.Math.Mathf;
 
 public class WobbleGrabber extends Behavior
@@ -31,8 +30,8 @@ public class WobbleGrabber extends Behavior
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
 		grabber.setPosition(0);
 
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
-		opMode.getHelper(Input.class).registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
 
 		resetEncoder();
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -52,7 +51,7 @@ public class WobbleGrabber extends Behavior
 		final float MaxPower = 0.38f;
 		final int GrabTargetPosition = 335;
 
-		if (opMode.getIsAuto())
+		if (opMode.hasSequence())
 		{
 			final float PushDownPower = 0.1f;
 
@@ -62,8 +61,7 @@ public class WobbleGrabber extends Behavior
 		}
 		else
 		{
-			Input input = opMode.getHelper(Input.class);
-			boolean positionToggle = input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.X);
+			boolean positionToggle = opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.X);
 
 			if (arm.isBusy())
 			{
@@ -72,7 +70,7 @@ public class WobbleGrabber extends Behavior
 			}
 			else
 			{
-				float armInput = input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
+				float armInput = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
 
 				//Process input for smoother/better control
 				int direction = Mathf.normalize(armInput);
@@ -89,8 +87,8 @@ public class WobbleGrabber extends Behavior
 				else arm.setPower(armInput * direction * MaxPower);
 			}
 
-			setReleased(input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y));
-			if (input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.2f) resetEncoder();
+			setReleased(opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y));
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.2f) resetEncoder();
 		}
 
 		grabber.setPosition(released ? 0.45f : 0f);
