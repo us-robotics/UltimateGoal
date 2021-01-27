@@ -56,7 +56,7 @@ public class WobbleGrabber extends Behavior
 
 	public void update()
 	{
-		super.update();
+		super.update(); //This code is so messy aaa
 
 		if (opMode.hasSequence())
 		{
@@ -85,6 +85,7 @@ public class WobbleGrabber extends Behavior
 
 				if (positionToggle)
 				{
+					arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 					arm.setTargetPosition(GRAB_TARGET_POSITION);
 					arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				}

@@ -73,8 +73,8 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 24f;
-			final float Threshold = 8f;
+			final float Cushion = 22f;
+			final float Threshold = 5f;
 
 			float difference = Mathf.toSignedAngle(targetAngle - drivetrain.getAngle());
 
@@ -88,8 +88,16 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 			int direction = -Mathf.normalize(difference);
 
-			difference = (float)Math.pow(Mathf.clamp01(Math.abs(difference) / Cushion), 1.2f);
+			difference = (float)Math.pow(Mathf.clamp01(Math.abs(difference) / Cushion), 1.6f);
 			drivetrain.setDirectInputs(Vector2.zero, difference * rotate.power * direction);
+		}
+
+		if (job instanceof Reset)
+		{
+			Reset reset = (Reset)job;
+
+			drivetrain.setTargetAngle();
+			reset.finishJob();
 		}
 	}
 
@@ -159,7 +167,7 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 	{
 		public Rotate(float angle)
 		{
-			this(angle, 0.65f);
+			this(angle, 0.6f);
 		}
 
 		public Rotate(float angle, float power)
@@ -170,5 +178,13 @@ public class DrivetrainAuto extends AutoBehavior<DrivetrainAuto.Job>
 
 		public final float angle;
 		public final float power;
+	}
+
+	/**
+	 * Resets internal IMU angle
+	 */
+	public static class Reset extends Job
+	{
+
 	}
 }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Mathf;
 
 public class Intake extends Behavior
 {
@@ -38,7 +39,8 @@ public class Intake extends Behavior
 
 		if (!opMode.hasSequence())
 		{
-			setPower(opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y);
+			float input = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y;
+			setPower(Mathf.normalize(input) * (float)Math.pow(Math.abs(input), 1.8f));
 		}
 
 		apply();

@@ -30,8 +30,8 @@ public class MecanumI4TeleOp extends OpModeBase
 		behaviorList.add(new LauncherAuto(this));
 		behaviorList.add(new Intake(this));
 		behaviorList.add(new IntakeAuto(this));
-		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new WobbleGrabber(this));
+		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
 //		behaviorList.add(new CameraVision(this));
 	}
@@ -40,5 +40,12 @@ public class MecanumI4TeleOp extends OpModeBase
 	protected void appendConfigOptions(List<ConfigOption> options)
 	{
 
+	}
+
+	@Override
+	public void loop()
+	{
+		debug.addData("FPS", 1f / time.getDeltaTime());
+		super.loop();
 	}
 }

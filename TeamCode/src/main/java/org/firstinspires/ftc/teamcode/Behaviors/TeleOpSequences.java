@@ -65,10 +65,9 @@ public class TeleOpSequences extends Behavior
 		{
 			DrivetrainAuto drivetrain = opMode.getBehavior(DrivetrainAuto.class);
 			LauncherAuto launcher = opMode.getBehavior(LauncherAuto.class);
-			IntakeAuto intake = opMode.getBehavior(IntakeAuto.class);
 
-			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-16f, 0f)));
+			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER - 0.01f, true));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-24f, 0f), 0.55f));
 
 			wait(0.75f);
 
@@ -77,7 +76,7 @@ public class TeleOpSequences extends Behavior
 			wait(1f);
 
 			execute(launcher, new LauncherAuto.Hit(false));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-8f, 0f)));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f), 0.55f));
 
 			wait(0.75f);
 
@@ -86,19 +85,7 @@ public class TeleOpSequences extends Behavior
 			wait(1f);
 
 			execute(launcher, new LauncherAuto.Hit(false));
-			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER - 0.005f, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f)));
-
-			execute(intake, new IntakeAuto.Run(-0.45f));
-			wait(0.75f);
-			execute(intake, new IntakeAuto.Run(0f));
-
-			//Launch ring 3
-			execute(launcher, new LauncherAuto.Hit(true));
-			wait(1f);
-
-			execute(launcher, new LauncherAuto.Hit(false));
-			execute(launcher, new LauncherAuto.Prime(Launcher.HIGH_POWER, false));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f), 0.55f));
 		}
 	}
 

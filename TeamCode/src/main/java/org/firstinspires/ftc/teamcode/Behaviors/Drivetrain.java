@@ -42,8 +42,6 @@ public class Drivetrain extends Behavior
 
 		resetMotorPositions();
 		setRawVelocities(Vector2.zero, 0f);
-
-		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
 	}
 
 	private DcMotor frontRight;
@@ -53,6 +51,7 @@ public class Drivetrain extends Behavior
 
 	private InertialMeasurementUnit imu;
 	private float targetAngle;
+	private boolean rotated;
 
 	private final float[] powers = new float[4];
 
@@ -90,12 +89,21 @@ public class Drivetrain extends Behavior
 		if (imu == null) setRawVelocities(positionalInput, rotationalInput);
 		else
 		{
-			if (!Mathf.almostEquals(rotationalInput, 0f) || positionalInput.equals(Vector2.zero))
+			if (!positionalInput.equals(Vector2.zero)) rotated = false;
+			if (!Mathf.almostEquals(rotationalInput, 0f)) rotated = true;
+
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.1f) rotated = true;
+
+			if (rotated)
 			{
 				targetAngle = getAngle();
 				setRawVelocities(positionalInput, rotationalInput);
 			}
-			else setRawVelocities(positionalInput, Mathf.toSignedAngle(getAngle() - targetAngle) / 25f);
+			else
+			{
+				float deviation = Mathf.toSignedAngle(getAngle() - targetAngle);
+				setRawVelocities(positionalInput, deviation / 25f);
+			}
 		}
 
 //		opMode.debug.addData("Motor Average", getAveragePosition());
@@ -160,10 +168,15 @@ public class Drivetrain extends Behavior
 		this.targetAngle = targetAngle;
 	}
 
+	public void setTargetAngle()
+	{
+		setTargetAngle(imu == null ? targetAngle : getAngle());
+	}
+
 	public float getAveragePosition()
 	{
 		return (Math.abs(frontRight.getCurrentPosition()) + Math.abs(frontLeft.getCurrentPosition()) +
-				Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
+		        Math.abs(backRight.getCurrentPosition()) + Math.abs(backLeft.getCurrentPosition())) / 4f;
 	}
 
 	public float getAngle()
