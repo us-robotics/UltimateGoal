@@ -99,7 +99,7 @@ public class MecanumI4Auto extends OpModeBase
 			execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1));
 
 			//Forward to launch position
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 60f)));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 61f)));
 			wait(0.5f);
 
 			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(24f, 0f)));
@@ -142,23 +142,26 @@ public class MecanumI4Auto extends OpModeBase
 			execute(drivetrain, new DrivetrainAuto.Rotate(180f));
 
 			//Hit wall reset Y
-			execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(0f, -1f), 0.5f));
+			execute(drivetrain, new DrivetrainAuto.Drive(new Vector2(0f, -1f), 0.55f));
 
 			wait(0.75f);
 			execute(drivetrain, new DrivetrainAuto.Drive(Vector2.zero));
 			execute(drivetrain, new DrivetrainAuto.Reset());
 
 			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(8f, 0f), 0.55f));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 14f), 0.55f));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 13f), 0.55f));
 
 			grabWobble(4f, 9f);
 
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-8f, 0f)));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f)));
 			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(0f, 84f)));
 
 			//Drop second wobble
 			execute(wobbleGrabber, new WobbleGrabberAuto.Move(-1));
 			wait(0.4f);
+
+			execute(wobbleGrabber, new WobbleGrabberAuto.Move(0));
+			wait(0.5f);
 
 			execute(wobbleGrabber, new WobbleGrabberAuto.Move(0, true));
 			wait(0.5f);
@@ -181,7 +184,9 @@ public class MecanumI4Auto extends OpModeBase
 
 			wait(0.34f);
 			execute(wobbleGrabber, new WobbleGrabberAuto.Move(0, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(rightDistance, 0f), 0.65f));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(rightDistance, 0f), 0.55f));
+
+			wait(0.5f);
 
 			execute(wobbleGrabber, new WobbleGrabberAuto.Move(0));
 			wait(0.3f);

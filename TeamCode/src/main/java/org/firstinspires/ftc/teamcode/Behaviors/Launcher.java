@@ -29,7 +29,6 @@ public class Launcher extends Behavior
 
 		launcher = hardwareMap.dcMotor.get("launcher");
 		trigger = hardwareMap.servo.get("trigger");
-		jeff = hardwareMap.servo.get("jeff");
 
 		launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -48,16 +47,14 @@ public class Launcher extends Behavior
 
 	private DcMotor launcher;
 	private Servo trigger;
-	private Servo jeff;
 
 	public static final float HIGH_POWER = 0.7325f; //Power for high goal
-	public static final float SHOT_POWER = 0.6725f; //Power for power shots
+	public static final float SHOT_POWER = 0.6975f; //Power for power shots
 
 	private float power = HIGH_POWER;
 
 	private boolean primed;
 	private boolean hit;
-	private float jeffing;
 
 	@Override
 	public void update()
@@ -67,9 +64,7 @@ public class Launcher extends Behavior
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
-
 			hit = opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
-			jeffing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER);
 
 			final float POWER_CHANGE_RATE = 0.0025f;
 
@@ -89,7 +84,6 @@ public class Launcher extends Behavior
 	{
 		launcher.setPower(primed ? power : 0d);
 		trigger.setPosition(hit ? 0d : 0.52d);
-		jeff.setPosition(Mathf.lerp(0.4f, 0f, jeffing));
 	}
 
 	public void setPower(float power)

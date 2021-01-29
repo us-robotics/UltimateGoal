@@ -40,7 +40,7 @@ public class Intake extends Behavior
 		if (!opMode.hasSequence())
 		{
 			float input = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).y;
-			setPower(Mathf.normalize(input) * (float)Math.pow(Math.abs(input), 1.8f));
+			setPower(Mathf.normalize(input) * (float)Math.pow(Math.abs(input), 0.75f));
 		}
 
 		apply();

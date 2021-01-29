@@ -66,8 +66,8 @@ public class TeleOpSequences extends Behavior
 			DrivetrainAuto drivetrain = opMode.getBehavior(DrivetrainAuto.class);
 			LauncherAuto launcher = opMode.getBehavior(LauncherAuto.class);
 
-			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER - 0.01f, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-24f, 0f), 0.55f));
+			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER, true));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-15f, 0f), 0.55f));
 
 			wait(0.75f);
 
@@ -76,7 +76,7 @@ public class TeleOpSequences extends Behavior
 			wait(1f);
 
 			execute(launcher, new LauncherAuto.Hit(false));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f), 0.55f));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-9.25f, 0f), 0.55f));
 
 			wait(0.75f);
 
@@ -85,7 +85,8 @@ public class TeleOpSequences extends Behavior
 			wait(1f);
 
 			execute(launcher, new LauncherAuto.Hit(false));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-10f, 0f), 0.55f));
+			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER - 0.01f, true));
+			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-9.25f, 0f), 0.55f));
 		}
 	}
 

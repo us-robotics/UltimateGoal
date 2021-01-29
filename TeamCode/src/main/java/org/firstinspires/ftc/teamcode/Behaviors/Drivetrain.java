@@ -79,10 +79,17 @@ public class Drivetrain extends Behavior
 			rotationalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
 
 			//Process input for smoother control by interpolating a polynomial curve
-			final float exponent = 0.72f;
+			float exponent = 0.72f;
+			float multiplier = 1f;
 
-			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent));
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * 0.72f;
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.1f)
+			{
+				exponent = 0.64f;
+				multiplier = 0.48f;
+			}
+
+			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
+			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * multiplier;
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
