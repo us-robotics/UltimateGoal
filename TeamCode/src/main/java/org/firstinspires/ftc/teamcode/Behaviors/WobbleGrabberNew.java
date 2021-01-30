@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Mathf;
+import FTCEngine.Math.Vector2;
 
 public class WobbleGrabberNew extends Behavior
 {
@@ -33,15 +35,21 @@ public class WobbleGrabberNew extends Behavior
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		apply();
-
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
+	}
+
+	@Override
+	public void awakeUpdate()
+	{
+		super.awakeUpdate();
+		apply();
 	}
 
 	private DcMotor arm;
 	private Servo grabber;
 	private TouchSensor touch;
 
+	private Position targetPosition;
 	private boolean releasing;
 	private boolean resetting = true;
 
@@ -52,7 +60,19 @@ public class WobbleGrabberNew extends Behavior
 	{
 		super.update();
 
-		releasing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
+		if (!opMode.hasSequence())
+		{
+			releasing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
+
+			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
+			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
+
+			if (magnitude > 0.5f)
+			{
+				if (Math.abs(direction.x) > Math.abs(direction.y)) targetPosition = Position.GRAB;
+				targetPosition = direction.y > 0f ? Position.HIGH : Position.FOLD;
+			}
+		}
 
 		apply();
 	}
@@ -67,22 +87,50 @@ public class WobbleGrabberNew extends Behavior
 			{
 				arm.setPower(0d);
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-				setResetting(false);
+				resetting = false;
 			}
 			else
 			{
-
+				arm.setPower(RESET_POWER);
+				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 			}
-
-			arm.setPower(RESET_POWER);
-			arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		}
 		else
 		{
+			int position;
 
+			switch (targetPosition)
+			{
+				case FOLD:
+				{
+					position = 0;
+					break;
+				}
+				case GRAB:
+				{
+					position = 335;
+					break;
+				}
+				case HIGH:
+				{
+					position = 500;
+					break;
+				}
+				default:
+				{
+					throw new IllegalArgumentException(targetPosition.name());
+				}
+			}
+
+			arm.setPower(1d);
+			arm.setTargetPosition(position);
+			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		}
+	}
+
+	public void setTargetPosition(Position targetPosition)
+	{
+		this.targetPosition = targetPosition;
 	}
 
 	public void setReleasing(boolean releasing)
@@ -103,7 +151,7 @@ public class WobbleGrabberNew extends Behavior
 	public enum Position
 	{
 		FOLD,
-		IDLE,
+		GRAB,
 		HIGH
 	}
 }
