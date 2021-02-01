@@ -255,7 +255,7 @@ public class ConceptVuforiaUltimateGoalNavigation extends LinearOpMode {
         // waitForStart();
 
         // Note: To use the remote camera preview:
-        // AFTER you launch Init on the Driver Station, use the "options menu" to select "Camera Stream"
+        // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
         // Tap the preview window to receive a fresh image.
 
         targetsUltimateGoal.activate();
