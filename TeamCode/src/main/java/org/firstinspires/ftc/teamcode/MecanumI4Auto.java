@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
-import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
+import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberOld;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class MecanumI4Auto extends OpModeBase
 	{
 		behaviorList.add(new Drivetrain(this));
 		behaviorList.add(new DrivetrainAuto(this));
-		behaviorList.add(new WobbleGrabber(this));
+		behaviorList.add(new WobbleGrabberOld(this));
 		behaviorList.add(new WobbleGrabberAuto(this));
 		behaviorList.add(new Launcher(this));
 		behaviorList.add(new LauncherAuto(this));

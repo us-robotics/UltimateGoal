@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberOld;
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.OpModeBase;
 
-public class WobbleGrabberAuto extends AutoBehavior<WobbleGrabberAuto.Job>
+public class WobbleGrabberAutoNew extends AutoBehavior<WobbleGrabberAutoNew.Job>
 {
-	public WobbleGrabberAuto(OpModeBase opMode)
+	public WobbleGrabberAutoNew(OpModeBase opMode)
 	{
 		super(opMode);
 	}
@@ -22,8 +22,6 @@ public class WobbleGrabberAuto extends AutoBehavior<WobbleGrabberAuto.Job>
 	}
 
 	WobbleGrabberOld grabber;
-
-
 
 	@Override
 	protected void updateJob()

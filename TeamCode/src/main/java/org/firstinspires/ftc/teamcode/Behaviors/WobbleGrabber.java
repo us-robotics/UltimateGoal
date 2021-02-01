@@ -6,13 +6,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import FTCEngine.Core.Behavior;
+import org.firstinspires.ftc.teamcode.Autos.DrivetrainAuto;
+
+import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Math.Mathf;
+import FTCEngine.Math.Vector2;
 
-public class WobbleGrabber extends Behavior
+public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 {
+	/**
+	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method!
+	 *
+	 * @param opMode
+	 */
 	public WobbleGrabber(OpModeBase opMode)
 	{
 		super(opMode);
@@ -27,105 +34,136 @@ public class WobbleGrabber extends Behavior
 		touch = hardwareMap.touchSensor.get("touch");
 
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
-		arm.setPower(-MAX_POWER);
-		grabber.setPosition(0);
-
-		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.X);
-		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
-
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+	}
+
+	@Override
+	public void awakeUpdate()
+	{
+		super.awakeUpdate();
+		apply();
 	}
 
 	private DcMotor arm;
 	private Servo grabber;
 	private TouchSensor touch;
 
-	private boolean released;
-	private int pushing; //Zero = no pushing, one = pushing up, negative one = pushing down
+	private Position targetPosition = Position.FOLD;
+	private boolean releasing;
 
-	final float MAX_POWER = 0.38f;
-	final int GRAB_TARGET_POSITION = 335;
+	private static final float RESET_POWER = -0.32f;
 
 	@Override
-	public void start()
-	{
-		super.start();
-		resetEncoder();
-		arm.setPower(0f);
-	}
-
 	public void update()
 	{
-		super.update(); //This code is so messy aaa
+		super.update();
 
-		if (opMode.hasSequence())
+		if (!opMode.hasSequence())
 		{
-			final float PushDownPower = 0.1f;
+			releasing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
 
-			if (pushing > 0) arm.setPower(MAX_POWER);
-			else if (pushing < 0) arm.setPower(-PushDownPower);
-			else arm.setPower(0f);
-		}
-		else
-		{
-			boolean positionToggle = opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.X);
+			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
+			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 
-			if (arm.isBusy())
+			if (magnitude > 0.5f)
 			{
-				if (positionToggle) arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-				arm.setPower(MAX_POWER);
+				if (Math.abs(direction.x) > Math.abs(direction.y)) targetPosition = Position.GRAB;
+				else targetPosition = direction.y > 0f ? Position.HIGH : Position.FOLD;
+			}
+		}
+
+		apply();
+	}
+
+	@Override
+	protected void updateJob()
+	{
+		WobbleGrabber.Job job = getCurrentJob();
+
+		if (job instanceof WobbleGrabber.Move)
+		{
+			WobbleGrabber.Move move = (WobbleGrabber.Move)job;
+		}
+
+		if (job instanceof WobbleGrabber.Grab)
+		{
+			WobbleGrabber.Grab move = (WobbleGrabber.Grab)job;
+		}
+	}
+
+	private void apply()
+	{
+		grabber.setPosition(releasing ? 0.45f : 0f);
+
+		if (targetPosition == Position.FOLD)
+		{
+			if (touch.isPressed())
+			{
+				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				arm.setPower(RESET_POWER / 3f);
 			}
 			else
 			{
-				float armInput = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK).y;
+				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				arm.setPower(RESET_POWER);
+			}
+		}
+		else
+		{
+			int position;
 
-				//Process input for smoother/better control
-				int direction = Mathf.normalize(armInput);
-				armInput = (float)Math.sin(Math.abs(armInput) * Math.PI - Math.PI / 2d) / 2f + 0.5f;
-
-				if (positionToggle)
+			switch (targetPosition)
+			{
+				case GRAB:
 				{
-					arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-					arm.setTargetPosition(GRAB_TARGET_POSITION);
-					arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+					position = 335;
+					break;
 				}
-				else arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-				if (touch.getValue() > 0.2d && direction >= 0) arm.setPower(MAX_POWER);
-				else arm.setPower(armInput * direction * MAX_POWER);
+				case HIGH:
+				{
+					position = 620;
+					break;
+				}
+				default:
+				{
+					throw new IllegalArgumentException(targetPosition.toString());
+				}
 			}
 
-			setReleased(opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.Y));
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.2f) resetEncoder();
+			arm.setPower(0.65d);
+			arm.setTargetPosition(position);
+			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		}
+	}
+
+	public enum Position
+	{
+		FOLD,
+		GRAB,
+		HIGH
+	}
+
+	abstract static class Job extends FTCEngine.Core.Auto.Job
+	{
+	}
+
+	public static class Move extends WobbleGrabber.Job
+	{
+		public Move(Position position)
+		{
+			this.position = position;
 		}
 
-		grabber.setPosition(released ? 0.45f : 0f);
-		//opMode.getHelper(Telemetry.class).addData("Wobble Arm Position", arm.getCurrentPosition());
+		public final Position position;
 	}
 
-	public void setReleased(boolean released)
+	public static class Grab extends WobbleGrabber.Job
 	{
-		this.released = released;
-	}
+		public Grab(boolean grab)
+		{
+			this.grab = grab;
+		}
 
-	public void clearPush()
-	{
-		pushing = 0;
-	}
-
-	public void setPushUp()
-	{
-		pushing = 1;
-	}
-
-	public void setPushDown()
-	{
-		pushing = -1;
-	}
-
-	public void resetEncoder()
-	{
-		arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		public final boolean grab;
 	}
 }
