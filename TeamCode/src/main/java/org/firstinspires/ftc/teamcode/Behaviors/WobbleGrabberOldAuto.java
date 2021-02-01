@@ -1,15 +1,13 @@
-package org.firstinspires.ftc.teamcode.Autos;
+package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberOld;
 
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.OpModeBase;
 
-public class WobbleGrabberAutoNew extends AutoBehavior<WobbleGrabberAutoNew.Job>
+public class WobbleGrabberOldAuto extends AutoBehavior<WobbleGrabberOldAuto.Job>
 {
-	public WobbleGrabberAutoNew(OpModeBase opMode)
+	public WobbleGrabberOldAuto(OpModeBase opMode)
 	{
 		super(opMode);
 	}

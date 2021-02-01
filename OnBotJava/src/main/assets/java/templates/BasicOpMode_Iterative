@@ -82,7 +82,7 @@ public class BasicOpMode_Iterative extends OpMode
     }
 
     /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     * Code to run REPEATEDLY after the driver hits INIT, but before they launch PLAY
      */
     @Override
     public void init_loop() {
@@ -97,7 +97,7 @@ public class BasicOpMode_Iterative extends OpMode
     }
 
     /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+     * Code to run REPEATEDLY after the driver hits PLAY but before they launch STOP
      */
     @Override
     public void loop() {

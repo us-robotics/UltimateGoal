@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Autos.DrivetrainAuto;
-import org.firstinspires.ftc.teamcode.Autos.IntakeAuto;
-import org.firstinspires.ftc.teamcode.Autos.LauncherAuto;
-
 import FTCEngine.Core.Auto.JobSequence;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
@@ -47,6 +43,8 @@ public class TeleOpSequences extends Behavior
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new PowerShotsSequence(opMode));
+
+			//NOTE: test these out, they should now work
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_LEFT)) opMode.assignSequence(new RotateSequence(opMode, -90f));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_RIGHT)) opMode.assignSequence(new RotateSequence(opMode, 90f));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_UP)) opMode.assignSequence(new RotateSequence(opMode, 180f));
@@ -63,30 +61,30 @@ public class TeleOpSequences extends Behavior
 		@Override
 		protected void queueJobs()
 		{
-			DrivetrainAuto drivetrain = opMode.getBehavior(DrivetrainAuto.class);
-			LauncherAuto launcher = opMode.getBehavior(LauncherAuto.class);
+			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+			Launcher launcher = opMode.getBehavior(Launcher.class);
 
-			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-15f, 0f), 0.55f));
+			execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(-15f, 0f), 0.55f));
 
 			wait(0.75f);
 
 			//Launch ring 1
-			execute(launcher, new LauncherAuto.Hit(true));
+			execute(launcher, new Launcher.Launch(true));
 			wait(1f);
 
-			execute(launcher, new LauncherAuto.Hit(false));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-9.25f, 0f), 0.55f));
+			execute(launcher, new Launcher.Launch(false));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(-9.25f, 0f), 0.55f));
 
 			wait(0.75f);
 
 			//Launch ring 2
-			execute(launcher, new LauncherAuto.Hit(true));
+			execute(launcher, new Launcher.Launch(true));
 			wait(1f);
 
-			execute(launcher, new LauncherAuto.Hit(false));
-			execute(launcher, new LauncherAuto.Prime(Launcher.SHOT_POWER - 0.01f, true));
-			execute(drivetrain, new DrivetrainAuto.Move(new Vector2(-9.25f, 0f), 0.55f));
+			execute(launcher, new Launcher.Launch(false));
+			execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.01f, true));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(-9.25f, 0f), 0.55f));
 		}
 	}
 
@@ -98,13 +96,13 @@ public class TeleOpSequences extends Behavior
 			this.angle = angle;
 		}
 
-		private final float angle; //Doesnt work right now because it is assigned after the constructor
+		private final float angle;
 
 		@Override
 		protected void queueJobs()
 		{
-			DrivetrainAuto drivetrain = opMode.getBehavior(DrivetrainAuto.class);
-			execute(drivetrain, new DrivetrainAuto.Rotate(angle));
+			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+			execute(drivetrain, new Drivetrain.Rotate(angle));
 		}
 	}
 }

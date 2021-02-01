@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.teamcode.Autos.DrivetrainAuto;
-
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
@@ -49,9 +47,9 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	private TouchSensor touch;
 
 	private Position targetPosition = Position.FOLD;
-	private boolean releasing;
+	private boolean isReleased;
 
-	private static final float RESET_POWER = -0.32f;
+	private static final float RESET_POWER = -0.28f;
 
 	@Override
 	public void update()
@@ -60,7 +58,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 		if (!opMode.hasSequence())
 		{
-			releasing = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
+			isReleased = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
 
 			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
@@ -83,24 +81,32 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 		if (job instanceof WobbleGrabber.Move)
 		{
 			WobbleGrabber.Move move = (WobbleGrabber.Move)job;
+
+			targetPosition = move.position;
+			apply(); //We need to actually set the target to check if the motor is busy or not
+
+			if (move.position == Position.FOLD || !arm.isBusy()) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
 		{
-			WobbleGrabber.Grab move = (WobbleGrabber.Grab)job;
+			WobbleGrabber.Grab grab = (WobbleGrabber.Grab)job;
+
+			isReleased = !grab.grab;
+			grab.finishJob();
 		}
 	}
 
 	private void apply()
 	{
-		grabber.setPosition(releasing ? 0.45f : 0f);
+		grabber.setPosition(isReleased ? 0.45f : 0f);
 
 		if (targetPosition == Position.FOLD)
 		{
 			if (touch.isPressed())
 			{
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				arm.setPower(RESET_POWER / 3f);
+				arm.setPower(RESET_POWER / 4f);
 			}
 			else
 			{

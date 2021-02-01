@@ -4,13 +4,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import FTCEngine.Core.Behavior;
+import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Core.Debug;
-import FTCEngine.Math.Mathf;
 
-public class Launcher extends Behavior
+public class Launcher extends AutoBehavior<Launcher.Job>
 {
 	/**
 	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method
@@ -27,11 +25,11 @@ public class Launcher extends Behavior
 	{
 		super.awake(hardwareMap);
 
-		launcher = hardwareMap.dcMotor.get("launcher");
+		flywheel = hardwareMap.dcMotor.get("flywheel"); //Rename launcher to flywheel in the config file
 		trigger = hardwareMap.servo.get("trigger");
 
-		launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
@@ -45,7 +43,7 @@ public class Launcher extends Behavior
 		apply();
 	}
 
-	private DcMotor launcher;
+	private DcMotor flywheel;
 	private Servo trigger;
 
 	public static final float HIGH_POWER = 0.7325f; //Power for high goal
@@ -73,31 +71,65 @@ public class Launcher extends Behavior
 
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
-
-			opMode.debug.addData("Launcher Power", power);
 		}
 
+		opMode.debug.addData("Launcher Power", power);
 		apply();
 	}
 
 	private void apply()
 	{
-		launcher.setPower(primed ? power : 0d);
+		flywheel.setPower(primed ? power : 0d);
 		trigger.setPosition(hit ? 0d : 0.52d);
 	}
 
-	public void setPower(float power)
+	@Override
+	protected void updateJob()
 	{
-		this.power = power;
+		Launcher.Job job = getCurrentJob();
+
+		if (job instanceof Launcher.Prime)
+		{
+			Launcher.Prime prime = (Launcher.Prime)job;
+
+			power = prime.power;
+			primed = prime.primed;
+
+			prime.finishJob();
+		}
+
+		if (job instanceof Launch)
+		{
+			Launch launch = (Launch)job;
+
+			hit = launch.launch;
+			launch.finishJob();
+		}
 	}
 
-	public void setPrimed(boolean primed)
+	static abstract class Job extends FTCEngine.Core.Auto.Job
 	{
-		this.primed = primed;
 	}
 
-	public void setHit(boolean hit)
+	public static class Prime extends Launcher.Job
 	{
-		this.hit = hit;
+		public Prime(float power, boolean primed)
+		{
+			this.power = power;
+			this.primed = primed;
+		}
+
+		public final float power;
+		public final boolean primed;
+	}
+
+	public static class Launch extends Launcher.Job
+	{
+		public Launch(boolean launch)
+		{
+			this.launch = launch;
+		}
+
+		public final boolean launch;
 	}
 }
