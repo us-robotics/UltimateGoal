@@ -36,8 +36,8 @@ public class MecanumI4TeleOp extends OpModeBase
 		behaviorList.add(new WobbleGrabberNew(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
-		behaviorList.add(new CameraVision(this));
-		behaviorList.add(new ColorSensors(this));
+//		behaviorList.add(new CameraVision(this));
+//		behaviorList.add(new ColorSensors(this));
 	}
 
 	@Override

@@ -49,9 +49,8 @@ public class WobbleGrabberNew extends Behavior
 	private Servo grabber;
 	private TouchSensor touch;
 
-	private Position targetPosition;
+	private Position targetPosition = Position.FOLD;
 	private boolean releasing;
-	private boolean resetting = true;
 
 	private static final float RESET_POWER = -0.38f;
 
@@ -70,7 +69,7 @@ public class WobbleGrabberNew extends Behavior
 			if (magnitude > 0.5f)
 			{
 				if (Math.abs(direction.x) > Math.abs(direction.y)) targetPosition = Position.GRAB;
-				targetPosition = direction.y > 0f ? Position.HIGH : Position.FOLD;
+				else targetPosition = direction.y > 0f ? Position.HIGH : Position.FOLD;
 			}
 		}
 
@@ -81,13 +80,12 @@ public class WobbleGrabberNew extends Behavior
 	{
 		grabber.setPosition(releasing ? 0.45f : 0f);
 
-		if (resetting)
+		if (targetPosition == Position.FOLD)
 		{
 			if (touch.isPressed())
 			{
 				arm.setPower(0d);
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				resetting = false;
 			}
 			else
 			{
@@ -101,11 +99,6 @@ public class WobbleGrabberNew extends Behavior
 
 			switch (targetPosition)
 			{
-				case FOLD:
-				{
-					position = 0;
-					break;
-				}
 				case GRAB:
 				{
 					position = 335;
@@ -113,16 +106,16 @@ public class WobbleGrabberNew extends Behavior
 				}
 				case HIGH:
 				{
-					position = 500;
+					position = 620;
 					break;
 				}
 				default:
 				{
-					throw new IllegalArgumentException(targetPosition.name());
+					throw new IllegalArgumentException(targetPosition.toString());
 				}
 			}
 
-			arm.setPower(1d);
+			arm.setPower(0.5d);
 			arm.setTargetPosition(position);
 			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		}
@@ -136,16 +129,6 @@ public class WobbleGrabberNew extends Behavior
 	public void setReleasing(boolean releasing)
 	{
 		this.releasing = releasing;
-	}
-
-	public void setResetting(boolean resetting)
-	{
-		this.resetting = resetting;
-	}
-
-	public boolean isResetting()
-	{
-		return resetting;
 	}
 
 	public enum Position

@@ -29,12 +29,16 @@ public class CameraVision extends Behavior
 		WebcamName webcamName = hardwareMap.get(WebcamName.class, "frontCamera");
 
 		camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-		camera.openCameraDeviceAsync(() ->
+		camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
 		{
-			pipeline = new CameraPipeline();
+			@Override
+			public void onOpened()
+			{
+				pipeline = new CameraPipeline();
 
-			camera.startStreaming(320, 240);
-			camera.setPipeline(pipeline);
+				camera.startStreaming(320, 240);
+				camera.setPipeline(pipeline);
+			}
 		});
 	}
 
