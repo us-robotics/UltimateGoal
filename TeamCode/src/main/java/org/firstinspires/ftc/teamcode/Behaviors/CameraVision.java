@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.*;
 
 import FTCEngine.Core.*;
@@ -29,6 +30,8 @@ public class CameraVision extends Behavior
 		WebcamName webcamName = hardwareMap.get(WebcamName.class, "frontCamera");
 
 		camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+		camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+
 		camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
 		{
 			@Override
@@ -36,7 +39,7 @@ public class CameraVision extends Behavior
 			{
 				pipeline = new CameraPipeline();
 
-				camera.startStreaming(320, 240);
+				camera.startStreaming(ResolutionX, ResolutionY, OpenCvCameraRotation.SIDEWAYS_RIGHT);
 				camera.setPipeline(pipeline);
 			}
 		});
@@ -44,6 +47,9 @@ public class CameraVision extends Behavior
 
 	private OpenCvCamera camera;
 	private CameraPipeline pipeline;
+
+	private static final int ResolutionX = 320;
+	private static final int ResolutionY = 240;
 
 	@Override
 	public void update()
@@ -60,6 +66,11 @@ public class CameraVision extends Behavior
 		}
 	}
 
+	public void closeCamera()
+	{
+		camera.stopStreaming();
+	}
+
 	private static class CameraPipeline extends OpenCvPipeline
 	{
 		public CameraPipeline()
@@ -68,11 +79,33 @@ public class CameraVision extends Behavior
 
 		private Scalar mean;
 
+		static final Scalar Blue = new Scalar(0f, 0f, 255f);
+
+		static final Point RegionCenter = new Point(ResolutionX / 4f, ResolutionY * 0f);
+		static final int RegionSize = 50;
+
+		static final Rect RegionRect = new Rect
+				(
+						new Point(RegionCenter.x - RegionSize / 2f, RegionCenter.y - RegionSize / 2f),
+						new Point(RegionCenter.x + RegionSize / 2f, RegionCenter.y + RegionSize / 2f)
+				);
+
+		Mat hsv = new Mat();
+		Mat saturation = new Mat();
+		Mat submat = saturation.submat(RegionRect);
+
 		@Override
 		public Mat processFrame(Mat input)
 		{
 			mean = Core.mean(input);
-			return input;
+
+			Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+			Core.extractChannel(hsv, saturation, 1);
+
+			Imgproc.rectangle(saturation, RegionRect, Blue, 1);
+			mean = Core.mean(submat);
+
+			return saturation;
 		}
 
 		public Scalar getMean()

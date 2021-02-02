@@ -106,7 +106,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			if (touch.isPressed())
 			{
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				arm.setPower(RESET_POWER / 4f);
+				arm.setPower(-0.01f);
 			}
 			else
 			{

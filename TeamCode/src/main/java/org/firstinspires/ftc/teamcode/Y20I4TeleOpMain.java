@@ -22,7 +22,7 @@ public class Y20I4TeleOpMain extends OpModeBase
 		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
-//		behaviorList.add(new CameraVision(this));
+		behaviorList.add(new CameraVision(this));
 //		behaviorList.add(new ColorSensors(this));
 	}
 
