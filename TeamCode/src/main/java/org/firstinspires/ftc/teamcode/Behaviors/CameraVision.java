@@ -55,16 +55,19 @@ public class CameraVision extends Behavior
 
 		if (pipeline != null)
 		{
-			float saturationUpper = (float)pipeline.getMeanUpper().val[0];
-			float saturationLower = (float)pipeline.getMeanLower().val[0];
+			Scalar saturationUpper = pipeline.getMeanUpper();
+			Scalar saturationLower = pipeline.getMeanLower();
 
-			final float Threshold = 100f;
-			Position position;
+			if (saturationLower != null && saturationUpper != null)
+			{
+				final float Threshold = 100f;
+				Position position;
 
-			if (saturationLower < Threshold) position = Position.A;
-			else position = saturationUpper > Threshold ? Position.C : Position.B;
+				if (saturationLower.val[0] < Threshold) position = Position.A;
+				else position = saturationUpper.val[0] > Threshold ? Position.C : Position.B;
 
-			opMode.debug.addData("Position", position);
+				opMode.debug.addData("Position", position);
+			}
 		}
 	}
 

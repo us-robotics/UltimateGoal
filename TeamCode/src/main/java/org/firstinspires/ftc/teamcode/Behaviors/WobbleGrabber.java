@@ -32,7 +32,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 		touch = hardwareMap.touchSensor.get("touch");
 
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
-		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			if (touch.isPressed())
 			{
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				arm.setPower(-0.01f);
+				arm.setPower(0f);
 			}
 			else
 			{

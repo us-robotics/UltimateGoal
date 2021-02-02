@@ -46,8 +46,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	private final float[] powers = new float[4];
 
 	private InertialMeasurementUnit imu;
-	private float targetAngle;
-	private boolean rotated;
+	private boolean angleCorrection;
+	private float persistentAngle;
 
 	private Vector2 positionalInput = Vector2.zero;
 	private float rotationalInput = 0f;
@@ -56,7 +56,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	public void start()
 	{
 		super.start();
-		targetAngle = getAngle();
+		persistentAngle = getAngle();
 	}
 
 	@Override
@@ -85,24 +85,26 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		}
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
-		if (!positionalInput.equals(Vector2.zero)) rotated = false;
-		if (!Mathf.almostEquals(rotationalInput, 0f)) rotated = true;
+		if (!positionalInput.equals(Vector2.zero)) angleCorrection = true;
+		if (!Mathf.almostEquals(rotationalInput, 0f)) angleCorrection = false;
 
 		if (!opMode.hasSequence())
 		{
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.1f) rotated = true;
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.1f) angleCorrection = false;
 		}
 
-		if (rotated)
+		if (angleCorrection)
 		{
-			targetAngle = getAngle();
-			setRawVelocities(positionalInput, rotationalInput);
+			float deviation = Mathf.toSignedAngle(getAngle() - persistentAngle);
+			setRawVelocities(positionalInput, deviation / 25f);
 		}
 		else
 		{
-			float deviation = Mathf.toSignedAngle(getAngle() - targetAngle);
-			setRawVelocities(positionalInput, deviation / 25f);
+			persistentAngle = getAngle();
+			setRawVelocities(positionalInput, rotationalInput);
 		}
+
+//		opMode.debug.addData("Position", getAveragePosition());
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -128,7 +130,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		max = Math.max(max, 1f); //Scales all powers down by a multiplier if one power is higher than 1
 		for (int i = 0; i < motors.length; i++) motors[i].setPower(powers[i] / max);
 
-//		opMode.getHelper(Telemetry.class).addData("Powers", Arrays.toString(powers));
+//		opMode.debug.addData("Powers", Arrays.toString(powers));
 	}
 
 	@Override
@@ -138,7 +140,12 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		Drivetrain.Job job = getCurrentJob();
 
 		if (job instanceof Drivetrain.Move) resetMotorPositions();
-		if (job instanceof Drivetrain.Rotate) targetAngle = getAngle() + ((Drivetrain.Rotate)job).angle;
+
+		if (job instanceof Drivetrain.Rotate)
+		{
+			Drivetrain.Rotate rotate = (Drivetrain.Rotate)getCurrentJob();
+			rotate.setTargetAngle(getAngle() + rotate.angle);
+		}
 	}
 
 	@Override
@@ -180,10 +187,12 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			final float Cushion = 22f;
 			final float Threshold = 5f;
 
-			float difference = Mathf.toSignedAngle(targetAngle - getAngle());
+			float difference = Mathf.toSignedAngle(rotate.getTargetAngle() - getAngle());
 
 			if (Math.abs(difference) < Threshold)
 			{
+				persistentAngle = rotate.getTargetAngle();
+
 				difference = 0f;
 				rotate.finishJob();
 			}
@@ -198,7 +207,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Drivetrain.Reset reset = (Drivetrain.Reset)job;
 
-			targetAngle = getAngle();
+			persistentAngle = getAngle();
 			reset.finishJob();
 		}
 	}
@@ -224,7 +233,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 		for (DcMotor motor : motors)
 		{
-			sum += motor.getCurrentPosition();
+			sum += Math.abs(motor.getCurrentPosition());
 		}
 
 		return sum / motors.length;
@@ -312,6 +321,18 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 		public final float angle;
 		public final float power;
+
+		private float targetAngle;
+
+		public float getTargetAngle()
+		{
+			return targetAngle;
+		}
+
+		public void setTargetAngle(float targetAngle)
+		{
+			this.targetAngle = targetAngle;
+		}
 	}
 
 	/**
