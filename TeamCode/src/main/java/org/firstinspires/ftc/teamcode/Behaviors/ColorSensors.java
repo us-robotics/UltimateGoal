@@ -58,13 +58,13 @@ public class ColorSensors extends Behavior
 	{
 		super.update();
 
-		Vector3 leftDifference = getColor(left).sub(baseLine);
 		Vector3 rightDifference = getColor(right).sub(baseLine);
+		Vector3 leftDifference = getColor(left).sub(baseLine);
 
 		opMode.debug.addData("Baseline", baseLine);
 
-		opMode.debug.addData("Left Difference", leftDifference + " " + getSaturationBrightness(leftDifference));
-		opMode.debug.addData("Right Difference", rightDifference + " " + getSaturationBrightness(leftDifference));
+		opMode.debug.addData("Right Difference", rightDifference + " // " + getSaturationBrightness(leftDifference) + " // " + getLineUpper());
+		opMode.debug.addData("Left Difference", leftDifference + " // " + getSaturationBrightness(leftDifference) + " // " + getLineLower());
 	}
 
 	public Line getLineUpper()
@@ -91,8 +91,8 @@ public class ColorSensors extends Behavior
 
 	private static Vector2 getSaturationBrightness(Vector3 color)
 	{
-		float cmax = Math.max(color.x, Math.max(color.y, color.z)) / 255f;
-		float cmin = Math.min(color.x, Math.min(color.y, color.z)) / 255f;
+		float cmax = Math.max(color.x, Math.max(color.y, color.z));
+		float cmin = Math.min(color.x, Math.min(color.y, color.z));
 
 		float saturation = Mathf.almostEquals(cmax, 0f) ? 0f : (cmax - cmin) / cmax;
 		return new Vector2(saturation * 100f, cmax * 100f);
@@ -100,7 +100,8 @@ public class ColorSensors extends Behavior
 
 	private static Vector3 getColor(ColorSensor sensor)
 	{
-		return new Vector3(sensor.red(), sensor.green(), sensor.blue());
+		float luminance = sensor.alpha();
+		return new Vector3(sensor.red() / luminance, sensor.green() / luminance, sensor.blue() / luminance);
 	}
 
 	public enum Line

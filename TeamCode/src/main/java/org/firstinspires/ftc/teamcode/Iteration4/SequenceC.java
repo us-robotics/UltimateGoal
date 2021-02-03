@@ -106,7 +106,7 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-6f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -6f)));
 		wait(0.4f);
 
 		execute(drivetrain, new Drivetrain.Rotate(180f));

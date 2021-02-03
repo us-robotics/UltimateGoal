@@ -46,10 +46,10 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	private Servo grabber;
 	private TouchSensor touch;
 
-	private Position targetPosition = Position.FOLD;
+	private Position targetPosition = Position.RESET;
 	private boolean isReleased;
 
-	private static final float RESET_POWER = -0.18f;
+	private static final float RESET_POWER = -0.38f;
 
 	@Override
 	public void update()
@@ -63,10 +63,10 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 
-			if (magnitude > 0.5f)
+			if (magnitude > 0.1f)
 			{
 				if (Math.abs(direction.x) > Math.abs(direction.y)) targetPosition = Position.GRAB;
-				else targetPosition = direction.y > 0f ? Position.HIGH : Position.FOLD;
+				else targetPosition = direction.y > 0f ? Position.HIGH : Position.RESET;
 			}
 		}
 
@@ -85,7 +85,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			targetPosition = move.position;
 			apply(); //We need to actually set the target to check if the motor is busy or not
 
-			if (move.position == Position.FOLD || !arm.isBusy()) move.finishJob();
+			if (move.position != Position.RESET && !arm.isBusy()) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
@@ -101,16 +101,23 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	{
 		grabber.setPosition(isReleased ? 0.45f : 0f);
 
-		if (targetPosition == Position.FOLD)
+		if (targetPosition == Position.RESET)
 		{
-			if (touch.isPressed()) arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-			arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-			arm.setPower(RESET_POWER);
+			if (touch.isPressed())
+			{
+				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+				targetPosition = Position.FOLD;
+			}
+			else
+			{
+				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				arm.setPower(RESET_POWER);
+			}
 		}
-		else
+
+		if (targetPosition != Position.RESET)
 		{
-			int position;
+			int position = 0;
 
 			switch (targetPosition)
 			{
@@ -124,29 +131,17 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 					position = 620;
 					break;
 				}
-				default:
-				{
-					throw new IllegalArgumentException(targetPosition.toString());
-				}
 			}
 
+			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 			arm.setTargetPosition(position);
-
-			if (arm.isBusy())
-			{
-				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-				arm.setPower(0.55d);
-			}
-			else
-			{
-				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-				arm.setPower(0d);
-			}
+			arm.setPower(0.52d);
 		}
 	}
 
 	public enum Position
 	{
+		RESET,
 		FOLD,
 		GRAB,
 		HIGH
