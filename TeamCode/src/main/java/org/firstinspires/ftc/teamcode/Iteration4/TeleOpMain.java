@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Iteration4;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,8 +10,8 @@ import FTCEngine.Core.Auto.ConfigOption;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
 
-@TeleOp(name = "Y20I4 TeleOpMain")
-public class Y20I4TeleOpMain extends OpModeBase
+@TeleOp(name = "Ultimate Goal TeleOpMain")
+public class TeleOpMain extends OpModeBase
 {
 	@Override
 	public void addBehaviors(List<Behavior> behaviorList)
@@ -22,7 +22,6 @@ public class Y20I4TeleOpMain extends OpModeBase
 		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
-		behaviorList.add(new CameraVision(this));
 //		behaviorList.add(new ColorSensors(this));
 	}
 

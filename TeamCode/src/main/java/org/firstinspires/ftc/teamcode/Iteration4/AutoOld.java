@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Iteration4;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -12,8 +12,8 @@ import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Vector2;
 
-@Autonomous(name = "Y20I4 AutoOld")
-public class Y20I4AutoOld extends OpModeBase
+@Autonomous(name = "Ultimate Goal AutoOld")
+public class AutoOld extends OpModeBase
 {
 	@Override
 	public void addBehaviors(List<Behavior> behaviorList)

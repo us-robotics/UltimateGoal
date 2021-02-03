@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -162,14 +163,32 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			float difference = move.distance - getAveragePosition();
 
-			if (Math.abs(difference) < Threshold)
+			if (difference < Threshold)
 			{
 				difference = 0f;
 				move.finishJob();
 			}
 
-			difference = Mathf.clamp(difference / Cushion, -move.maxPower, move.maxPower);
-			setDirectInputs(move.direction.mul(difference), 0f);
+			Vector2 direction;
+
+			if (move instanceof Trace)
+			{
+				ColorSensors sensor = opMode.getBehavior(ColorSensors.class);
+
+				ColorSensors.Line upperLine = sensor.getLineUpper();
+				ColorSensors.Line lowerLine = sensor.getLineLower();
+
+				float y = 0f;
+
+				if (upperLine != ColorSensors.Line.NONE) y++;
+				if (lowerLine == ColorSensors.Line.NONE) y--;
+
+				direction = new Vector2(move.direction.x, y);
+			}
+			else direction = move.direction;
+
+			float power = Math.min(difference / Cushion, move.maxPower);
+			setDirectInputs(direction.normalize().mul(power), 0f);
 		}
 
 		if (job instanceof Drivetrain.Drive)
@@ -203,9 +222,9 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			setDirectInputs(Vector2.zero, difference * rotate.power * direction);
 		}
 
-		if (job instanceof Drivetrain.Reset)
+		if (job instanceof Reset)
 		{
-			Drivetrain.Reset reset = (Drivetrain.Reset)job;
+			Reset reset = (Reset)job;
 
 			persistentAngle = getAngle();
 			reset.finishJob();
@@ -341,5 +360,17 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	public static class Reset extends Drivetrain.Job
 	{
 
+	}
+
+	/**
+	 * Moves the drivetrain horizontally by strafing against a line
+	 * while correcting the vertical position using color sensors
+	 */
+	public static class Trace extends Move
+	{
+		public Trace(float movement, float maxPower)
+		{
+			super(Vector2.right.mul(movement), maxPower);
+		}
 	}
 }

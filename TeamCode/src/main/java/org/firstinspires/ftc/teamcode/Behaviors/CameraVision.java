@@ -9,6 +9,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.*;
 
 import FTCEngine.Core.*;
+import FTCEngine.Core.Auto.JobSequence;
 
 public class CameraVision extends Behavior
 {
@@ -71,14 +72,35 @@ public class CameraVision extends Behavior
 		}
 	}
 
+	public boolean available()
+	{
+		return pipeline != null && pipeline.getMeanUpper() != null && pipeline.getMeanLower() != null;
+	}
+
+	public Position getPosition()
+	{
+		if (!available()) throw new IllegalStateException("Attempting to access position while vision is unavailable!");
+
+		double saturationUpper = pipeline.getMeanUpper().val[0];
+		double saturationLower = pipeline.getMeanLower().val[0];
+
+		final float Threshold = 100f;
+
+		if (saturationLower < Threshold) return Position.A;
+		return saturationUpper > Threshold ? Position.C : Position.B;
+	}
+
 	public void closeCamera()
 	{
 		camera.stopStreaming();
+		camera.closeCameraDeviceAsync(null);
+
+		pipeline = null;
 	}
 
 	public enum Position
 	{
-		A, B, C
+		A, B, C;
 	}
 
 	private static class CameraPipeline extends OpenCvPipeline
