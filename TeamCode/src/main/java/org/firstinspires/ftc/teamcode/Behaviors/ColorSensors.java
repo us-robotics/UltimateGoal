@@ -43,6 +43,8 @@ public class ColorSensors extends Behavior
 
 		//Base line should converge towards the average
 		baseLine = baseLine.mul((count - 1f) / count).add(average.div(count));
+
+		opMode.debug.addData("Baseline", baseLine);
 	}
 
 	private ColorSensor left;
@@ -58,6 +60,8 @@ public class ColorSensors extends Behavior
 
 		Vector3 leftDifference = getColor(left).sub(baseLine);
 		Vector3 rightDifference = getColor(right).sub(baseLine);
+
+		opMode.debug.addData("Baseline", baseLine);
 
 		opMode.debug.addData("Left Difference", leftDifference + " " + getSaturationBrightness(leftDifference));
 		opMode.debug.addData("Right Difference", rightDifference + " " + getSaturationBrightness(leftDifference));
@@ -81,7 +85,7 @@ public class ColorSensors extends Behavior
 		final float SaturationThreshold = 50f;
 		final float BrightnessThreshold = 20f;
 
-		if (sb.x > SaturationThreshold) return Line.COLORED;
+		if (sb.x > SaturationThreshold) return Line.COLOR;
 		return sb.y > BrightnessThreshold ? Line.WHITE : Line.NONE;
 	}
 
@@ -102,7 +106,7 @@ public class ColorSensors extends Behavior
 	public enum Line
 	{
 		NONE,
-		COLORED,
+		COLOR,
 		WHITE
 	}
 }

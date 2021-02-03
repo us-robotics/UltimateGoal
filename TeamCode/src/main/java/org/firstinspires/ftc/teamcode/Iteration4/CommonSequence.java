@@ -19,14 +19,14 @@ public abstract class CommonSequence extends JobSequence
 		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(-leftDistance, 0f), 0.75f));
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
 
 		execute();
 
-		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(rightDistance, 0f), 0.45f));
-
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 		wait(0.5f);
 

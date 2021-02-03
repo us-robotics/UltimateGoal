@@ -93,7 +93,14 @@ public class CameraVision extends Behavior
 	public void closeCamera()
 	{
 		camera.stopStreaming();
-		camera.closeCameraDeviceAsync(null);
+		camera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
+		{
+			@Override
+			public void onClose()
+			{
+
+			}
+		});
 
 		pipeline = null;
 	}

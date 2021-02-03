@@ -32,7 +32,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 		touch = hardwareMap.touchSensor.get("touch");
 
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
-		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	private Position targetPosition = Position.FOLD;
 	private boolean isReleased;
 
-	private static final float RESET_POWER = -0.28f;
+	private static final float RESET_POWER = -0.18f;
 
 	@Override
 	public void update()
@@ -103,12 +103,9 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 		if (targetPosition == Position.FOLD)
 		{
-			if (touch.isPressed())
-			{
-				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-			}
+			if (touch.isPressed()) arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+			arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 			arm.setPower(RESET_POWER);
 		}
 		else
@@ -133,9 +130,18 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 				}
 			}
 
-			arm.setPower(0.65d);
 			arm.setTargetPosition(position);
-			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+			if (arm.isBusy())
+			{
+				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+				arm.setPower(0.55d);
+			}
+			else
+			{
+				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				arm.setPower(0d);
+			}
 		}
 	}
 

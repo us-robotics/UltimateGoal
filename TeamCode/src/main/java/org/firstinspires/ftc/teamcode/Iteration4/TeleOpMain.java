@@ -22,7 +22,7 @@ public class TeleOpMain extends OpModeBase
 		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
-//		behaviorList.add(new ColorSensors(this));
+		behaviorList.add(new ColorSensors(this));
 	}
 
 	@Override
