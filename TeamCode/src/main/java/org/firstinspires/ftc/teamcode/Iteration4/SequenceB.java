@@ -30,19 +30,45 @@ public class SequenceB extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(-1f, 0f), .5f));
-		wait(.4f);
+		wait(.7f);
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+		execute(drivetrain, new Drivetrain.Reset());
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -90f)));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), .5f));
-		wait(.4f);
+		execute(drivetrain, new Drivetrain.Rotate(180f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 40f)));
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(1f, 0f), .5f));
+		wait(.7f);
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+		execute(drivetrain, new Drivetrain.Reset());
 
-		grabWobble(4f, 9f);
+		//Launch ring 1
+		execute(launcher, new Launcher.Launch(true));
+		wait(1f);
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 76f)));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-16f, 0f)));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(1f, 0f)));
+		execute(launcher, new Launcher.Launch(false));
+		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
+		wait(1f);
+
+		//Launch ring 2
+		execute(launcher, new Launcher.Launch(true));
+		wait(1f);
+
+		execute(launcher, new Launcher.Launch(false));
+		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
+
+		execute(intake, new Intake.Run(0.4f));
+		wait(0.5f);
+		execute(intake, new Intake.Run(0f));
+		wait(0.5f);
+
+		//Launch ring 3
+		execute(launcher, new Launcher.Launch(true));
+		wait(1f);
+
+		execute(launcher, new Launcher.Launch(false));
+		execute(launcher, new Launcher.Prime(0f, false));
+
+
 	}
 }
