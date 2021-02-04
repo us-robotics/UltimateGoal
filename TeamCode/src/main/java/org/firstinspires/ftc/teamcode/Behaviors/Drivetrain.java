@@ -169,23 +169,18 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 				move.finishJob();
 			}
 
-			Vector2 direction;
+			Vector2 direction = move.direction;
 
 			if (move instanceof Trace)
 			{
 				ColorSensors sensor = opMode.getBehavior(ColorSensors.class);
 
-				ColorSensors.Line upperLine = sensor.getLineUpper();
-				ColorSensors.Line lowerLine = sensor.getLineLower();
+				boolean upper = sensor.getLineUpper() != ColorSensors.Line.NONE;
+				boolean lower = sensor.getLineLower() == ColorSensors.Line.NONE;
 
-				float y = 0f;
-
-				if (upperLine != ColorSensors.Line.NONE) y++;
-				if (lowerLine == ColorSensors.Line.NONE) y--;
-
-				direction = new Vector2(move.direction.x, y);
+				int y = upper ? 1 : lower ? -1 : 0;
+				if (y != 0) direction = new Vector2(0f, y);
 			}
-			else direction = move.direction;
 
 			float power = Math.min(difference / Cushion, move.maxPower);
 			setDirectInputs(direction.normalize().mul(power), 0f);

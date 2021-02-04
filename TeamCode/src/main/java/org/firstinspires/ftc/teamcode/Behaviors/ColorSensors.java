@@ -33,57 +33,38 @@ public class ColorSensors extends Behavior
 		right.enableLed(true);
 	}
 
-	@Override
-	public void awakeUpdate()
-	{
-		super.awakeUpdate();
-
-		Vector3 average = getColor(left).add(getColor(right)).div(2f);
-		float count = ++baseLineCount;
-
-		//Base line should converge towards the average
-		baseLine = baseLine.mul((count - 1f) / count).add(average.div(count));
-
-		opMode.debug.addData("Baseline", baseLine);
-	}
-
 	private ColorSensor left;
 	private ColorSensor right;
-
-	private Vector3 baseLine = Vector3.zero;
-	private int baseLineCount;
 
 	@Override
 	public void update()
 	{
 		super.update();
 
-		Vector3 rightDifference = getColor(right).sub(baseLine);
-		Vector3 leftDifference = getColor(left).sub(baseLine);
+		Vector3 rightColor = getColor(right);
+		Vector3 leftColor = getColor(left);
 
-		opMode.debug.addData("Baseline", baseLine);
-
-		opMode.debug.addData("Right Difference", rightDifference + " // " + getSaturationBrightness(leftDifference) + " // " + getLineUpper());
-		opMode.debug.addData("Left Difference", leftDifference + " // " + getSaturationBrightness(leftDifference) + " // " + getLineLower());
+		opMode.debug.addData("Right", rightColor + " // " + getSaturationBrightness(rightColor) + " // " + getLineLower());
+		opMode.debug.addData("Left", leftColor + " // " + getSaturationBrightness(leftColor) + " // " + getLineUpper());
 	}
 
 	public Line getLineUpper()
 	{
-		return getLine(right);
+		return getLine(left);
 	}
 
 	public Line getLineLower()
 	{
-		return getLine(left);
+		return getLine(right);
 	}
 
 	private Line getLine(ColorSensor sensor)
 	{
-		Vector3 difference = getColor(sensor).sub(baseLine);
-		Vector2 sb = getSaturationBrightness(difference); //Saturation and brightness/value
+		Vector3 color = getColor(sensor);
+		Vector2 sb = getSaturationBrightness(color); //Saturation and brightness/value
 
-		final float SaturationThreshold = 50f;
-		final float BrightnessThreshold = 20f;
+		final float SaturationThreshold = 45f;
+		final float BrightnessThreshold = 45f;
 
 		if (sb.x > SaturationThreshold) return Line.COLOR;
 		return sb.y > BrightnessThreshold ? Line.WHITE : Line.NONE;
