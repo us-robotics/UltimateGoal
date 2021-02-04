@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
+import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber.Position;
 
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Vector2;
@@ -22,6 +23,8 @@ public class SequenceC extends CommonSequence
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
+
+		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
 		grabWobble(10f, 9f);
 
@@ -44,7 +47,7 @@ public class SequenceC extends CommonSequence
 
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
+		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
 		//Forward to launch position
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 59f)));
@@ -117,7 +120,7 @@ public class SequenceC extends CommonSequence
 		wait(0.5f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
+		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
 	}
 }
