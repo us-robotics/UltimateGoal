@@ -40,7 +40,7 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
-		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
