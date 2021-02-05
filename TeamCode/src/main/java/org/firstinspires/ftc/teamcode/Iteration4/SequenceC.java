@@ -53,7 +53,7 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 59f)));
 		wait(0.5f);
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(24f, 0f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(25f, 0f)));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(1f, 0f), 0.55f));
 
 		wait(0.7f);
