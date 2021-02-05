@@ -23,6 +23,7 @@ public class TeleOpMain extends OpModeBase
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
 		behaviorList.add(new ColorSensors(this));
+		behaviorList.add(new DistanceSensors(this));
 	}
 
 	@Override

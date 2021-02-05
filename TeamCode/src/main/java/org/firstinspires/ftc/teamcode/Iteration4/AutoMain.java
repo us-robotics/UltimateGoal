@@ -36,8 +36,6 @@ public class AutoMain extends OpModeBase
 	@Override
 	public void loop()
 	{
-		super.loop();
-
 		CameraVision vision = getBehavior(CameraVision.class);
 
 		if (vision.available())
@@ -65,6 +63,8 @@ public class AutoMain extends OpModeBase
 			}
 		}
 
-		debug.addData("Target Zone", targetZone);
+		if (targetZone != null) debug.addData("Target Zone", targetZone);
+
+		super.loop();
 	}
 }

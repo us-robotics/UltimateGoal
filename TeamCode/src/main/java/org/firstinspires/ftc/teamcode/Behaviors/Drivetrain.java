@@ -181,6 +181,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 //				int y = upper ? 1 : lower ? -1 : 0;
 
 				int y = lower ? -1 : 0;
+				if (y == 0) job.finishJob();
+
 				direction = new Vector2(0f, y);
 			}
 

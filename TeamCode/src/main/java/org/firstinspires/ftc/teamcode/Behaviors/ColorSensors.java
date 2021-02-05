@@ -44,8 +44,8 @@ public class ColorSensors extends Behavior
 		Vector3 rightColor = getColor(right);
 		Vector3 leftColor = getColor(left);
 
-		opMode.debug.addData("Right", rightColor + " // " + getSaturationBrightness(rightColor) + " // " + getLineLower());
-		opMode.debug.addData("Left", leftColor + " // " + getSaturationBrightness(leftColor) + " // " + getLineUpper());
+		opMode.debug.addData("Left Line", getLineUpper() + " // " + getSaturationBrightness(leftColor));
+		opMode.debug.addData("Right Line", getLineLower() + " // " + getSaturationBrightness(rightColor));
 	}
 
 	public Line getLineUpper()
@@ -64,7 +64,7 @@ public class ColorSensors extends Behavior
 		Vector2 sb = getSaturationBrightness(color); //Saturation and brightness/value
 
 		final float SaturationThreshold = 45f;
-		final float BrightnessThreshold = 45f;
+		final float BrightnessThreshold = 2e5f;
 
 		if (sb.x > SaturationThreshold) return Line.COLOR;
 		return sb.y > BrightnessThreshold ? Line.WHITE : Line.NONE;
