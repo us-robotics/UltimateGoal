@@ -24,9 +24,9 @@ public class SequenceC extends CommonSequence
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
 
-		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
-		grabWobble(10f, 9f);
+		//grabWobble(10f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
 
@@ -43,11 +43,11 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
-		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
 		//Forward to launch position
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 59f)));
@@ -104,7 +104,7 @@ public class SequenceC extends CommonSequence
 
 
 		//Grab and place wobble
-		grabWobble(4f, 9f);
+		//grabWobble(4f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
@@ -116,11 +116,11 @@ public class SequenceC extends CommonSequence
 
 		wait(0.5f);
 
-		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(0.5f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
-		execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
 	}
 }
