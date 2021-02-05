@@ -30,6 +30,7 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
 
+
 		execute(drivetrain, new Drivetrain.Move(new Vector2(20f, 0f)));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
@@ -43,6 +44,7 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB)
 		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
@@ -107,7 +109,7 @@ public class SequenceC extends CommonSequence
 		//grabWobble(4f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 112f)));
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -6f)));
 		wait(0.4f);
@@ -115,7 +117,7 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Rotate(180f));
 
 		wait(0.5f);
-
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB));
 		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(0.5f);
 
