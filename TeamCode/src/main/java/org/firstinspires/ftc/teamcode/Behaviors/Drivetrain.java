@@ -178,8 +178,10 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 				boolean upper = sensor.getLineUpper() != ColorSensors.Line.NONE;
 				boolean lower = sensor.getLineLower() == ColorSensors.Line.NONE;
 
-				int y = upper ? 1 : lower ? -1 : 0;
-				if (y != 0) direction = new Vector2(0f, y);
+//				int y = upper ? 1 : lower ? -1 : 0;
+
+				int y = lower ? -1 : 0;
+				direction = new Vector2(0f, y);
 			}
 
 			float power = Math.min(difference / Cushion, move.maxPower);

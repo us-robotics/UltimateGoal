@@ -49,7 +49,7 @@ public class AutoColorSensorsTest extends OpModeBase
 		protected void queueJobs()
 		{
 			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
-			execute(drivetrain, new Drivetrain.Trace(-72f, 0.25f));
+			execute(drivetrain, new Drivetrain.Trace(-72f, 0.1f));
 		}
 	}
 }

@@ -81,8 +81,7 @@ public class ColorSensors extends Behavior
 
 	private static Vector3 getColor(ColorSensor sensor)
 	{
-		float luminance = sensor.alpha();
-		return new Vector3(sensor.red() / luminance, sensor.green() / luminance, sensor.blue() / luminance);
+		return new Vector3(sensor.red(), sensor.green(), sensor.blue());
 	}
 
 	public enum Line
