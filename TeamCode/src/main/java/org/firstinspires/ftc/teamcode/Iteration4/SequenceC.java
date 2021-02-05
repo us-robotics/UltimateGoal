@@ -121,6 +121,6 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-10f, 0f)));
 		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 36f)));
 	}
 }
