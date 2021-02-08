@@ -72,7 +72,15 @@ public class SequenceB extends CommonSequence
 		execute(launcher, new Launcher.Launch(false));
 		execute(launcher, new Launcher.Prime(0f, false));
 
-		execute();
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-24f, 0f)));
+		execute(drivetrain, new Drivetrain.Rotate(180f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -80f)));
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), .7f));
+		wait(.8f);
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+		execute(drivetrain, new Drivetrain.Reset());
+
+		grabWobble(20f, 9f);
 
 
 	}
