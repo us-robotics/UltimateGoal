@@ -1,0 +1,291 @@
+Index: TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoA.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoA.java	(date 1612800366000)
++++ TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoA.java	(date 1612800366000)
+@@ -0,0 +1,87 @@
++spackage org.firstinspires.ftc.teamcode;
++
++import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
++
++import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
++import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
++import org.firstinspires.ftc.teamcode.Behaviors.Intake;
++import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
++import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
++
++import java.util.List;
++
++import FTCEngine.Core.Auto.ConfigOption;
++import FTCEngine.Core.Auto.JobSequence;
++import FTCEngine.Core.Behavior;
++import FTCEngine.Core.OpModeBase;
++import FTCEngine.Math.Vector2;
++
++@Autonomous(name = "AutoA")
++public class AutoA extends OpModeBase {
++
++    @Override
++    protected void addBehaviors(List<Behavior> behaviorList) {
++        behaviorList.add(new Drivetrain(this));
++        behaviorList.add(new WobbleGrabber(this));
++        behaviorList.add(new Launcher(this));
++        behaviorList.add(new Intake(this));
++        behaviorList.add(new InertialMeasurementUnit(this));
++    }
++
++    @Override
++    protected void appendConfigOptions(List<ConfigOption> options) {
++
++    }
++
++    @Override
++    public void init() {
++        super.init();
++        assignSequence(new AutoSequence(this));
++    }
++
++    @Override
++    public void loop()
++    {
++        debug.addData("FPS", 1f / time.getDeltaTime());
++        super.loop();
++    }
++
++    private static class AutoSequence extends JobSequence {
++        public AutoSequence(OpModeBase opMode) {
++            super(opMode);
++        }
++
++        @Override
++        protected void queueJobs() {
++            Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
++            WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
++            Launcher launcher = opMode.getBehavior(Launcher.class);
++            Intake intake = opMode.getBehavior(Intake.class);
++
++            grabWobble(10f, 9f);
++
++            //execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 92f)));
++            //execute();
++
++        }
++
++        private void grabWobble(float leftDistance, float rightDistance)
++        {
++            Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
++            WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
++
++            execute(wobbleGrabber, new WobbleGrabber.Grab(false));
++            execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
++
++            execute(drivetrain, new Drivetrain.Move(new Vector2(-leftDistance, 0f), 0.75f));
++
++            execute(drivetrain, new Drivetrain.Move(new Vector2(rightDistance, 0f), 0.55f));
++
++            wait(0.3f);
++            execute(wobbleGrabber, new WobbleGrabber.Grab(true));
++            execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.HIGH));
++
++            execute(drivetrain, new Drivetrain.Move(new Vector2(-4f, 0f), 0.75f));
++        }
++    }
++}
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\n\nbuildscript {\n    \n    repositories {\n        google()\n        jcenter()\n    }\n    dependencies {\n        classpath 'com.android.tools.build:gradle:3.4.2'\n        \n\n        // NOTE: Do not place your application dependencies here; they belong\n        // in the individual module build.gradle files\n    }\n}\n\nallprojects {\n    repositories {\n        google()\n        jcenter()\n        maven {\n            url 'https://dl.bintray.com/openftc/maven';\n        }\n        maven {\n            url = \"https://dl.bintray.com/first-tech-challenge/ftcsdk/\"\n        }\n    }\n}\n\ntask clean(type: Delete) {\n    delete rootProject.buildDir\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision b1c2a38aef8874486d0327b32ef0836b27b84545)
++++ build.gradle	(date 1612301607000)
+@@ -7,7 +7,7 @@
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:3.4.2'
++        classpath 'com.android.tools.build:gradle:4.1.2'
+         
+ 
+         // NOTE: Do not place your application dependencies here; they belong
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Fri Aug 09 15:50:47 EDT 2019\ndistributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-5.1.1-all.zip\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradle/wrapper/gradle-wrapper.properties	(revision b1c2a38aef8874486d0327b32ef0836b27b84545)
++++ gradle/wrapper/gradle-wrapper.properties	(date 1612301607000)
+@@ -1,6 +1,6 @@
+-#Fri Aug 09 15:50:47 EDT 2019
++#Tue Feb 02 16:33:27 EST 2021
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-5.1.1-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-6.5-bin.zip
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(date 1612301332000)
++++ .idea/runConfigurations.xml	(date 1612301332000)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RunConfigurationProducerService">
++    <option name="ignoredProducers">
++      <set>
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
++        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
++      </set>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/codeStyles/codeStyleConfig.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/codeStyleConfig.xml	(date 1612301332000)
++++ .idea/codeStyles/codeStyleConfig.xml	(date 1612301332000)
+@@ -0,0 +1,5 @@
++<component name="ProjectCodeStyleConfiguration">
++  <state>
++    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Default" />
++  </state>
++</component>
+\ No newline at end of file
+Index: .idea/codeStyles/Project.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/codeStyles/Project.xml	(date 1612301332000)
++++ .idea/codeStyles/Project.xml	(date 1612301332000)
+@@ -0,0 +1,116 @@
++<component name="ProjectCodeStyleConfiguration">
++  <code_scheme name="Project" version="173">
++    <codeStyleSettings language="XML">
++      <indentOptions>
++        <option name="CONTINUATION_INDENT_SIZE" value="4" />
++      </indentOptions>
++      <arrangement>
++        <rules>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>xmlns:android</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>^$</XML_NAMESPACE>
++                </AND>
++              </match>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>xmlns:.*</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>^$</XML_NAMESPACE>
++                </AND>
++              </match>
++              <order>BY_NAME</order>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>.*:id</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
++                </AND>
++              </match>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>.*:name</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
++                </AND>
++              </match>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>name</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>^$</XML_NAMESPACE>
++                </AND>
++              </match>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>style</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>^$</XML_NAMESPACE>
++                </AND>
++              </match>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>.*</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>^$</XML_NAMESPACE>
++                </AND>
++              </match>
++              <order>BY_NAME</order>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>.*</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
++                </AND>
++              </match>
++              <order>ANDROID_ATTRIBUTE_ORDER</order>
++            </rule>
++          </section>
++          <section>
++            <rule>
++              <match>
++                <AND>
++                  <NAME>.*</NAME>
++                  <XML_ATTRIBUTE />
++                  <XML_NAMESPACE>.*</XML_NAMESPACE>
++                </AND>
++              </match>
++              <order>BY_NAME</order>
++            </rule>
++          </section>
++        </rules>
++      </arrangement>
++    </codeStyleSettings>
++  </code_scheme>
++</component>
+\ No newline at end of file

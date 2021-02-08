@@ -8,21 +8,22 @@ import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Vector2;
 
-public class SequenceA extends CommonSequence
-{
-	public SequenceA(OpModeBase opMode)
-	{
-		super(opMode);
-	}
+public class SequenceA extends CommonSequence {
+    public SequenceA(OpModeBase opMode) {
+        super(opMode);
+    }
 
-	@Override
-	protected void queueJobs()
-	{
-		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
-		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
-		Launcher launcher = opMode.getBehavior(Launcher.class);
-		Intake intake = opMode.getBehavior(Intake.class);
+    @Override
+    protected void queueJobs() {
+        Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+        WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
+        Launcher launcher = opMode.getBehavior(Launcher.class);
+        Intake intake = opMode.getBehavior(Intake.class);
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 48f)));
-	}
+        //execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+        //grabWobble(10f, 9f);
+
+        execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
+        execute(drivetrain, new Drivetrain.Rotate(90f));
+    }
 }

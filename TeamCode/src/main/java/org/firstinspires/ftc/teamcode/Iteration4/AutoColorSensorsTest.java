@@ -60,17 +60,17 @@ public class AutoColorSensorsTest extends OpModeBase
 
 			execute(launcher, new Launcher.Launch(false));
 			execute(drivetrain, new Drivetrain.Trace(56f));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 3f)));
 
 			execute(launcher, new Launcher.Launch(true));
 			wait(1f);
 
 			execute(launcher, new Launcher.Launch(false));
-			execute(drivetrain, new Drivetrain.Trace(81f));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+			//execute(drivetrain, new Drivetrain.Trace(81f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 15f)));
 
 			execute(launcher, new Launcher.Launch(true));
-			wait(1f);
+			//wait(1f);
 
 			execute(launcher, new Launcher.Launch(false));
 			execute(drivetrain, new Drivetrain.Trace(106f));

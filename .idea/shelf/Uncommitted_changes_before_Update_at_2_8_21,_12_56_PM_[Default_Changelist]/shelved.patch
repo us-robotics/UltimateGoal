@@ -1,0 +1,12 @@
+Index: TeamCode/src/main/java/FTCEngine
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- TeamCode/src/main/java/FTCEngine	(revision 29377425818c598fdd69d8dfc461aceb5cf3e16f)
++++ TeamCode/src/main/java/FTCEngine	(date 1612284380000)
+@@ -1,1 +1,1 @@
+-b659bcec0cbaeddff611f425414000a21b14fae7
+\ No newline at end of file
++58fbafc5239dc854d785df37242627ee736e35b5
+\ No newline at end of file
