@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -25,20 +24,20 @@ public class DistanceSensors extends Behavior
 	public void awake(HardwareMap hardwareMap)
 	{
 		super.awake(hardwareMap);
-		distance = hardwareMap.get(DistanceSensor.class, "distance");
+		sensor = hardwareMap.get(DistanceSensor.class, "distance");
 	}
 
-	DistanceSensor distance;
+	DistanceSensor sensor;
 
 	@Override
-	public void update()
+	public void awakeUpdate()
 	{
-		super.update();
+		super.awakeUpdate();
 		opMode.debug.addData("Distance", getDistance());
 	}
 
 	public float getDistance()
 	{
-		return (float)distance.getDistance(DistanceUnit.CM);
+		return (float)sensor.getDistance(DistanceUnit.CM);
 	}
 }

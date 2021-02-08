@@ -77,8 +77,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.1f)
 			{
-				exponent = 0.64f;
-				multiplier = 0.48f;
+				exponent = 0.62f;
+				multiplier = 0.44f;
 			}
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
@@ -97,7 +97,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		if (angleCorrection)
 		{
 			float deviation = Mathf.toSignedAngle(getAngle() - persistentAngle);
-			setRawVelocities(positionalInput, deviation / 25f);
+			setRawVelocities(positionalInput, deviation / 28f);
 		}
 		else
 		{
@@ -150,10 +150,10 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 		if (job instanceof Trace)
 		{
-			Trace rotate = (Trace)getCurrentJob();
+			Trace trace = (Trace)getCurrentJob();
 			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
 
-			rotate.startDistance = distance.getDistance();
+			trace.startDistance = distance.getDistance();
 		}
 	}
 
@@ -232,22 +232,28 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			int y = front ? 1 : back ? -1 : 0;
 
-			final float StrafePower = 0.42f;
-			final float CorrectPower = 0.22f;
+			final float StrafePower = 0.46f;
+			final float CorrectPower = 0.2f;
 
 			if (y == 0)
 			{
 				float percent = (distance.getDistance() - trace.startDistance) / (trace.distance - trace.startDistance);
-				float strafe = -StrafePower;
+				float strafe;
 
 				if (percent >= 1f)
 				{
 					strafe = 0f;
 					job.finishJob();
 				}
-				else strafe *= Math.pow(1f - percent, 0.75f);
+				else
+				{
+					final float MinPowerPercent = 0.75f;
 
-				setDirectInputs(Vector2.right.mul(strafe), 0f);
+					strafe = Mathf.sigmoid(percent);
+					strafe = strafe * (1f - MinPowerPercent) + MinPowerPercent;
+				}
+
+				setDirectInputs(Vector2.left.mul(strafe * StrafePower), 0f);
 			}
 			else setDirectInputs(Vector2.up.mul(y * CorrectPower), 0f);
 		}
@@ -264,7 +270,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		for (DcMotor motor : motors)
 		{
 			motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-			motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //Changed from run without encoders
+			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		}
 	}
 
