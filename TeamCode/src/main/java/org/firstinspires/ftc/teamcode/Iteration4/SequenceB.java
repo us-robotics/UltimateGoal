@@ -24,7 +24,7 @@ public class SequenceB extends CommonSequence
 
 		grabWobble(10f, 9f); //ends with wobble high
 
-		//drive to square, let go, reset on wall
+		//drive to square, let go, reset on wall ed
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
@@ -72,6 +72,7 @@ public class SequenceB extends CommonSequence
 		execute(launcher, new Launcher.Launch(false));
 		execute(launcher, new Launcher.Prime(0f, false));
 
+		execute();
 
 
 	}
