@@ -82,6 +82,8 @@ public class SequenceB extends CommonSequence
 
 		grabWobble(20f, 9f);
 
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -108f)));
+
 
 	}
 }
