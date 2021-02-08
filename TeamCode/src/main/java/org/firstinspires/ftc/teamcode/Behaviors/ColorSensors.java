@@ -44,16 +44,16 @@ public class ColorSensors extends Behavior
 		Vector3 rightColor = getColor(right);
 		Vector3 leftColor = getColor(left);
 
-		opMode.debug.addData("Left Line", getLineUpper() + " // " + getSaturationBrightness(leftColor));
-		opMode.debug.addData("Right Line", getLineLower() + " // " + getSaturationBrightness(rightColor));
+		opMode.debug.addData("Front Line", getLineFront() + " // " + getSaturationBrightness(leftColor));
+		opMode.debug.addData("Back Line", getLineBack() + " // " + getSaturationBrightness(rightColor));
 	}
 
-	public Line getLineUpper()
+	public Line getLineFront()
 	{
 		return getLine(left);
 	}
 
-	public Line getLineLower()
+	public Line getLineBack()
 	{
 		return getLine(right);
 	}

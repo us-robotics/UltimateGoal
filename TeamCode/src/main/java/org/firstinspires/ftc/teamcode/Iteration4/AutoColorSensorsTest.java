@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Behaviors.CameraVision;
 import org.firstinspires.ftc.teamcode.Behaviors.ColorSensors;
+import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
+import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import FTCEngine.Core.Auto.ConfigOption;
 import FTCEngine.Core.Auto.JobSequence;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Vector2;
 
 @Autonomous(name = "Ultimate Goal AutoColorSensorsTest")
 public class AutoColorSensorsTest extends OpModeBase
@@ -23,6 +26,8 @@ public class AutoColorSensorsTest extends OpModeBase
 		behaviorList.add(new Drivetrain(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new ColorSensors(this));
+		behaviorList.add(new DistanceSensors(this));
+		behaviorList.add(new Launcher(this));
 	}
 
 	@Override
@@ -49,7 +54,30 @@ public class AutoColorSensorsTest extends OpModeBase
 		protected void queueJobs()
 		{
 			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
-			execute(drivetrain, new Drivetrain.Trace(-72f, 0.15f));
+			Launcher launcher = opMode.getBehavior(Launcher.class);
+
+			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
+
+			execute(launcher, new Launcher.Launch(false));
+			execute(drivetrain, new Drivetrain.Trace(56f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+
+			execute(launcher, new Launcher.Launch(true));
+			wait(1f);
+
+			execute(launcher, new Launcher.Launch(false));
+			execute(drivetrain, new Drivetrain.Trace(81f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+
+			execute(launcher, new Launcher.Launch(true));
+			wait(1f);
+
+			execute(launcher, new Launcher.Launch(false));
+			execute(drivetrain, new Drivetrain.Trace(106f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+
+			execute(launcher, new Launcher.Launch(true));
+			wait(1f);
 		}
 	}
 }

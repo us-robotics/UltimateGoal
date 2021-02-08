@@ -34,6 +34,11 @@ public class DistanceSensors extends Behavior
 	public void update()
 	{
 		super.update();
-		opMode.debug.addData("Distance", distance.getDistance(DistanceUnit.CM));
+		opMode.debug.addData("Distance", getDistance());
+	}
+
+	public float getDistance()
+	{
+		return (float)distance.getDistance(DistanceUnit.CM);
 	}
 }
