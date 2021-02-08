@@ -22,14 +22,14 @@ public class SequenceB extends CommonSequence
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
 
-		grabWobble(10f, 9f); //ends with wobble high
+		//grabWobble(10f, 9f); //ends with wobble high
 
 		//drive to square, let go, reset on wall ed
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
-		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
+		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(.2f);
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(-1f, 0f), .7f));
 		wait(.8f);
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
@@ -80,7 +80,7 @@ public class SequenceB extends CommonSequence
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
 
-		grabWobble(20f, 9f);
+		//grabWobble(20f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -108f)));
 
