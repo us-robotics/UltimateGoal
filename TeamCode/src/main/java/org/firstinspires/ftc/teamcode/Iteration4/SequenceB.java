@@ -36,7 +36,8 @@ public class SequenceB extends CommonSequence
 		execute(drivetrain, new Drivetrain.Reset());
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0)));
-		execute(drivetrain, new Drivetrain.Rotate(180f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 30f)));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(1f, 0f), .7f));
 		wait(.8f);
@@ -73,7 +74,8 @@ public class SequenceB extends CommonSequence
 		execute(launcher, new Launcher.Prime(0f, false));
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-8f, 0f)));
-		execute(drivetrain, new Drivetrain.Rotate(180f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -80f)));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), .7f));
 		wait(.8f);
@@ -83,6 +85,10 @@ public class SequenceB extends CommonSequence
 		//grabWobble(20f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 108f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-24f, 0f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 96f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 
 	}
