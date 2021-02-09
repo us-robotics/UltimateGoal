@@ -20,7 +20,7 @@ public abstract class CommonSequence extends JobSequence
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(-leftDistance, 0f), 0.75f));
-		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 
 		execute();
 
@@ -31,7 +31,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 		wait(0.5f);
 
-		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.HIGH));
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.HIGH));
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(leftDistance - rightDistance, 0f), 0.75f));
 
 		execute();

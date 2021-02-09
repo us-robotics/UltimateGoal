@@ -46,10 +46,10 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	private Servo grabber;
 	private TouchSensor touch;
 
-	private Position targetPosition = Position.RESET;
+	private Mode targetMode = Mode.FOLD;
 	private boolean isReleased;
 
-	private static final float RESET_POWER = -0.38f;
+	private static final float MOVE_POWER = 0.38f;
 
 	@Override
 	public void update()
@@ -65,8 +65,8 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 			if (magnitude > 0.1f)
 			{
-				if (Math.abs(direction.x) > Math.abs(direction.y)) targetPosition = Position.GRAB;
-				else targetPosition = direction.y > 0f ? Position.HIGH : Position.RESET;
+				if (Math.abs(direction.x) > Math.abs(direction.y)) targetMode = Mode.HIGH;
+				else targetMode = direction.y > 0f ? Mode.RESET : Mode.GRAB;
 			}
 		}
 
@@ -82,10 +82,10 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 		{
 			WobbleGrabber.Move move = (WobbleGrabber.Move)job;
 
-			targetPosition = move.position;
+			targetMode = move.mode;
 			apply(); //We need to actually set the target to check if the motor is busy or not
 
-			if (move.position != Position.RESET && !arm.isBusy()) move.finishJob();
+			if (move.mode != Mode.RESET && !arm.isBusy()) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
@@ -99,52 +99,68 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 	private void apply()
 	{
-		grabber.setPosition(isReleased ? 0.45f : 0f);
-
-		if (targetPosition == Position.RESET)
+		if (targetMode == Mode.FOLD)
 		{
 			if (touch.isPressed())
 			{
 				arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-				targetPosition = Position.FOLD;
+				arm.setPower(0f);
+
+				targetMode = Mode.FOLD;
 			}
 			else
 			{
 				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-				arm.setPower(RESET_POWER);
+				arm.setPower(MOVE_POWER);
 			}
+
+			isReleased = false;
 		}
 
-		if (targetPosition != Position.RESET)
+		grabber.setPosition(isReleased ? 1f : 0f);
+
+		if (targetMode)
 		{
-			int position = 0;
 
-			switch (targetPosition)
+		}
+		else
+		{
+			if (targetMode == Mode.FOLD)
 			{
-				case GRAB:
-				{
-					position = 335;
-					break;
-				}
-				case HIGH:
-				{
-					position = 620;
-					break;
-				}
-			}
 
-			arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-			arm.setTargetPosition(position);
-			arm.setPower(0.52d);
+			}
+			else
+			{
+				int position = 0;
+
+				switch (targetMode)
+				{
+					case GRAB:
+					{
+						position = -760;
+						break;
+					}
+					case HIGH:
+					{
+						position = -400;
+						break;
+					}
+				}
+
+				arm.setTargetPosition(position);
+				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+				arm.setPower(MOVE_POWER);
+			}
 		}
 	}
 
-	public enum Position
+	public enum Mode
 	{
-		RESET,
 		FOLD,
 		GRAB,
-		HIGH
+		HIGH,
+		UP,
+		DOWN
 	}
 
 	abstract static class Job extends FTCEngine.Core.Auto.Job
@@ -153,12 +169,12 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 	public static class Move extends WobbleGrabber.Job
 	{
-		public Move(Position position)
+		public Move(Mode mode)
 		{
-			this.position = position;
+			this.mode = mode;
 		}
 
-		public final Position position;
+		public final Mode mode;
 	}
 
 	public static class Grab extends WobbleGrabber.Job
