@@ -226,7 +226,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
 			final float MaxPower = 0.52f;
-			final float MinPower = 0.24f;
+			final float MinPower = 0.34f;
 			final float Threshold = 1.4f;
 
 			float distance = sensor.getDistance();
@@ -239,13 +239,11 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			}
 			else
 			{
-				float moved = Math.abs(sensor.getDistance() - obstacle.startDistance);
+				float moved = Math.abs(distance - obstacle.startDistance);
 				float target = Math.abs(obstacle.distance - obstacle.startDistance);
 
 				float power = Mathf.sigmoid(moved / target) * (MinPower - MaxPower) + MaxPower;
 				setDirectInputs(new Vector2(power * Mathf.normalize(difference), 0f), 0f);
-
-				opMode.debug.addData("Move", power);
 			}
 		}
 
