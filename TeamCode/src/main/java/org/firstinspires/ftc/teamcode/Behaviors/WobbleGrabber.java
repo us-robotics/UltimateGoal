@@ -69,7 +69,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 				if (Math.abs(direction.x) > Math.abs(direction.y)) mode = direction.x > 0f ? Mode.GRAB : Mode.HIGH;
 				else mode = direction.y > 0f ? Mode.FOLD : Mode.DOWN;
 			}
-			else mode = Mode.IDLE;
+			else if (mode == Mode.FOLD || mode == Mode.DOWN) mode = Mode.IDLE;
 		}
 
 		apply();
@@ -89,7 +89,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 			if (move.mode == Mode.DOWN || move.mode == Mode.IDLE) move.finishJob();
 			else if (move.mode == Mode.FOLD && Mathf.almostEquals((float)arm.getPower(), 0f)) move.finishJob();
-			else if (move.mode != Mode.IDLE && !arm.isBusy()) move.finishJob();
+			else if (!arm.isBusy()) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
@@ -103,8 +103,6 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 	private void apply()
 	{
-		arm.setPower(MOVE_POWER);
-
 		switch (mode)
 		{
 			case FOLD:
@@ -114,19 +112,25 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 					arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 					arm.setPower(0f);
 				}
-				else arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				else
+				{
+					arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+					arm.setPower(MOVE_POWER);
+				}
 
 				break;
 			}
 			case GRAB:
 			{
 				arm.setTargetPosition(-760);
+				arm.setPower(MOVE_POWER);
 				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				break;
 			}
 			case HIGH:
 			{
 				arm.setTargetPosition(-400);
+				arm.setPower(MOVE_POWER);
 				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				break;
 			}
@@ -134,11 +138,13 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			{
 				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 				arm.setPower(-MOVE_POWER);
+				break;
 			}
 			case IDLE:
 			{
 				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 				arm.setPower(0f);
+				break;
 			}
 		}
 

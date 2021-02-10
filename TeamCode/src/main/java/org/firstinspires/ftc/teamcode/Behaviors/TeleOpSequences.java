@@ -45,8 +45,8 @@ public class TeleOpSequences extends Behavior
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new PowerShotsSequence(opMode));
 
 			//NOTE: test these out, they should now work
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_LEFT)) opMode.assignSequence(new RotateSequence(opMode, -90f));
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_RIGHT)) opMode.assignSequence(new RotateSequence(opMode, 90f));
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_LEFT)) opMode.assignSequence(new RotateSequence(opMode, 90f));
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_RIGHT)) opMode.assignSequence(new RotateSequence(opMode, -90f));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_UP)) opMode.assignSequence(new RotateSequence(opMode, 180f));
 		}
 	}
@@ -64,27 +64,33 @@ public class TeleOpSequences extends Behavior
 			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
 			Launcher launcher = opMode.getBehavior(Launcher.class);
 
-			execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(-15f, 0f), 0.55f));
-
-			wait(0.75f);
-
-			//Launch ring 1
-			execute(launcher, new Launcher.Launch(true));
-			wait(1f);
+			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
 
 			execute(launcher, new Launcher.Launch(false));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(-9.25f, 0f), 0.55f));
+			execute(drivetrain, new Drivetrain.Trace(56f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
 
+			//Launch first ring
+			execute(launcher, new Launcher.Launch(true));
 			wait(0.75f);
 
-			//Launch ring 2
+			execute(launcher, new Launcher.Launch(false));
+			execute(drivetrain, new Drivetrain.Trace(72f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+
+			//Launch second ring
 			execute(launcher, new Launcher.Launch(true));
-			wait(1f);
+			wait(0.75f);
 
 			execute(launcher, new Launcher.Launch(false));
-			execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.01f, true));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(-9.25f, 0f), 0.55f));
+			execute(drivetrain, new Drivetrain.Trace(88f));
+			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+
+			//Launch third ring
+			execute(launcher, new Launcher.Launch(true));
+			wait(0.75f);
+
+			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
 		}
 	}
 

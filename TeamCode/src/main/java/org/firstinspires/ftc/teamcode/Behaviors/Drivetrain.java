@@ -232,7 +232,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			int y = front ? 1 : back ? -1 : 0;
 
-			final float StrafePower = 0.64f;
+			final float StrafePower = 0.42f;
 			final float CorrectPower = 0.21f;
 
 			if (y == 0)
@@ -247,7 +247,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 				}
 				else
 				{
-					final float MinPowerPercent = 0.45f;
+					final float MinPowerPercent = 0.75f;
 
 					strafe = Mathf.sigmoid(percent);
 					strafe = strafe * (1f - MinPowerPercent) + MinPowerPercent;

@@ -22,7 +22,8 @@ public class AutoMain extends OpModeBase
 		behaviorList.add(new Intake(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new CameraVision(this));
-//		behaviorList.add(new ColorSensors(this));
+		behaviorList.add(new ColorSensors(this));
+		behaviorList.add(new DistanceSensors(this));
 	}
 
 	CameraVision.Position targetZone;
