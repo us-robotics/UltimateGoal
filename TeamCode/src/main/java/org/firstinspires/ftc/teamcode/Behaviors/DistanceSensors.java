@@ -27,12 +27,12 @@ public class DistanceSensors extends Behavior
 		sensor = hardwareMap.get(DistanceSensor.class, "distance");
 	}
 
-	DistanceSensor sensor;
+	private DistanceSensor sensor;
 
 	@Override
-	public void awakeUpdate()
+	public void update()
 	{
-		super.awakeUpdate();
+		super.update();
 		opMode.debug.addData("Distance", getDistance());
 	}
 

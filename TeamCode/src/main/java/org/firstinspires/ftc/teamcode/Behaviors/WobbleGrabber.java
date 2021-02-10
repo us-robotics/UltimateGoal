@@ -122,7 +122,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			}
 			case GRAB:
 			{
-				arm.setTargetPosition(-760);
+				arm.setTargetPosition(-800);
 				arm.setPower(MOVE_POWER);
 				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				break;

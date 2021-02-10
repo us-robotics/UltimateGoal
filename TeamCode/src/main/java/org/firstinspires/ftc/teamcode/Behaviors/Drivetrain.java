@@ -148,12 +148,12 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			rotate.targetAngle = getAngle() + rotate.angle;
 		}
 
-		if (job instanceof Trace)
+		if (job instanceof Obstacle)
 		{
-			Trace trace = (Trace)getCurrentJob();
+			Obstacle obstacle = (Obstacle)getCurrentJob();
 			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
 
-			trace.startDistance = distance.getDistance();
+			obstacle.startDistance = distance.getDistance();
 		}
 	}
 
@@ -220,42 +220,60 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			reset.finishJob();
 		}
 
-		if (job instanceof Trace)
+		if (job instanceof Obstacle)
 		{
-			Trace trace = (Trace)job;
+			Obstacle obstacle = (Obstacle)job;
+			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
+			final float MaxPower = 0.52f;
+			final float MinPower = 0.24f;
+			final float Threshold = 1.4f;
+
+			float distance = sensor.getDistance();
+			float difference = distance - obstacle.distance;
+
+			if (Math.abs(difference) < Threshold)
+			{
+				setDirectInputs(Vector2.zero, 0f);
+				job.finishJob();
+			}
+			else
+			{
+				float moved = Math.abs(sensor.getDistance() - obstacle.startDistance);
+				float target = Math.abs(obstacle.distance - obstacle.startDistance);
+
+				float power = Mathf.sigmoid(moved / target) * (MinPower - MaxPower) + MaxPower;
+				setDirectInputs(new Vector2(power * Mathf.normalize(difference), 0f), 0f);
+
+				opMode.debug.addData("Move", power);
+			}
+		}
+
+		if (job instanceof Line)
+		{
+			Line line = (Line)job;
 			ColorSensors color = opMode.getBehavior(ColorSensors.class);
-			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
 
 			boolean front = color.getLineFront() == ColorSensors.Line.WHITE;
 			boolean back = color.getLineBack() == ColorSensors.Line.NONE;
 
 			int y = front ? 1 : back ? -1 : 0;
 
-			final float StrafePower = 0.42f;
-			final float CorrectPower = 0.21f;
-
 			if (y == 0)
 			{
-				float percent = (distance.getDistance() - trace.startDistance) / (trace.distance - trace.startDistance);
-				float strafe;
+				float current = opMode.time.getTime();
+				final float Time = 0.6f;
 
-				if (percent >= 1f)
-				{
-					strafe = 0f;
-					job.finishJob();
-				}
-				else
-				{
-					final float MinPowerPercent = 0.75f;
+				if (line.startTime > current) line.startTime = current;
+				else if (line.startTime + Time < current) line.finishJob();
 
-					strafe = Mathf.sigmoid(percent);
-					strafe = strafe * (1f - MinPowerPercent) + MinPowerPercent;
-				}
-
-				setDirectInputs(Vector2.left.mul(strafe * StrafePower), 0f);
+				setDirectInputs(Vector2.zero, 0f);
 			}
-			else setDirectInputs(Vector2.up.mul(y * CorrectPower), 0f);
+			else
+			{
+				final float CorrectPower = 0.24f;
+				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
+			}
 		}
 	}
 
@@ -381,17 +399,24 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	}
 
 	/**
-	 * Moves the drivetrain horizontally by strafing against a line
-	 * while correcting the vertical position using color sensors
+	 * Strafes the drivetrain so its side is a certain distance to an obstacle.
 	 */
-	public static class Trace extends Drivetrain.Job
+	public static class Obstacle extends Drivetrain.Job
 	{
-		public Trace(float distance)
+		public Obstacle(float distance)
 		{
 			this.distance = distance;
 		}
 
 		public final float distance;
 		private float startDistance;
+	}
+
+	/**
+	 * Drives the drivetrain backward until it hits a line
+	 */
+	public static class Line extends Drivetrain.Job
+	{
+		private float startTime = Float.MAX_VALUE; //Time when first scanned line
 	}
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Iteration4;
 
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
+import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
 
 import FTCEngine.Core.Auto.JobSequence;
@@ -35,5 +36,41 @@ public abstract class CommonSequence extends JobSequence
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(leftDistance - rightDistance, 0f), 0.75f));
 
 		execute();
+	}
+
+	protected void powerShots()
+	{
+		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+		Launcher launcher = opMode.getBehavior(Launcher.class);
+
+		execute(drivetrain, new Drivetrain.Obstacle(64f));
+
+//		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
+//
+//		execute(launcher, new Launcher.Launch(false));
+//		execute(drivetrain, new Drivetrain.Trace(56f));
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+//
+//		//Launch first ring
+//		execute(launcher, new Launcher.Launch(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Launch(false));
+//		execute(drivetrain, new Drivetrain.Trace(72f));
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+//
+//		//Launch second ring
+//		execute(launcher, new Launcher.Launch(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Launch(false));
+//		execute(drivetrain, new Drivetrain.Trace(88f));
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+//
+//		//Launch third ring
+//		execute(launcher, new Launcher.Launch(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
 	}
 }

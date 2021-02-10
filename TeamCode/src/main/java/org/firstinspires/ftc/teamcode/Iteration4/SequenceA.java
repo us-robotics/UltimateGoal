@@ -23,6 +23,21 @@ public class SequenceA extends CommonSequence
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
 
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 72f)));
+		execute(drivetrain, new Drivetrain.Rotate(135f));
+
+		wait(2f);
+
+		execute(drivetrain, new Drivetrain.Rotate(-135f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -64f)));
+
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.5f));
+		wait(1f);
+
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+
+		if (true) return;
+
 		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
 		//grabWobble(10f, 9f);

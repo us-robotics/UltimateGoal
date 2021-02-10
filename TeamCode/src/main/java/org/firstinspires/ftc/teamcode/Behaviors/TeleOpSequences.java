@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Iteration4.CommonSequence;
+
 import FTCEngine.Core.Auto.JobSequence;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
@@ -44,14 +46,13 @@ public class TeleOpSequences extends Behavior
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new PowerShotsSequence(opMode));
 
-			//NOTE: test these out, they should now work
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_LEFT)) opMode.assignSequence(new RotateSequence(opMode, 90f));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_RIGHT)) opMode.assignSequence(new RotateSequence(opMode, -90f));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.DPAD_UP)) opMode.assignSequence(new RotateSequence(opMode, 180f));
 		}
 	}
 
-	private static class PowerShotsSequence extends JobSequence
+	private static class PowerShotsSequence extends CommonSequence
 	{
 		public PowerShotsSequence(OpModeBase opMode)
 		{
@@ -61,36 +62,7 @@ public class TeleOpSequences extends Behavior
 		@Override
 		protected void queueJobs()
 		{
-			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
-			Launcher launcher = opMode.getBehavior(Launcher.class);
-
-			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
-
-			execute(launcher, new Launcher.Launch(false));
-			execute(drivetrain, new Drivetrain.Trace(56f));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
-
-			//Launch first ring
-			execute(launcher, new Launcher.Launch(true));
-			wait(0.75f);
-
-			execute(launcher, new Launcher.Launch(false));
-			execute(drivetrain, new Drivetrain.Trace(72f));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
-
-			//Launch second ring
-			execute(launcher, new Launcher.Launch(true));
-			wait(0.75f);
-
-			execute(launcher, new Launcher.Launch(false));
-			execute(drivetrain, new Drivetrain.Trace(88f));
-			execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
-
-			//Launch third ring
-			execute(launcher, new Launcher.Launch(true));
-			wait(0.75f);
-
-			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
+			powerShots();
 		}
 	}
 
