@@ -38,11 +38,38 @@ public class SequenceC extends CommonSequence
 
 		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB)
 		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
+		execute(drivetrain, new Drivetrain.Rotate(-90f));
+		execute(drivetrain, new Drivetrain.Rotate(-45f));
+
+		//Hit wall reset Y
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-100f)));
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.55f));
+
+		wait(0.75f);
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+		execute(drivetrain, new Drivetrain.Reset());
+
+		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0f), 0.55f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 13f), 0.55f));
+
+		//Grab and place wobble
+		//grabWobble(4f, 9f);
+
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(10f,0f)));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Rotate(45f));
 
-		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
+		wait(0.4f);
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB));
+		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+
+		execute(drivetrain, new Drivetrain.Rotate(45f));
+		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
 
 		//Forward to launch position
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 59f)));
@@ -87,32 +114,6 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 44f)));
 		execute(drivetrain, new Drivetrain.Rotate(180f));
 
-		//Hit wall reset Y
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.55f));
-
-		wait(0.75f);
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
-		execute(drivetrain, new Drivetrain.Reset());
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0f), 0.55f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 13f), 0.55f));
-
-
-		//Grab and place wobble
-		//grabWobble(4f, 9f);
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(10f,0f)));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Rotate(45f));
-
-		wait(0.4f);
-
-
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB));
-		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 		wait(0.5f);
 		execute(drivetrain, new Drivetrain.Rotate(45f));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 30f)));
