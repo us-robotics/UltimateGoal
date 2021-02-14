@@ -39,6 +39,7 @@ public class SequenceC extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f,0f)));
 		execute(drivetrain,new Drivetrain.Rotate(45f));
 
 		//Hit wall reset Y
