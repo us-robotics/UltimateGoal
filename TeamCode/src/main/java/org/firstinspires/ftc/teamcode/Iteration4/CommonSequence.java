@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Iteration4;
 
+import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
@@ -85,12 +86,14 @@ public abstract class CommonSequence extends JobSequence
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
-		buffer(drivetrain, new Drivetrain.Obstacle(130f));
+		execute(drivetrain, new Drivetrain.Obstacle(130f));
 
 		execute(drivetrain, new Drivetrain.Line());
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 48f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 30f)));
+
+		execute(drivetrain, new Drivetrain.Obstacle(38f, DistanceSensors.Side.FRONT));
 
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		execute(drivetrain, new Drivetrain.Obstacle(100f));

@@ -144,7 +144,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		if (job instanceof Rotate)
 		{
 			Rotate rotate = (Rotate)getCurrentJob();
-			rotate.targetAngle = getAngle() + rotate.angle;
+			rotate.targetAngle = persistentAngle + rotate.angle;
 		}
 
 		if (job instanceof Obstacle)
@@ -192,8 +192,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 22f;
-			final float Threshold = 5f;
+			final float Cushion = 19f;
+			final float Threshold = 7f;
 
 			float difference = Mathf.toSignedAngle(rotate.targetAngle - getAngle());
 
@@ -226,7 +226,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			final float MaxPower = 0.52f;
 			final float MinPower = 0.31f;
-			final float Threshold = 1.4f;
+			final float Threshold = 1.5f;
 
 			float distance = sensor.getDistance(obstacle.side);
 			float difference = distance - obstacle.distance;
@@ -242,7 +242,9 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 				float target = Math.abs(obstacle.distance - obstacle.startDistance);
 
 				float power = Mathf.sigmoid(moved / target) * (MinPower - MaxPower) + MaxPower;
-				setDirectInputs(new Vector2(power * Mathf.normalize(difference), 0f), 0f);
+				Vector2 direction = obstacle.side == DistanceSensors.Side.RIGHT ? Vector2.right : Vector2.up;
+
+				setDirectInputs(direction.mul(power * Mathf.normalize(difference)), 0f);
 			}
 		}
 
@@ -259,7 +261,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			if (y == 0)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.25f;
+				final float Time = 0.26f;
 
 				if (line.startTime > current) line.startTime = current;
 				else if (line.startTime + Time < current) line.finishJob();
@@ -268,7 +270,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			}
 			else
 			{
-				final float CorrectPower = 0.23f;
+				final float CorrectPower = 0.22f;
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}
 		}
@@ -372,7 +374,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	{
 		public Rotate(float angle)
 		{
-			this(angle, 0.6f);
+			this(angle, 0.58f);
 		}
 
 		public Rotate(float angle, float power)

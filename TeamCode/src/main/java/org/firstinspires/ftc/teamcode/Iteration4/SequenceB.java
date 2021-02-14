@@ -16,80 +16,35 @@ public class SequenceB extends CommonSequence
 	}
 
 	@Override
-	protected void queueJobs() {
+	protected void queueJobs()
+	{
 		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
-		Launcher launcher = opMode.getBehavior(Launcher.class);
-		Intake intake = opMode.getBehavior(Intake.class);
 
-		//grabWobble(10f, 9f); //ends with wobble high
-
-		//drive to square, let go, reset on wall ed
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
-		//execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.GRAB));
-		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
-		wait(.2f);
-		//execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Position.FOLD));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(-1f, 0f), .7f));
-		wait(.8f);
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
-		execute(drivetrain, new Drivetrain.Reset());
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0)));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 30f)));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(1f, 0f), .7f));
-		wait(.8f);
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
-		execute(drivetrain, new Drivetrain.Reset());
-
-		//Launch ring 1
-		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
-		wait(1f);
-		execute(launcher, new Launcher.Launch(true));
-		wait(1f);
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
-		wait(1f);
-
-		//Launch ring 2
-		execute(launcher, new Launcher.Launch(true));
-		wait(1f);
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
-
-		execute(intake, new Intake.Run(0.4f));
-		wait(0.5f);
-		execute(intake, new Intake.Run(0f));
-		wait(0.5f);
-
-		//Launch ring 3
-		execute(launcher, new Launcher.Launch(true));
-		wait(1f);
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(launcher, new Launcher.Prime(0f, false));
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-8f, 0f)));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -80f)));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), .7f));
-		wait(.8f);
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
-		execute(drivetrain, new Drivetrain.Reset());
-
-		//grabWobble(20f, 9f);
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 108f)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-24f, 0f)));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 96f)));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 
+		wait(0.5f);
+
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f, 0f)));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
+
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -42f)));
+		execute(drivetrain, new Drivetrain.Obstacle(64f));
+
+		execute(drivetrain, new Drivetrain.Rotate(90f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
+
+		execute(drivetrain, new Drivetrain.Obstacle(16f));
+		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
+		wait(1f);
+
+		execute(drivetrain, new Drivetrain.Reset());
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero, 0f));
+
+		powerShots();
+		execute(drivetrain, new Drivetrain.Line());
 	}
 }

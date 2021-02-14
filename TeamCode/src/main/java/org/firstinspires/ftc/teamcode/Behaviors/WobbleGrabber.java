@@ -89,7 +89,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 			if (move.mode == Mode.DOWN || move.mode == Mode.IDLE) move.finishJob();
 			else if (move.mode == Mode.FOLD && Mathf.almostEquals((float)arm.getPower(), 0f)) move.finishJob();
-			else if (!arm.isBusy()) move.finishJob();
+			else if (Math.abs(arm.getCurrentPosition() - arm.getTargetPosition()) < 12f) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
