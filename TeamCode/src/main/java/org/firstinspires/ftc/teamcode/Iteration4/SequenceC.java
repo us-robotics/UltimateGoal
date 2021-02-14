@@ -42,7 +42,7 @@ public class SequenceC extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(0.4f);
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f,0f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-30f,0f)));
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,64f)));
