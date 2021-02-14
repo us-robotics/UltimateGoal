@@ -26,7 +26,6 @@ public class SequenceC extends CommonSequence
 
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
-		execute();
 
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Rotate(45f));
