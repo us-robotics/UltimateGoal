@@ -28,16 +28,7 @@ public class SequenceC extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 
 		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Rotate(45f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(6f, 0f)));
-
-		wait(0.4f);
-
-		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f,0f)));
-		execute(drivetrain,new Drivetrain.Rotate(45f));
+		execute(drivetrain, new Drivetrain.Rotate(90f));
 
 		//Hit wall reset Y
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12)));
@@ -46,6 +37,9 @@ public class SequenceC extends CommonSequence
 		wait(0.75f);
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
+
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,60f)));
 
