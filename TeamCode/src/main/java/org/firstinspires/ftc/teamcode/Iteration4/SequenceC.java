@@ -45,7 +45,15 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f,0f)));
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,60f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,64f)));
+
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(-12f,0f)));
+		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
+
+		wait(0.5f);
+
+		execute(drivetrain, new Drivetrain.Reset());
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 		powerShots();
 		execute(drivetrain, new Drivetrain.Line());
