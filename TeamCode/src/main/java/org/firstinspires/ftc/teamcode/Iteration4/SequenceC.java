@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Iteration4;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
@@ -25,37 +26,37 @@ public class SequenceC extends CommonSequence
 
 		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
 
-		//grabWobble(10f, 9f);
+		buffer(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
+		execute();
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
-
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(4f, 0f)));
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Rotate(45f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(6f, 0f)));
 
 		wait(0.4f);
 
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB)
-		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
-		execute(drivetrain, new Drivetrain.Rotate(-90f));
-		execute(drivetrain, new Drivetrain.Rotate(-45f));
+		execute(drivetrain,new Drivetrain.Rotate(45f));
 
 		//Hit wall reset Y
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-98)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12)));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.55f));
 
 		wait(0.75f);
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		execute(drivetrain, new Drivetrain.Reset());
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(8f, 0f), 0.55f));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 13f), 0.55f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,60f)));
+
+		powerShots();
+
+		if (true) return;
 
 		//Grab and place wobble
-		//grabWobble(4f, 9f);
+		grabWobble(4f, 9f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-6f, 0f)));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 100f)));
@@ -64,9 +65,9 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Rotate(45f));
 
 		wait(0.4f);
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.GRAB));
-		//execute(wobbleGrabber, new WobbleGrabber.Grab(false));
-		//execute(wobbleGrabber, new WobbleGrabber.Move(Position.RESET));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		//execute(wobbleGrabber, new WobbleGrabber.Move(Mode));
 
 		execute(drivetrain, new Drivetrain.Rotate(57f));
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER - 0.02f, true));
