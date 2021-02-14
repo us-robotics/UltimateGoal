@@ -226,7 +226,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
 			final float MaxPower = 0.52f;
-			final float MinPower = 0.34f;
+			final float MinPower = 0.31f;
 			final float Threshold = 1.4f;
 
 			float distance = sensor.getDistance();
@@ -260,7 +260,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			if (y == 0)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.6f;
+				final float Time = 0.25f;
 
 				if (line.startTime > current) line.startTime = current;
 				else if (line.startTime + Time < current) line.finishJob();
@@ -269,7 +269,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			}
 			else
 			{
-				final float CorrectPower = 0.24f;
+				final float CorrectPower = 0.23f;
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}
 		}

@@ -78,4 +78,27 @@ public abstract class CommonSequence extends JobSequence
 		execute(launcher, new Launcher.Launch(false));
 		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
 	}
+
+	protected void grabWobble2()
+	{
+		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
+
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
+		buffer(drivetrain, new Drivetrain.Obstacle(130f));
+
+		execute(drivetrain, new Drivetrain.Line());
+
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 48f)));
+
+		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
+		execute(drivetrain, new Drivetrain.Obstacle(100f));
+
+		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -30f)));
+
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.HIGH));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -30f)));
+	}
 }
