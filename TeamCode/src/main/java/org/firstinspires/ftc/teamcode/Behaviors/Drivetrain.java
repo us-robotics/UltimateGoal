@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import FTCEngine.Core.Auto.AutoBehavior;
@@ -153,7 +152,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Obstacle obstacle = (Obstacle)getCurrentJob();
 			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
 
-			obstacle.startDistance = distance.getDistance();
+			obstacle.startDistance = distance.getDistance(obstacle.side);
 		}
 	}
 
@@ -229,7 +228,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			final float MinPower = 0.31f;
 			final float Threshold = 1.4f;
 
-			float distance = sensor.getDistance();
+			float distance = sensor.getDistance(obstacle.side);
 			float difference = distance - obstacle.distance;
 
 			if (Math.abs(difference) < Threshold)
@@ -252,7 +251,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Line line = (Line)job;
 			ColorSensors color = opMode.getBehavior(ColorSensors.class);
 
-			boolean front = color.getLineFront() == ColorSensors.Line.WHITE;
+			boolean front = color.getLineFront() == line.color;
 			boolean back = color.getLineBack() == ColorSensors.Line.NONE;
 
 			int y = front ? 1 : back ? -1 : 0;
@@ -403,10 +402,18 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	{
 		public Obstacle(float distance)
 		{
+			this(distance, DistanceSensors.Side.RIGHT);
+		}
+
+		public Obstacle(float distance, DistanceSensors.Side side)
+		{
 			this.distance = distance;
+			this.side = side;
 		}
 
 		public final float distance;
+		public final DistanceSensors.Side side;
+
 		private float startDistance;
 	}
 
@@ -415,6 +422,17 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	 */
 	public static class Line extends Drivetrain.Job
 	{
+		public Line()
+		{
+			this(ColorSensors.Line.WHITE);
+		}
+
+		public Line(ColorSensors.Line color)
+		{
+			this.color = color;
+		}
+
+		public final ColorSensors.Line color;
 		private float startTime = Float.MAX_VALUE; //Time when first scanned line
 	}
 }
