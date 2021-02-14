@@ -24,9 +24,9 @@ public class SequenceC extends CommonSequence
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
 
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
 
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 
