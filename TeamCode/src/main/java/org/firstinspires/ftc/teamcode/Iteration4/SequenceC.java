@@ -31,17 +31,20 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 
 		//Hit wall reset Y
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12)));
-		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.55f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12f)));
+		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.7f));
 
-		wait(0.75f);
-		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
+		wait(0.5f);
+
 		execute(drivetrain, new Drivetrain.Reset());
+		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(0.4f);
-		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
+		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f,0f)));
+
+		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,60f)));
 
 		powerShots();
