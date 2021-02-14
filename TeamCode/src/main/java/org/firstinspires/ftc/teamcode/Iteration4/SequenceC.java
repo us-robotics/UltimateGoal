@@ -24,17 +24,20 @@ public class SequenceC extends CommonSequence
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 		Intake intake = opMode.getBehavior(Intake.class);
 
-		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
+
+		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.IDLE));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(12f, 0f)));
 
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 
 		//Hit wall reset Y
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-24f)));
 		execute(drivetrain, new Drivetrain.Drive(new Vector2(0f, -1f), 0.7f));
 
-		wait(0.5f);
+		wait(1f);
 
 		execute(drivetrain, new Drivetrain.Reset());
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
@@ -43,14 +46,15 @@ public class SequenceC extends CommonSequence
 		wait(0.4f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f,0f)));
+		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,64f)));
 
-		execute(drivetrain, new Drivetrain.Obstacle(8f));
+		execute(drivetrain, new Drivetrain.Obstacle(16f));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
 
-		wait(0.5f);
+		wait(1f);
 
 		execute(drivetrain, new Drivetrain.Reset());
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
