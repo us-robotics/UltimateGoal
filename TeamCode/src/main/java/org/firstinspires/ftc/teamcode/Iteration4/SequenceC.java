@@ -27,8 +27,8 @@ public class SequenceC extends CommonSequence
 		buffer(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 
-		execute(drivetrain, new Drivetrain.Rotate(90f));
-		execute(drivetrain, new Drivetrain.Rotate(90f));
+		execute(drivetrain, new Drivetrain.Rotate(-90f));
+		execute(drivetrain, new Drivetrain.Rotate(-90f));
 
 		//Hit wall reset Y
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f,-12)));
