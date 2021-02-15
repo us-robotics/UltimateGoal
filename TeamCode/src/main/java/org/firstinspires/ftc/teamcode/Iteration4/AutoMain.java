@@ -2,7 +2,14 @@ package org.firstinspires.ftc.teamcode.Iteration4;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Behaviors.*;
+import org.firstinspires.ftc.teamcode.Behaviors.CameraVision;
+import org.firstinspires.ftc.teamcode.Behaviors.ColorSensors;
+import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
+import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
+import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
+import org.firstinspires.ftc.teamcode.Behaviors.Intake;
+import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
+import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
 
 import java.util.List;
 

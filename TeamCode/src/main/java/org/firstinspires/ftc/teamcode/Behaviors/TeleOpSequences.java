@@ -8,7 +8,6 @@ import FTCEngine.Core.Auto.JobSequence;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Math.Vector2;
 
 public class TeleOpSequences extends Behavior
 {
