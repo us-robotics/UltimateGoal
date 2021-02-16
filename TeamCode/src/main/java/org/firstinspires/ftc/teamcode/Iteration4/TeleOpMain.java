@@ -43,6 +43,8 @@ public class TeleOpMain extends OpModeBase
 	public void loop()
 	{
 		debug.addData("FPS", 1f / time.getDeltaTime());
+		if (hasSequence()) debug.addData("Running Sequence");
+
 		super.loop();
 	}
 }
