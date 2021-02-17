@@ -22,11 +22,15 @@ public class SequenceB extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 98f)));
 
+		wait(0.5f);
+
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 
 		wait(0.5f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f, 0f)));
+
+		wait(0.5f);
 
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
