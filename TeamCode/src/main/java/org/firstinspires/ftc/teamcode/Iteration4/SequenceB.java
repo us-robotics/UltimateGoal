@@ -27,6 +27,7 @@ public class SequenceB extends CommonSequence
 		wait(0.5f);
 
 		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f, 0f)));
+
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
@@ -36,8 +37,9 @@ public class SequenceB extends CommonSequence
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 
-		execute(drivetrain, new Drivetrain.Obstacle(10f));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(18f, 0f)));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
+
 		wait(1f);
 
 		execute(drivetrain, new Drivetrain.Reset());

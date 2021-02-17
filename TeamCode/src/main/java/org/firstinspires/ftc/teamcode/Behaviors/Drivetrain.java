@@ -226,7 +226,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			final float MaxPower = 0.52f;
 			final float MinPower = 0.31f;
-			final float Threshold = 1.5f;
+			final float Threshold = 1.4f;
 
 			float distance = sensor.getDistance(obstacle.side);
 			float difference = distance - obstacle.distance;

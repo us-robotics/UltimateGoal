@@ -50,7 +50,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(drivetrain, new Drivetrain.Obstacle(56f));
 		execute(drivetrain, new Drivetrain.Line());
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.75f));
 
 		//Launch first ring
 		execute(launcher, new Launcher.Launch(true));
@@ -60,7 +60,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(drivetrain, new Drivetrain.Obstacle(72f));
 		execute(drivetrain, new Drivetrain.Line());
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.75f));
 
 		//Launch second ring
 		execute(launcher, new Launcher.Launch(true));
@@ -70,7 +70,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(drivetrain, new Drivetrain.Obstacle(88f));
 		execute(drivetrain, new Drivetrain.Line());
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.75f));
 
 		//Launch third ring
 		execute(launcher, new Launcher.Launch(true));

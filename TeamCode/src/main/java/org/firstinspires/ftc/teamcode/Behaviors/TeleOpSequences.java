@@ -80,8 +80,8 @@ public class TeleOpSequences extends Behavior
 		{
 			Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
 
-			execute(drivetrain, new Drivetrain.Obstacle(16f));
-			execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.8f));
+			execute(drivetrain, new Drivetrain.Obstacle(4f));
+			execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
 
 			wait(0.5f);
 
@@ -89,6 +89,12 @@ public class TeleOpSequences extends Behavior
 			execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 			execute(drivetrain, new Drivetrain.Line());
+			execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
+
+			wait(0.3f);
+
+			execute(drivetrain, new Drivetrain.Reset());
+			execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 		}
 	}
 
