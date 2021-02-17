@@ -53,6 +53,6 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 		powerShots();
-		execute(drivetrain, new Drivetrain.Line());
+		linePark();
 	}
 }
