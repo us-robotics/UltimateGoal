@@ -24,15 +24,14 @@ public class SequenceC extends CommonSequence
 		Intake intake = opMode.getBehavior(Intake.class);
 
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 104f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 114f)));
 
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.IDLE));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(12f, 0f)));
 
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 		execute(drivetrain, new Drivetrain.Rotate(-90f));
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -24f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -14f)));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.down, 0.7f));
 
 		wait(1f);
@@ -43,7 +42,7 @@ public class SequenceC extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(false));
 		wait(0.4f);
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(-12f, 0f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(12f, 0f)));
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
