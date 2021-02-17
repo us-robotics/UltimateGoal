@@ -31,7 +31,7 @@ public class SequenceC extends CommonSequence
 
 		execute(drivetrain, new Drivetrain.Drive(Vector2.down, 0.7f));
 
-		wait(1f);
+		wait(0.5f);
 
 		execute(drivetrain, new Drivetrain.Reset());
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
@@ -47,7 +47,7 @@ public class SequenceC extends CommonSequence
 		execute(drivetrain, new Drivetrain.Move(new Vector2(12f,0f)));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
 
-		wait(1f);
+		wait(2f);
 
 		execute(drivetrain, new Drivetrain.Reset());
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
