@@ -20,7 +20,7 @@ public class SequenceA extends CommonSequence
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 70f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 64f), 0.75f));
 
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.IDLE));
 		execute(drivetrain, new Drivetrain.Rotate(90f));
@@ -36,12 +36,12 @@ public class SequenceA extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
 
-		wait(1f);
+		wait(2f);
 
 		execute(drivetrain, new Drivetrain.Reset());
 		execute(drivetrain, new Drivetrain.Drive(Vector2.zero));
 
 		powerShots();
-		execute(drivetrain, new Drivetrain.Line());
+		linePark();
 	}
 }

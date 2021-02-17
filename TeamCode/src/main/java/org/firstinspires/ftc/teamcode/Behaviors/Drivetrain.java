@@ -165,8 +165,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Move move = (Move)job;
 
-			final float Cushion = 150f;
-			final float Threshold = Cushion * 0.24f;
+			final float Cushion = 170f;
+			final float Threshold = Cushion * 0.22f;
 
 			float difference = move.distance - getAveragePosition();
 
@@ -192,23 +192,35 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 19f;
-			final float Threshold = 7f;
+			final float Threshold = 12f;
+			final float Cushion = 37f;
+
+			final float MinPower = 0.29f;
+			final float MaxPower = 0.46f;
 
 			float difference = Mathf.toSignedAngle(rotate.targetAngle - getAngle());
 
 			if (Math.abs(difference) < Threshold)
 			{
-				persistentAngle = rotate.targetAngle;
+				float current = opMode.time.getTime();
+				final float Time = 0.14f;
 
-				difference = 0f;
-				rotate.finishJob();
+				if (Mathf.almostEquals(rotate.startTime, 0f)) rotate.startTime = current;
+				else if (rotate.startTime + Time < current)
+				{
+					persistentAngle = rotate.targetAngle;
+					rotate.finishJob();
+				}
+
+				setDirectInputs(Vector2.zero, 0f);
 			}
+			else
+			{
+				rotate.startTime = 0f;
 
-			int direction = -Mathf.normalize(difference);
-
-			difference = (float)Math.pow(Mathf.clamp01(Math.abs(difference) / Cushion), 1.6f);
-			setDirectInputs(Vector2.zero, difference * rotate.power * direction);
+				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(Math.abs(difference) / Cushion));
+				setDirectInputs(Vector2.zero, power * -Mathf.normalize(difference));
+			}
 		}
 
 		if (job instanceof Reset)
@@ -224,24 +236,31 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Obstacle obstacle = (Obstacle)job;
 			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
-			final float MaxPower = 0.52f;
-			final float MinPower = 0.31f;
 			final float Threshold = 1.4f;
+			final float MinPower = 0.31f;
+			final float MaxPower = 0.52f;
 
 			float distance = sensor.getDistance(obstacle.side);
 			float difference = distance - obstacle.distance;
 
 			if (Math.abs(difference) < Threshold)
 			{
+				float current = opMode.time.getTime();
+				final float Time = 0.22f;
+
+				if (Mathf.almostEquals(obstacle.startTime, 0f)) obstacle.startTime = current;
+				else if (obstacle.startTime + Time < current) obstacle.finishJob();
+
 				setDirectInputs(Vector2.zero, 0f);
-				job.finishJob();
 			}
 			else
 			{
+				obstacle.startTime = 0f;
+
 				float moved = Math.abs(distance - obstacle.startDistance);
 				float target = Math.abs(obstacle.distance - obstacle.startDistance);
 
-				float power = Mathf.sigmoid(moved / target) * (MinPower - MaxPower) + MaxPower;
+				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(moved / target));
 				Vector2 direction = obstacle.side == DistanceSensors.Side.RIGHT ? Vector2.right : Vector2.up;
 
 				setDirectInputs(direction.mul(power * Mathf.normalize(difference)), 0f);
@@ -263,14 +282,16 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 				float current = opMode.time.getTime();
 				final float Time = 0.26f;
 
-				if (line.startTime > current) line.startTime = current;
+				if (Mathf.almostEquals(line.startTime, 0f)) line.startTime = current;
 				else if (line.startTime + Time < current) line.finishJob();
 
 				setDirectInputs(Vector2.zero, 0f);
 			}
 			else
 			{
+				line.startTime = 0f;
 				final float CorrectPower = 0.22f;
+
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}
 		}
@@ -374,19 +395,13 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	{
 		public Rotate(float angle)
 		{
-			this(angle, 0.58f);
-		}
-
-		public Rotate(float angle, float power)
-		{
 			this.angle = angle;
-			this.power = power;
 		}
 
 		public final float angle;
-		public final float power;
 
 		private float targetAngle;
+		private float startTime;
 	}
 
 	/**
@@ -417,6 +432,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		public final DistanceSensors.Side side;
 
 		private float startDistance;
+		private float startTime;
 	}
 
 	/**
@@ -435,6 +451,6 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		}
 
 		public final ColorSensors.Line color;
-		private float startTime = Float.MAX_VALUE; //Time when first scanned line
+		private float startTime;
 	}
 }

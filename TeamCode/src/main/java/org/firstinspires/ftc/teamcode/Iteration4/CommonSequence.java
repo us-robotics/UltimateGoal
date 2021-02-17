@@ -104,4 +104,12 @@ public abstract class CommonSequence extends JobSequence
 		buffer(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.HIGH));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -30f)));
 	}
+
+	protected void linePark()
+	{
+		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+
+		execute(drivetrain, new Drivetrain.Line());
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -12f), 0.65f));
+	}
 }
