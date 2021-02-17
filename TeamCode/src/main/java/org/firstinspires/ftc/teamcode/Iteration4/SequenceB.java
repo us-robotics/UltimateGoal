@@ -36,7 +36,7 @@ public class SequenceB extends CommonSequence
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 		execute(drivetrain, new Drivetrain.Rotate(90f));
 
-		execute(drivetrain, new Drivetrain.Obstacle(16f));
+		execute(drivetrain, new Drivetrain.Obstacle(10f));
 		execute(drivetrain, new Drivetrain.Drive(Vector2.right, 0.7f));
 		wait(1f);
 
