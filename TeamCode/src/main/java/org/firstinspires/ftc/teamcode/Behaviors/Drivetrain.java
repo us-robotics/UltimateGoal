@@ -74,7 +74,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			float exponent = 0.72f;
 			float multiplier = 1f;
 
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.1f)
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.4f)
 			{
 				exponent = 0.62f;
 				multiplier = 0.44f;
@@ -90,7 +90,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 		if (!opMode.hasSequence())
 		{
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.1f) angleCorrection = false;
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.4f) angleCorrection = false;
 		}
 
 		if (angleCorrection)
@@ -146,14 +146,6 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Rotate rotate = (Rotate)getCurrentJob();
 			rotate.targetAngle = persistentAngle + rotate.angle;
 		}
-
-		if (job instanceof Obstacle)
-		{
-			Obstacle obstacle = (Obstacle)getCurrentJob();
-			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
-
-			obstacle.startDistance = distance.getDistance(obstacle.side);
-		}
 	}
 
 	@Override
@@ -192,18 +184,18 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Threshold = 12f;
-			final float Cushion = 37f;
+			final float Threshold = 8f;
+			final float Cushion = 42f;
 
-			final float MinPower = 0.29f;
-			final float MaxPower = 0.46f;
+			final float MinPower = 0.21f;
+			final float MaxPower = 0.47f;
 
 			float difference = Mathf.toSignedAngle(rotate.targetAngle - getAngle());
 
 			if (Math.abs(difference) < Threshold)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.14f;
+				final float Time = 0.12f;
 
 				if (Mathf.almostEquals(rotate.startTime, 0f)) rotate.startTime = current;
 				else if (rotate.startTime + Time < current)
@@ -236,17 +228,18 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Obstacle obstacle = (Obstacle)job;
 			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
-			final float Threshold = 1.4f;
-			final float MinPower = 0.31f;
-			final float MaxPower = 0.52f;
+			final float Threshold = 1.7f;
+			final float Cushion = 12f;
 
-			float distance = sensor.getDistance(obstacle.side);
-			float difference = distance - obstacle.distance;
+			final float MinPower = 0.22f;
+			final float MaxPower = 0.46f;
+
+			float difference = sensor.getDistance() - obstacle.distance;
 
 			if (Math.abs(difference) < Threshold)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.22f;
+				final float Time = 0.14f;
 
 				if (Mathf.almostEquals(obstacle.startTime, 0f)) obstacle.startTime = current;
 				else if (obstacle.startTime + Time < current) obstacle.finishJob();
@@ -257,13 +250,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			{
 				obstacle.startTime = 0f;
 
-				float moved = Math.abs(distance - obstacle.startDistance);
-				float target = Math.abs(obstacle.distance - obstacle.startDistance);
-
-				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(moved / target));
-				Vector2 direction = obstacle.side == DistanceSensors.Side.RIGHT ? Vector2.right : Vector2.up;
-
-				setDirectInputs(direction.mul(power * Mathf.normalize(difference)), 0f);
+				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(Math.abs(difference) / Cushion));
+				setDirectInputs(new Vector2(power * Mathf.normalize(difference), 0f), 0f);
 			}
 		}
 
@@ -280,7 +268,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			if (y == 0)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.26f;
+				final float Time = 0.12f;
 
 				if (Mathf.almostEquals(line.startTime, 0f)) line.startTime = current;
 				else if (line.startTime + Time < current) line.finishJob();
@@ -290,7 +278,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			else
 			{
 				line.startTime = 0f;
-				final float CorrectPower = 0.22f;
+				final float CorrectPower = 0.205f;
 
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}
@@ -419,19 +407,10 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	{
 		public Obstacle(float distance)
 		{
-			this(distance, DistanceSensors.Side.RIGHT);
-		}
-
-		public Obstacle(float distance, DistanceSensors.Side side)
-		{
 			this.distance = distance;
-			this.side = side;
 		}
 
 		public final float distance;
-		public final DistanceSensors.Side side;
-
-		private float startDistance;
 		private float startTime;
 	}
 

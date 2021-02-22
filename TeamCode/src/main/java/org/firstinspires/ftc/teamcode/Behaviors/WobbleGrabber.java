@@ -59,7 +59,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 		if (!opMode.hasSequence())
 		{
-			isReleased = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.1f;
+			isReleased = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.4f;
 
 			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
@@ -89,7 +89,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 
 			if (move.mode == Mode.DOWN || move.mode == Mode.IDLE) move.finishJob();
 			else if (move.mode == Mode.FOLD && Mathf.almostEquals((float)arm.getPower(), 0f)) move.finishJob();
-			else if (Math.abs(arm.getCurrentPosition() - arm.getTargetPosition()) < 12f) move.finishJob();
+			else if (Math.abs(arm.getCurrentPosition() - arm.getTargetPosition()) < 25f) move.finishJob();
 		}
 
 		if (job instanceof WobbleGrabber.Grab)
@@ -122,14 +122,14 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			}
 			case GRAB:
 			{
-				arm.setTargetPosition(-800);
+				arm.setTargetPosition(-740);
 				arm.setPower(MOVE_POWER);
 				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				break;
 			}
 			case HIGH:
 			{
-				arm.setTargetPosition(-400);
+				arm.setTargetPosition(-360);
 				arm.setPower(MOVE_POWER);
 				arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 				break;

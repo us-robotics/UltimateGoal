@@ -118,7 +118,7 @@ public class CameraVision extends Behavior
 
 	private static class CameraPipeline extends OpenCvPipeline
 	{
-		private static final Scalar Purple = new Scalar(255f, 0f, 255f);
+		private static final Scalar GRAY = new Scalar(127f, 127f, 127f);
 		private static final Point RegionCenter = new Point(ResolutionX * 0.755f, ResolutionY / 3f);
 
 		private static final float RegionWidth = ResolutionX / 7f;
@@ -157,8 +157,8 @@ public class CameraVision extends Behavior
 			meanUpper = Core.mean(submatUpper);
 			meanLower = Core.mean(submatLower);
 
-			Imgproc.rectangle(saturation, RegionUpper, Purple, 1);
-			Imgproc.rectangle(saturation, RegionLower, Purple, 1);
+			Imgproc.rectangle(saturation, RegionUpper, GRAY, 1);
+			Imgproc.rectangle(saturation, RegionLower, GRAY, 1);
 
 			return saturation;
 		}

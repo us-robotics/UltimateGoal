@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.util.HashMap;
+
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
 import FTCEngine.Math.Vector2;
@@ -26,37 +28,31 @@ public class DistanceSensors extends Behavior
 	{
 		super.awake(hardwareMap);
 
-		right = hardwareMap.get(DistanceSensor.class, "rightDistance");
 		front = hardwareMap.get(DistanceSensor.class, "frontDistance");
+		back = hardwareMap.get(DistanceSensor.class, "backDistance");
 	}
 
-	private DistanceSensor right;
 	private DistanceSensor front;
+	private DistanceSensor back;
 
 	@Override
 	public void update()
 	{
 		super.update();
 
-		opMode.debug.addData("Distance", new Vector2(getDistance(Side.RIGHT), getDistance(Side.FRONT)));
+		opMode.debug.addData("Distance", getDistance());
 	}
 
-	public float getDistance(Side side)
+	public float getDistance()
 	{
-		DistanceSensor sensor = null;
+		float frontDistance = (float)front.getDistance(DistanceUnit.CM);
+		float backDistance = (float)back.getDistance(DistanceUnit.CM);
 
-		switch (side)
-		{
-			case RIGHT: sensor = right; break;
-			case FRONT: sensor = front; break;
-		}
+		final float Threshold = 500f;
 
-		return (float)sensor.getDistance(DistanceUnit.CM);
-	}
+		if (frontDistance > Threshold) return backDistance;
+		if (backDistance > Threshold) return frontDistance;
 
-	public enum Side
-	{
-		RIGHT,
-		FRONT
+		return (frontDistance + backDistance) / 2f;
 	}
 }

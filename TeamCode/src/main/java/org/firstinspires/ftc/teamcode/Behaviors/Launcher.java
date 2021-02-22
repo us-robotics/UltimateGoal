@@ -46,8 +46,8 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	private DcMotor flywheel;
 	private Servo trigger;
 
-	public static final float HIGH_POWER = 0.8025f; //Power for high goal
-	public static final float SHOT_POWER = 0.7325f; //Power for power shots
+	public static final float HIGH_POWER = 0.80f; //Power for high goal
+	public static final float SHOT_POWER = 0.7275f; //Power for power shots
 
 	private float power = HIGH_POWER;
 
