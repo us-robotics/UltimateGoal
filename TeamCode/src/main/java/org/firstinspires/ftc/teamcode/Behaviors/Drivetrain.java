@@ -228,7 +228,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			Obstacle obstacle = (Obstacle)job;
 			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
-			final float Threshold = 1.7f;
+			final float Threshold = 1.8f;
 			final float Cushion = 12f;
 
 			final float MinPower = 0.22f;
@@ -239,7 +239,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			if (Math.abs(difference) < Threshold)
 			{
 				float current = opMode.time.getTime();
-				final float Time = 0.14f;
+				final float Time = 0.12f;
 
 				if (Mathf.almostEquals(obstacle.startTime, 0f)) obstacle.startTime = current;
 				else if (obstacle.startTime + Time < current) obstacle.finishJob();
@@ -267,18 +267,20 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 			if (y == 0)
 			{
-				float current = opMode.time.getTime();
-				final float Time = 0.12f;
+//				float current = opMode.time.getTime();
+//				final float Time = 0.07f;
+//
+//				if (Mathf.almostEquals(line.startTime, 0f)) line.startTime = current;
+//				else if (line.startTime + Time < current) line.finishJob();
+//
 
-				if (Mathf.almostEquals(line.startTime, 0f)) line.startTime = current;
-				else if (line.startTime + Time < current) line.finishJob();
-
+				line.finishJob();
 				setDirectInputs(Vector2.zero, 0f);
 			}
 			else
 			{
 				line.startTime = 0f;
-				final float CorrectPower = 0.205f;
+				final float CorrectPower = 0.21f;
 
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}

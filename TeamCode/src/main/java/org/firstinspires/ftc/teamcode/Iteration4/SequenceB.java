@@ -19,8 +19,8 @@ public class SequenceB extends CommonSequence
 		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
 		WobbleGrabber wobbleGrabber = opMode.getBehavior(WobbleGrabber.class);
 
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 89f)));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.GRAB));
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 96f)));
 
 		wait(0.5f);
 
@@ -33,7 +33,7 @@ public class SequenceB extends CommonSequence
 		execute(wobbleGrabber, new WobbleGrabber.Grab(true));
 		execute(wobbleGrabber, new WobbleGrabber.Move(WobbleGrabber.Mode.FOLD));
 
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -36f)));
+		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, -33f)));
 		execute(drivetrain, new Drivetrain.Move(new Vector2(18f, 0f)));
 
 		execute(drivetrain, new Drivetrain.Rotate(90f));
