@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import FTCEngine.Core.Auto.AutoBehavior;
@@ -75,10 +74,10 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			float exponent = 0.72f;
 			float multiplier = 1f;
 
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.1f)
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.4f)
 			{
-				exponent = 0.64f;
-				multiplier = 0.48f;
+				exponent = 0.62f;
+				multiplier = 0.44f;
 			}
 
 			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
@@ -91,13 +90,13 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 
 		if (!opMode.hasSequence())
 		{
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.1f) angleCorrection = false;
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.4f) angleCorrection = false;
 		}
 
 		if (angleCorrection)
 		{
 			float deviation = Mathf.toSignedAngle(getAngle() - persistentAngle);
-			setRawVelocities(positionalInput, deviation / 25f);
+			setRawVelocities(positionalInput, deviation / 28f);
 		}
 		else
 		{
@@ -145,15 +144,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		if (job instanceof Rotate)
 		{
 			Rotate rotate = (Rotate)getCurrentJob();
-			rotate.targetAngle = getAngle() + rotate.angle;
-		}
-
-		if (job instanceof Trace)
-		{
-			Trace rotate = (Trace)getCurrentJob();
-			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
-
-			rotate.startDistance = distance.getDistance();
+			rotate.targetAngle = persistentAngle + rotate.angle;
 		}
 	}
 
@@ -166,8 +157,8 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Move move = (Move)job;
 
-			final float Cushion = 150f;
-			final float Threshold = Cushion * 0.24f;
+			final float Cushion = 170f;
+			final float Threshold = Cushion * 0.22f;
 
 			float difference = move.distance - getAveragePosition();
 
@@ -193,23 +184,35 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		{
 			Rotate rotate = (Rotate)job;
 
-			final float Cushion = 22f;
-			final float Threshold = 5f;
+			final float Threshold = 8f;
+			final float Cushion = 42f;
+
+			final float MinPower = 0.21f;
+			final float MaxPower = 0.47f;
 
 			float difference = Mathf.toSignedAngle(rotate.targetAngle - getAngle());
 
 			if (Math.abs(difference) < Threshold)
 			{
-				persistentAngle = rotate.targetAngle;
+				float current = opMode.time.getTime();
+				final float Time = 0.12f;
 
-				difference = 0f;
-				rotate.finishJob();
+				if (Mathf.almostEquals(rotate.startTime, 0f)) rotate.startTime = current;
+				else if (rotate.startTime + Time < current)
+				{
+					persistentAngle = rotate.targetAngle;
+					rotate.finishJob();
+				}
+
+				setDirectInputs(Vector2.zero, 0f);
 			}
+			else
+			{
+				rotate.startTime = 0f;
 
-			int direction = -Mathf.normalize(difference);
-
-			difference = (float)Math.pow(Mathf.clamp01(Math.abs(difference) / Cushion), 1.6f);
-			setDirectInputs(Vector2.zero, difference * rotate.power * direction);
+				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(Math.abs(difference) / Cushion));
+				setDirectInputs(Vector2.zero, power * -Mathf.normalize(difference));
+			}
 		}
 
 		if (job instanceof Reset)
@@ -220,36 +223,67 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			reset.finishJob();
 		}
 
-		if (job instanceof Trace)
+		if (job instanceof Obstacle)
 		{
-			Trace trace = (Trace)job;
+			Obstacle obstacle = (Obstacle)job;
+			DistanceSensors sensor = opMode.getBehavior(DistanceSensors.class);
 
+			final float Threshold = 1.8f;
+			final float Cushion = 12f;
+
+			final float MinPower = 0.22f;
+			final float MaxPower = 0.46f;
+
+			float difference = sensor.getDistance() - obstacle.distance;
+
+			if (Math.abs(difference) < Threshold)
+			{
+				float current = opMode.time.getTime();
+				final float Time = 0.12f;
+
+				if (Mathf.almostEquals(obstacle.startTime, 0f)) obstacle.startTime = current;
+				else if (obstacle.startTime + Time < current) obstacle.finishJob();
+
+				setDirectInputs(Vector2.zero, 0f);
+			}
+			else
+			{
+				obstacle.startTime = 0f;
+
+				float power = Mathf.lerp(MinPower, MaxPower, Mathf.sigmoid(Math.abs(difference) / Cushion));
+				setDirectInputs(new Vector2(power * Mathf.normalize(difference), 0f), 0f);
+			}
+		}
+
+		if (job instanceof Line)
+		{
+			Line line = (Line)job;
 			ColorSensors color = opMode.getBehavior(ColorSensors.class);
-			DistanceSensors distance = opMode.getBehavior(DistanceSensors.class);
 
-			boolean front = color.getLineFront() == ColorSensors.Line.WHITE;
+			boolean front = color.getLineFront() == line.color;
 			boolean back = color.getLineBack() == ColorSensors.Line.NONE;
 
 			int y = front ? 1 : back ? -1 : 0;
 
-			final float StrafePower = 0.42f;
-			final float CorrectPower = 0.22f;
-
 			if (y == 0)
 			{
-				float percent = (distance.getDistance() - trace.startDistance) / (trace.distance - trace.startDistance);
-				float strafe = -StrafePower;
+//				float current = opMode.time.getTime();
+//				final float Time = 0.07f;
+//
+//				if (Mathf.almostEquals(line.startTime, 0f)) line.startTime = current;
+//				else if (line.startTime + Time < current) line.finishJob();
+//
 
-				if (percent >= 1f)
-				{
-					strafe = 0f;
-					job.finishJob();
-				}
-				else strafe *= Math.pow(1f - percent, 0.75f);
-
-				setDirectInputs(Vector2.right.mul(strafe), 0f);
+				line.finishJob();
+				setDirectInputs(Vector2.zero, 0f);
 			}
-			else setDirectInputs(Vector2.up.mul(y * CorrectPower), 0f);
+			else
+			{
+				line.startTime = 0f;
+				final float CorrectPower = 0.21f;
+
+				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
+			}
 		}
 	}
 
@@ -264,7 +298,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		for (DcMotor motor : motors)
 		{
 			motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-			motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //Changed from run without encoders
+			motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		}
 	}
 
@@ -351,19 +385,13 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	{
 		public Rotate(float angle)
 		{
-			this(angle, 0.6f);
-		}
-
-		public Rotate(float angle, float power)
-		{
 			this.angle = angle;
-			this.power = power;
 		}
 
 		public final float angle;
-		public final float power;
 
 		private float targetAngle;
+		private float startTime;
 	}
 
 	/**
@@ -375,17 +403,35 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 	}
 
 	/**
-	 * Moves the drivetrain horizontally by strafing against a line
-	 * while correcting the vertical position using color sensors
+	 * Strafes the drivetrain so its side is a certain distance to an obstacle.
 	 */
-	public static class Trace extends Drivetrain.Job
+	public static class Obstacle extends Drivetrain.Job
 	{
-		public Trace(float distance)
+		public Obstacle(float distance)
 		{
 			this.distance = distance;
 		}
 
 		public final float distance;
-		private float startDistance;
+		private float startTime;
+	}
+
+	/**
+	 * Drives the drivetrain backward until it hits a line
+	 */
+	public static class Line extends Drivetrain.Job
+	{
+		public Line()
+		{
+			this(ColorSensors.Line.WHITE);
+		}
+
+		public Line(ColorSensors.Line color)
+		{
+			this.color = color;
+		}
+
+		public final ColorSensors.Line color;
+		private float startTime;
 	}
 }

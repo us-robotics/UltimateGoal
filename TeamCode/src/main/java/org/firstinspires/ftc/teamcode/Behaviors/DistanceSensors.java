@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.util.HashMap;
+
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Vector2;
 
 public class DistanceSensors extends Behavior
 {
@@ -25,20 +27,32 @@ public class DistanceSensors extends Behavior
 	public void awake(HardwareMap hardwareMap)
 	{
 		super.awake(hardwareMap);
-		distance = hardwareMap.get(DistanceSensor.class, "distance");
+
+		front = hardwareMap.get(DistanceSensor.class, "frontDistance");
+		back = hardwareMap.get(DistanceSensor.class, "backDistance");
 	}
 
-	DistanceSensor distance;
+	private DistanceSensor front;
+	private DistanceSensor back;
 
 	@Override
 	public void update()
 	{
 		super.update();
+
 		opMode.debug.addData("Distance", getDistance());
 	}
 
 	public float getDistance()
 	{
-		return (float)distance.getDistance(DistanceUnit.CM);
+		float frontDistance = (float)front.getDistance(DistanceUnit.CM);
+		float backDistance = (float)back.getDistance(DistanceUnit.CM);
+
+		final float Threshold = 500f;
+
+		if (frontDistance > Threshold) return backDistance;
+		if (backDistance > Threshold) return frontDistance;
+
+		return (frontDistance + backDistance) / 2f;
 	}
 }

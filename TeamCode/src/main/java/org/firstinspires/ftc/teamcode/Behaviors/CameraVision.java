@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
-import com.qualcomm.ftccommon.configuration.EditLegacyServoControllerActivity;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.*;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
-import FTCEngine.Core.*;
-import FTCEngine.Core.Auto.JobSequence;
+import FTCEngine.Core.Behavior;
+import FTCEngine.Core.OpModeBase;
 
 public class CameraVision extends Behavior
 {
@@ -112,7 +118,7 @@ public class CameraVision extends Behavior
 
 	private static class CameraPipeline extends OpenCvPipeline
 	{
-		private static final Scalar Purple = new Scalar(255f, 0f, 255f);
+		private static final Scalar GRAY = new Scalar(127f, 127f, 127f);
 		private static final Point RegionCenter = new Point(ResolutionX * 0.755f, ResolutionY / 3f);
 
 		private static final float RegionWidth = ResolutionX / 7f;
@@ -151,8 +157,8 @@ public class CameraVision extends Behavior
 			meanUpper = Core.mean(submatUpper);
 			meanLower = Core.mean(submatLower);
 
-			Imgproc.rectangle(saturation, RegionUpper, Purple, 1);
-			Imgproc.rectangle(saturation, RegionLower, Purple, 1);
+			Imgproc.rectangle(saturation, RegionUpper, GRAY, 1);
+			Imgproc.rectangle(saturation, RegionLower, GRAY, 1);
 
 			return saturation;
 		}
