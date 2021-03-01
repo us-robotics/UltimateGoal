@@ -46,13 +46,14 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	private DcMotor flywheel;
 	private Servo trigger;
 
-	public static final float HIGH_POWER = 0.80f; //Power for high goal
-	public static final float SHOT_POWER = 0.7275f; //Power for power shots
+	public static final float HIGH_POWER = 0.8025f; //Power for high goal
+	public static final float SHOT_POWER = 0.7225f; //Power for power shots
 
 	private float power = HIGH_POWER;
 
 	private boolean primed;
 	private boolean hit;
+	private float multiplier = 1f;
 
 	@Override
 	public void update()
@@ -71,6 +72,8 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
+
+			multiplier = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER) > 0.4f ? -0.3f : 1f;
 		}
 
 		opMode.debug.addData("Launcher Power", power);
@@ -79,7 +82,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 	private void apply()
 	{
-		flywheel.setPower(primed ? power : 0d);
+		flywheel.setPower(primed ? power * multiplier : 0d);
 		trigger.setPosition(hit ? 0d : 0.52d);
 	}
 

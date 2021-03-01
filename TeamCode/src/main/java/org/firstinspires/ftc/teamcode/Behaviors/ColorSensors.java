@@ -64,7 +64,7 @@ public class ColorSensors extends Behavior
 		Vector2 sb = getSaturationBrightness(color); //Saturation and brightness/value
 
 		final float SaturationThreshold = 45f;
-		final float BrightnessThreshold = 2e5f;
+		final float BrightnessThreshold = 1.5e5f;
 
 		if (sb.x > SaturationThreshold) return Line.COLOR;
 		return sb.y > BrightnessThreshold ? Line.WHITE : Line.NONE;
