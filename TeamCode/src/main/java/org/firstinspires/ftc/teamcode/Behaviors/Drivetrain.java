@@ -96,7 +96,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 		if (angleCorrection)
 		{
 			float deviation = Mathf.toSignedAngle(getAngle() - persistentAngle);
-			setRawVelocities(positionalInput, deviation / 28f);
+			setRawVelocities(positionalInput, Mathf.clamp(deviation / 32f, -0.7f, 0.7f));
 		}
 		else
 		{
@@ -280,7 +280,7 @@ public class Drivetrain extends AutoBehavior<Drivetrain.Job>
 			else
 			{
 				line.startTime = 0f;
-				final float CorrectPower = 0.21f;
+				final float CorrectPower = 0.2f;
 
 				setDirectInputs(new Vector2(0f, y * CorrectPower), 0f);
 			}

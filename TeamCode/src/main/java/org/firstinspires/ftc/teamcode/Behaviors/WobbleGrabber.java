@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -50,7 +51,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 	private Mode mode = Mode.FOLD;
 	private boolean isReleased;
 
-	private static final float MOVE_POWER = 0.38f;
+	private static final float MOVE_POWER = 0.43f;
 
 	@Override
 	public void update()
@@ -114,7 +115,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 				}
 				else
 				{
-					arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+					arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 					arm.setPower(MOVE_POWER);
 				}
 
@@ -136,13 +137,13 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			}
 			case DOWN:
 			{
-				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 				arm.setPower(-MOVE_POWER);
 				break;
 			}
 			case IDLE:
 			{
-				arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+				arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 				arm.setPower(0f);
 				break;
 			}
