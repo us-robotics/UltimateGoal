@@ -47,9 +47,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,6 +59,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.google.blocks.ftcrobotcontroller.ProgrammingWebHandlers;
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.ftccommon.ClassManagerFactory;
@@ -175,7 +177,8 @@ public class FtcRobotControllerActivity extends Activity
 
   private WifiDirectChannelChanger wifiDirectChannelChanger;
 
-  protected class RobotRestarter implements Restarter {
+  protected class RobotRestarter implements Restarter
+  {
 
     public void requestRestart() {
       requestRobotRestart();
@@ -267,7 +270,6 @@ public class FtcRobotControllerActivity extends Activity
 
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
-    RobotLog.vv(TAG, "App version: OpenRC " + getString(R.string.version_name_for_manifest) + " " + getString(R.string.openrc_variant));
     ThemedActivity.appAppThemeToActivity(getTag(), this); // do this way instead of inherit to help AppInventor
 
     // Oddly, sometimes after a crash & restart the root activity will be something unexpected, like from the before crash? We don't yet understand
@@ -312,6 +314,7 @@ public class FtcRobotControllerActivity extends Activity
           }
         });
         popupMenu.inflate(R.menu.ftc_robot_controller);
+        FtcDashboard.populateMenu(popupMenu.getMenu());
         popupMenu.show();
       }
     });
@@ -381,6 +384,11 @@ public class FtcRobotControllerActivity extends Activity
     }
 
     FtcAboutActivity.setBuildTimeFromBuildConfig(BuildConfig.BUILD_TIME);
+
+    // check to see if there is a preferred Wi-Fi to use.
+    checkPreferredChannel();
+
+    FtcDashboard.start();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -401,17 +409,6 @@ public class FtcRobotControllerActivity extends Activity
   protected void onStart() {
     super.onStart();
     RobotLog.vv(TAG, "onStart()");
-
-    // If we're start()ing after a stop(), then shut the old robot down so
-    // we can refresh it with new state (e.g., with new hw configurations)
-    shutdownRobot();
-
-    updateUIAndRequestRobotSetup();
-
-    cfgFileMgr.getActiveConfigAndUpdateUI();
-
-    // check to see if there is a preferred Wi-Fi to use.
-    checkPreferredChannel();
 
     entireScreenLayout.setOnTouchListener(new View.OnTouchListener() {
       @Override
@@ -460,6 +457,8 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper != null) preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
 
     RobotLog.cancelWriteLogcatToDisk();
+
+    FtcDashboard.stop();
   }
 
   protected void bindToService() {
@@ -477,11 +476,11 @@ public class FtcRobotControllerActivity extends Activity
   }
 
   protected void logPackageVersions() {
-    RobotLog.logBuildConfig(com.qualcomm.ftcrobotcontroller.BuildConfig.class);
+    RobotLog.logBuildConfig(BuildConfig.class);
     RobotLog.logBuildConfig(com.qualcomm.robotcore.BuildConfig.class);
     RobotLog.logBuildConfig(com.qualcomm.hardware.BuildConfig.class);
     RobotLog.logBuildConfig(com.qualcomm.ftccommon.BuildConfig.class);
-    //RobotLog.logBuildConfig(com.google.blocks.BuildConfig.class);
+    RobotLog.logBuildConfig(com.google.blocks.BuildConfig.class);
     RobotLog.logBuildConfig(org.firstinspires.inspection.BuildConfig.class);
   }
 
@@ -525,6 +524,7 @@ public class FtcRobotControllerActivity extends Activity
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.ftc_robot_controller, menu);
+    FtcDashboard.populateMenu(menu);
     return true;
   }
 
@@ -658,7 +658,9 @@ public class FtcRobotControllerActivity extends Activity
     // was some historical confusion about launch codes here, so we err safely
     if (request == RequestCode.CONFIGURE_ROBOT_CONTROLLER.ordinal() || request == RequestCode.SETTINGS_ROBOT_CONTROLLER.ordinal()) {
       // We always do a refresh, whether it was a cancel or an OK, for robustness
+      shutdownRobot();
       cfgFileMgr.getActiveConfigAndUpdateUI();
+      updateUIAndRequestRobotSetup();
     }
   }
 
@@ -680,6 +682,8 @@ public class FtcRobotControllerActivity extends Activity
         return service.getRobot().eventLoopManager;
       }
     });
+
+    FtcDashboard.attachWebServer(service.getWebServer());
   }
 
   private void updateUIAndRequestRobotSetup() {
@@ -719,6 +723,8 @@ public class FtcRobotControllerActivity extends Activity
 
     passReceivedUsbAttachmentsToEventLoop();
     AndroidBoard.showErrorIfUnknownControlHub();
+
+    FtcDashboard.attachEventLoop(eventLoop);
   }
 
   protected OpModeRegister createOpModeRegister() {
@@ -748,7 +754,7 @@ public class FtcRobotControllerActivity extends Activity
 
   private void checkPreferredChannel() {
     // For P2P network, check to see what preferred channel is.
-    if (networkType ==  NetworkType.WIFIDIRECT) {
+    if (networkType == NetworkType.WIFIDIRECT) {
       int prefChannel = preferencesHelper.readInt(getString(com.qualcomm.ftccommon.R.string.pref_wifip2p_channel), -1);
       if (prefChannel == -1) {
         prefChannel = 0;
