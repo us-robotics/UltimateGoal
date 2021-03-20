@@ -148,7 +148,7 @@ public class WobbleGrabber extends AutoBehavior<WobbleGrabber.Job>
 			}
 		}
 
-		grabber.setPosition(isReleased ? 1f : 0f);
+		grabber.setPosition(isReleased ? 0.6f : 0.2f);
 	}
 
 	public enum Mode
