@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -32,9 +33,9 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.rpmToVelocity;
  *      regression.
  */
 @Config
+@Disabled
 @Autonomous(group = "drive")
-public class AutomaticFeedforwardTuner extends LinearOpMode
-{
+public class AutomaticFeedforwardTuner extends LinearOpMode {
     public static double MAX_POWER = 0.7;
     public static double DISTANCE = 100; // in
 
@@ -42,7 +43,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode
     public void runOpMode() throws InterruptedException {
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
-                                       "when using the built-in drive motor velocity PID.");
+                    "when using the built-in drive motor velocity PID.");
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -127,18 +128,18 @@ public class AutomaticFeedforwardTuner extends LinearOpMode
         drive.setDrivePower(new Pose2d(0.0, 0.0, 0.0));
 
         RegressionUtil.RampResult rampResult = RegressionUtil.fitRampData(
-		        timeSamples, positionSamples, powerSamples, fitIntercept,
-		        LoggingUtil.getLogFile(Misc.formatInvariant(
+                timeSamples, positionSamples, powerSamples, fitIntercept,
+                LoggingUtil.getLogFile(Misc.formatInvariant(
                         "DriveRampRegression-%d.csv", System.currentTimeMillis())));
 
         telemetry.clearAll();
         telemetry.addLine("Quasi-static ramp up test complete");
         if (fitIntercept) {
             telemetry.addLine(Misc.formatInvariant("kV = %.5f, kStatic = %.5f (R^2 = %.2f)",
-                                                   rampResult.kV, rampResult.kStatic, rampResult.rSquare));
+                    rampResult.kV, rampResult.kStatic, rampResult.rSquare));
         } else {
             telemetry.addLine(Misc.formatInvariant("kV = %.5f (R^2 = %.2f)",
-                                                   rampResult.kStatic, rampResult.rSquare));
+                    rampResult.kStatic, rampResult.rSquare));
         }
         telemetry.addLine("Would you like to fit kA?");
         telemetry.addLine("Press (Y/Δ) for yes, (B/O) for no");
@@ -203,14 +204,14 @@ public class AutomaticFeedforwardTuner extends LinearOpMode
             drive.setDrivePower(new Pose2d(0.0, 0.0, 0.0));
 
             RegressionUtil.AccelResult accelResult = RegressionUtil.fitAccelData(
-		            timeSamples, positionSamples, powerSamples, rampResult,
-		            LoggingUtil.getLogFile(Misc.formatInvariant(
+                    timeSamples, positionSamples, powerSamples, rampResult,
+                    LoggingUtil.getLogFile(Misc.formatInvariant(
                             "DriveAccelRegression-%d.csv", System.currentTimeMillis())));
 
             telemetry.clearAll();
             telemetry.addLine("Constant power test complete");
             telemetry.addLine(Misc.formatInvariant("kA = %.5f (R^2 = %.2f)",
-                                                   accelResult.kA, accelResult.rSquare));
+                    accelResult.kA, accelResult.rSquare));
             telemetry.update();
         }
 

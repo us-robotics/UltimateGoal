@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -34,9 +35,9 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  * satisfactory result is produced.
  */
 @Config
+@Disabled
 @Autonomous(group="drive")
-public class TrackingWheelForwardOffsetTuner extends LinearOpMode
-{
+public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
     public static int NUM_TRIALS = 5;
     public static int DELAY = 1000; // ms
@@ -49,8 +50,8 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
-                                       + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
-                                       + "(hardwareMap));\" is called in SampleMecanumDrive.java");
+                    + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
+                    + "(hardwareMap));\" is called in SampleMecanumDrive.java");
         }
 
         telemetry.addLine("Press play to begin the forward offset tuner");
@@ -93,7 +94,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode
         telemetry.clearAll();
         telemetry.addLine("Tuning complete");
         telemetry.addLine(Misc.formatInvariant("Effective forward offset = %.2f (SE = %.3f)",
-                                               forwardOffsetStats.getMean(),
+                forwardOffsetStats.getMean(),
                 forwardOffsetStats.getStandardDeviation() / Math.sqrt(NUM_TRIALS)));
         telemetry.update();
 
