@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.TeleOpSequences;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
+import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberI5;
 
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class TeleOpMain extends OpModeBase
 		behaviorList.add(new Drivetrain(this));
 		behaviorList.add(new Launcher(this));
 		behaviorList.add(new Intake(this));
-		behaviorList.add(new WobbleGrabber(this));
+//		behaviorList.add(new WobbleGrabber(this));
+		behaviorList.add(new WobbleGrabberI5(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
 		behaviorList.add(new ColorSensors(this));
