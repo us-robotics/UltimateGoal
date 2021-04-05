@@ -48,6 +48,10 @@ public class WobbleGrabberI5 extends Behavior
 	private float currentI;
 	private float currentD;
 
+	public float constantP = 4.5f;
+	public float constantI = 3.7f;
+	public float constantD = 0.3f;
+
 	private float previousError;
 
 	@Override
@@ -90,7 +94,7 @@ public class WobbleGrabberI5 extends Behavior
 			}
 			case GRAB:
 			{
-				targetAngle = 44f;
+				targetAngle = 47f;
 				break;
 			}
 		}
@@ -117,11 +121,7 @@ public class WobbleGrabberI5 extends Behavior
 
 		previousError = currentError;
 
-		final float ConstantP = 2.2f;
-		final float ConstantI = 0.1f;
-		final float ConstantD = 0.5f;
-
-		return currentP * ConstantP + currentI * ConstantI + currentD * ConstantD;
+		return currentP * constantP + currentI * constantI + currentD * constantD;
 	}
 
 	private float getAngle()

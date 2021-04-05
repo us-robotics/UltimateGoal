@@ -83,7 +83,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	private void apply()
 	{
 		flywheel.setPower(primed ? power * multiplier : 0d);
-		trigger.setPosition(hit ? 0d : 0.52d);
+		trigger.setPosition(hit ? 0.8d : 1d);
 	}
 
 	@Override
