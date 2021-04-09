@@ -50,7 +50,7 @@ public class WobbleGrabberI5 extends Behavior
 
 	public float constantP = 4.5f;
 	public float constantI = 3.7f;
-	public float constantD = 0.3f;
+	public float constantD = 0.1f;
 
 	private float previousError;
 
@@ -68,7 +68,9 @@ public class WobbleGrabberI5 extends Behavior
 
 			if (magnitude > 0.3f)
 			{
-				if (Math.abs(direction.x) > Math.abs(direction.y)) mode = Mode.HIGH;
+				boolean x = Math.abs(direction.x) > Math.abs(direction.y);
+
+				if (x) mode = direction.x > 0 ? Mode.HIGH : Mode.DROP;
 				else mode = direction.y > 0f ? Mode.FOLD : Mode.GRAB;
 			}
 		}
@@ -84,17 +86,22 @@ public class WobbleGrabberI5 extends Behavior
 		{
 			case FOLD:
 			{
-				targetAngle = 245f;
+				targetAngle = 35f;
 				break;
 			}
 			case HIGH:
 			{
-				targetAngle = 142f;
+				targetAngle = 132f;
+				break;
+			}
+			case DROP:
+			{
+				targetAngle = 174f;
 				break;
 			}
 			case GRAB:
 			{
-				targetAngle = 47f;
+				targetAngle = 227f;
 				break;
 			}
 		}
@@ -135,6 +142,7 @@ public class WobbleGrabberI5 extends Behavior
 	{
 		FOLD,
 		HIGH,
+		DROP,
 		GRAB
 	}
 }

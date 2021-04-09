@@ -25,11 +25,12 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	{
 		super.awake(hardwareMap);
 
-		flywheel = hardwareMap.dcMotor.get("flywheel"); //Rename launcher to flywheel in the config file
+		flywheel = hardwareMap.dcMotor.get("flywheel");
+		lift = hardwareMap.dcMotor.get("lift");
 		trigger = hardwareMap.servo.get("trigger");
 
 		flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
@@ -44,16 +45,18 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	}
 
 	private DcMotor flywheel;
+	private DcMotor lift;
+
 	private Servo trigger;
 
 	public static final float HIGH_POWER = 0.8025f; //Power for high goal
-	public static final float SHOT_POWER = 0.7225f; //Power for power shots
+	public static final float SHOT_POWER = 0.07225f; //Power for power shots
 
-	private float power = HIGH_POWER;
+	private float flywheelPower = HIGH_POWER;
+	private float liftPower;
 
 	private boolean primed;
 	private boolean hit;
-	private float multiplier = 1f;
 
 	@Override
 	public void update()
@@ -63,26 +66,28 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
+
+			liftPower = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
 			hit = opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 			final float POWER_CHANGE_RATE = 0.0025f;
 
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) power += POWER_CHANGE_RATE;
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) power -= POWER_CHANGE_RATE;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP)) flywheelPower += POWER_CHANGE_RATE;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN)) flywheelPower -= POWER_CHANGE_RATE;
 
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) power = HIGH_POWER;
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) power = SHOT_POWER;
-
-			multiplier = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER) > 0.4f ? -0.3f : 1f;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) flywheelPower = HIGH_POWER;
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) flywheelPower = SHOT_POWER;
 		}
 
-		opMode.debug.addData("Launcher Power", power);
+		opMode.debug.addData("Launcher Power", flywheelPower);
 		apply();
 	}
 
 	private void apply()
 	{
-		flywheel.setPower(primed ? power * multiplier : 0d);
+		flywheel.setPower(primed ? flywheelPower : 0d);
+		lift.setPower(liftPower);
+
 		trigger.setPosition(hit ? 0.8d : 1d);
 	}
 
@@ -95,7 +100,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		{
 			Launcher.Prime prime = (Launcher.Prime)job;
 
-			power = prime.power;
+			flywheelPower = prime.power;
 			primed = prime.primed;
 
 			prime.finishJob();

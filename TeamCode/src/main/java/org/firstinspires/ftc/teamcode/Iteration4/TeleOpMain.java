@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Iteration4;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Behaviors.CameraVision;
@@ -35,6 +37,13 @@ public class TeleOpMain extends OpModeBase
 		behaviorList.add(new TeleOpSequences(this));
 		behaviorList.add(new ColorSensors(this));
 		behaviorList.add(new DistanceSensors(this));
+	}
+
+	@Override
+	public void start()
+	{
+		super.start();
+		telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 	}
 
 	@Override
@@ -156,8 +165,8 @@ public class TeleOpMain extends OpModeBase
 			{
 				switch (button)
 				{
-					case LEFT_BUMPER: grabber.constantD -= 0.1f; break;
-					case RIGHT_BUMPER: grabber.constantD += 0.1f; break;
+					case LEFT_BUMPER: grabber.constantD -= 0.01f; break;
+					case RIGHT_BUMPER: grabber.constantD += 0.01f; break;
 				}
 			}
 		});
