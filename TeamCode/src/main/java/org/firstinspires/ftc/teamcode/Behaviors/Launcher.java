@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Mathf;
 
 public class Launcher extends AutoBehavior<Launcher.Job>
 {
@@ -27,13 +30,18 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 		flywheel = hardwareMap.dcMotor.get("flywheel");
 		lift = hardwareMap.dcMotor.get("lift");
-		trigger = hardwareMap.servo.get("trigger");
+		locker = hardwareMap.servo.get("trigger");
 
 		flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+		lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		lift.setDirection(DcMotorSimple.Direction.REVERSE);
+
+		touchUpper = hardwareMap.touchSensor.get("sensorTop");
+		touchLower = hardwareMap.touchSensor.get("sensorBottom");
+
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER);
-		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_UP);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.DPAD_DOWN);
@@ -47,16 +55,18 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 	private DcMotor flywheel;
 	private DcMotor lift;
 
-	private Servo trigger;
+	private TouchSensor touchUpper;
+	private TouchSensor touchLower;
 
-	public static final float HIGH_POWER = 0.8025f; //Power for high goal
-	public static final float SHOT_POWER = 0.07225f; //Power for power shots
+	private Servo locker;
+
+	public static final float HIGH_POWER = 0.7225f; //Power for high goal
+	public static final float SHOT_POWER = 0.7225f; //Power for power shots
 
 	private float flywheelPower = HIGH_POWER;
-	private float liftPower;
 
 	private boolean primed;
-	private boolean hit;
+	private float liftPower;
 
 	@Override
 	public void update()
@@ -66,9 +76,10 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
+			float direction = -opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
 
-			liftPower = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
-			hit = opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
+			if (Mathf.almostEquals(direction, 0f) && liftPower > 0f) liftPower = 0f;
+			else liftPower = direction < 0f ? -1f : direction;
 
 			final float POWER_CHANGE_RATE = 0.0025f;
 
@@ -79,16 +90,28 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) flywheelPower = SHOT_POWER;
 		}
 
-		opMode.debug.addData("Launcher Power", flywheelPower);
+		opMode.debug.addData("Flywheel Power", flywheelPower);
 		apply();
 	}
 
 	private void apply()
 	{
 		flywheel.setPower(primed ? flywheelPower : 0d);
-		lift.setPower(liftPower);
 
-		trigger.setPosition(hit ? 0.8d : 1d);
+		if (liftPower < 0f)
+		{
+			locker.setPosition(0.8d);
+			lift.setPower(touchLower.isPressed() ? 0f : liftPower);
+		}
+		else
+		{
+			locker.setPosition(1d);
+			lift.setPower(touchUpper.isPressed() ? 0f : liftPower);
+		}
+
+		opMode.debug.addData("Lift Power", liftPower);
+		opMode.debug.addData("Up", touchUpper.isPressed());
+		opMode.debug.addData("Lower", touchLower.isPressed());
 	}
 
 	@Override
@@ -110,7 +133,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		{
 			Launch launch = (Launch)job;
 
-			hit = launch.launch;
+//			hit = launch.launch;
 			launch.finishJob();
 		}
 	}

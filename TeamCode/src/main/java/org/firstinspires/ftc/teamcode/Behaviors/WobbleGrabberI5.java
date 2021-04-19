@@ -41,7 +41,7 @@ public class WobbleGrabberI5 extends Behavior
 	private Servo grabber;
 	private AnalogInput potentiometer;
 
-	private Mode mode = Mode.GRAB;
+	private Mode mode = Mode.FOLD;
 	private boolean isReleased;
 
 	private float currentP;
