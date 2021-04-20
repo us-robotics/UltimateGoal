@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
-import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -47,10 +46,6 @@ public class WobbleGrabberI5 extends Behavior
 	private float currentP;
 	private float currentI;
 	private float currentD;
-
-	public float constantP = 4.5f;
-	public float constantI = 3.7f;
-	public float constantD = 0.1f;
 
 	private float previousError;
 
@@ -112,12 +107,9 @@ public class WobbleGrabberI5 extends Behavior
 		arm.setPower(power * 0.001f);
 		grabber.setPosition(isReleased ? 1f : 0f);
 
-		opMode.telemetry.addData("angle", getAngle());
-		opMode.telemetry.addData("target", targetAngle);
-		opMode.telemetry.addData("power", power);
-		opMode.telemetry.addData("p", currentP);
-		opMode.telemetry.addData("i", currentI);
-		opMode.telemetry.addData("d", currentD);
+//		opMode.telemetry.addData("angle", getAngle());
+//		opMode.telemetry.addData("target", targetAngle);
+//		opMode.telemetry.addData("power", power);
 	}
 
 	private float updatePID(float currentError, float deltaTime)
@@ -128,7 +120,11 @@ public class WobbleGrabberI5 extends Behavior
 
 		previousError = currentError;
 
-		return currentP * constantP + currentI * constantI + currentD * constantD;
+		final float ConstantP = 4.5f;
+		final float ConstantI = 3.7f;
+		final float ConstantD = 0.1f;
+
+		return currentP * ConstantP + currentI * ConstantI + currentD * ConstantD;
 	}
 
 	private float getAngle()

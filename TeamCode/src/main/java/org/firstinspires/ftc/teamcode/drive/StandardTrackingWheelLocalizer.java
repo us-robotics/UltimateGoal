@@ -40,8 +40,8 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer
 
 	//NOTE MULTIPLIER: 367.3428571429 and 524.7755102041 (multiplier 1.4285714286)
 
-	private final double X_MULTIPLIER = 1.0245226882189928d;
-	private final double Y_MULTIPLIER = 1.0353819408473899d;
+	private final double X_MULTIPLIER = 1.0146038042153909d;
+	private final double Y_MULTIPLIER = 1.0028568537003515d;
 
 	public StandardTrackingWheelLocalizer(HardwareMap hardwareMap)
 	{
@@ -52,12 +52,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer
 		                   ));
 
 		leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "intake"));
-		rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "flywheel"));
+		rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "lift"));
 		frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "arm"));
 
 		// TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 		leftEncoder.setDirection(Encoder.Direction.REVERSE);
-		frontEncoder.setDirection(Encoder.Direction.REVERSE);
+		rightEncoder.setDirection(Encoder.Direction.REVERSE);
 	}
 
 	public static double encoderTicksToInches(double ticks)

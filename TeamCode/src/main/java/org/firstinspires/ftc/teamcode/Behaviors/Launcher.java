@@ -76,10 +76,12 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
-			float direction = -opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
+			float direction = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
 
-			if (Mathf.almostEquals(direction, 0f) && liftPower > 0f) liftPower = 0f;
-			else liftPower = direction < 0f ? -1f : direction;
+			boolean rest = Mathf.almostEquals(direction, 0f);
+
+			if (direction > 0f && !rest) liftPower = direction;
+			else liftPower = rest && liftPower >= 0f ? 0f : -1f;
 
 			final float POWER_CHANGE_RATE = 0.0025f;
 
@@ -100,18 +102,14 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 		if (liftPower < 0f)
 		{
-			locker.setPosition(0.8d);
+			locker.setPosition(0.8d); //Released
 			lift.setPower(touchLower.isPressed() ? 0f : liftPower);
 		}
 		else
 		{
-			locker.setPosition(1d);
+			locker.setPosition(1d); //Locked
 			lift.setPower(touchUpper.isPressed() ? 0f : liftPower);
 		}
-
-		opMode.debug.addData("Lift Power", liftPower);
-		opMode.debug.addData("Up", touchUpper.isPressed());
-		opMode.debug.addData("Lower", touchLower.isPressed());
 	}
 
 	@Override
