@@ -120,10 +120,9 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		if (job instanceof Launcher.Prime)
 		{
 			Launcher.Prime prime = (Launcher.Prime)job;
+			if (prime.power >= 0f) flywheelPower = prime.power;
 
-			flywheelPower = prime.power;
 			primed = prime.primed;
-
 			prime.finishJob();
 		}
 
@@ -145,6 +144,12 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		public Prime(float power, boolean primed)
 		{
 			this.power = power;
+			this.primed = primed;
+		}
+
+		public Prime(boolean primed)
+		{
+			power = -1f; //Do not change power;
 			this.primed = primed;
 		}
 

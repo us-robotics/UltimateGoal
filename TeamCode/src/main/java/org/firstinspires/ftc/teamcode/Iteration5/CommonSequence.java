@@ -20,7 +20,7 @@ public abstract class CommonSequence extends JobSequence
 		super(opMode);
 	}
 
-	protected Trajectory dropWobbles(Pose2d start, Vector2d center)
+	protected Pose2d dropWobbles(Pose2d start, Vector2d center)
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
 		WobbleGrabberI5 grabber = opMode.getBehavior(WobbleGrabberI5.class);
@@ -64,18 +64,18 @@ public abstract class CommonSequence extends JobSequence
 
 		buffer(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.HIGH));
 
-		return wobbleDrop2;
+		return wobbleDrop2.end();
 	}
 
-	protected Trajectory powerShots(Pose2d start)
+	protected Pose2d powerShots(Pose2d start)
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
 		Launcher launcher = opMode.getBehavior(Launcher.class);
 
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
-		execute(launcher, new Launcher.Lift(-1));
+		buffer(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+		buffer(launcher, new Launcher.Lift(-1));
 
 		Trajectory goLaunch1 = drive.trajectoryBuilder(start)
 				.splineTo(new Vector2d(2d, 28d), Math.toRadians(180d)).build();
@@ -105,8 +105,9 @@ public abstract class CommonSequence extends JobSequence
 
 		wait(0.5f);
 
+		execute(launcher, new Launcher.Prime(false));
 		execute(launcher, new Launcher.Lift(-1));
 
-		return goLaunch3;
+		return goLaunch3.end();
 	}
 }

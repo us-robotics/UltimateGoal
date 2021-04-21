@@ -80,8 +80,8 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 
 		if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.4f)
 		{
-			exponent = 0.62f;
-			multiplier = 0.44f;
+			exponent = 0.56f;
+			multiplier = 0.32f;
 		}
 
 		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
@@ -161,9 +161,12 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 		if (job instanceof Follow)
 		{
 			Follow follow = (Follow)job;
+
 			drive.followTrajectoryAsync(follow.trajectory);
+			drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		}
 	}
+
 	@Override
 	protected void updateJob()
 	{
@@ -184,7 +187,10 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 
 	public static class Follow extends Job
 	{
-		public Follow(Trajectory trajectory) {this.trajectory = trajectory;}
+		public Follow(Trajectory trajectory)
+		{
+			this.trajectory = trajectory;
+		}
 
 		public final Trajectory trajectory;
 	}
