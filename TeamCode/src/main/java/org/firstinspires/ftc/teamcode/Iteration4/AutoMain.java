@@ -18,7 +18,7 @@ import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 
-@Autonomous(name = "Ultimate Goal AutoMain")
+//@Autonomous(name = "Ultimate Goal AutoMain")
 public class AutoMain extends OpModeBase
 {
 	@Override

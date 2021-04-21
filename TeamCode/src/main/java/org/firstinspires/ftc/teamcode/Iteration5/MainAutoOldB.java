@@ -4,13 +4,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "MainAutoA")
-public class MainAutoA extends MainAuto
+@Autonomous(name = "MainAutoOldB")
+public class MainAutoOldB extends MainAutoOld
 {
 	@Override
 	public Vector2d getTargetCenter()
 	{
-		return new Vector2d(12d, 60d);
+		return new Vector2d(36d, 36d);
 	}
 
 	@Override

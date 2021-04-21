@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Behaviors.CameraVision;
 import org.firstinspires.ftc.teamcode.Behaviors.ColorSensors;
 import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
+import org.firstinspires.ftc.teamcode.Behaviors.DrivetrainI5;
 import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
@@ -28,15 +29,12 @@ public class TeleOpMain extends OpModeBase
 	@Override
 	public void addBehaviors(List<Behavior> behaviorList)
 	{
-		behaviorList.add(new Drivetrain(this));
+		behaviorList.add(new DrivetrainI5(this));
 		behaviorList.add(new Launcher(this));
 		behaviorList.add(new Intake(this));
-//		behaviorList.add(new WobbleGrabber(this));
 		behaviorList.add(new WobbleGrabberI5(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
 		behaviorList.add(new TeleOpSequences(this));
-		behaviorList.add(new ColorSensors(this));
-		behaviorList.add(new DistanceSensors(this));
 	}
 
 	@Override

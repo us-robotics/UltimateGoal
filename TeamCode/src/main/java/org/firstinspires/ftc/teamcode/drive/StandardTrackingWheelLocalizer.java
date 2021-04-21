@@ -41,7 +41,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer
 	//NOTE MULTIPLIER: 367.3428571429 and 524.7755102041 (multiplier 1.4285714286)
 
 	private final double X_MULTIPLIER = 1.0146038042153909d;
-	private final double Y_MULTIPLIER = 1.0028568537003515d;
+	private final double Y_MULTIPLIER = 1.0334997020078622d;
 
 	public StandardTrackingWheelLocalizer(HardwareMap hardwareMap)
 	{

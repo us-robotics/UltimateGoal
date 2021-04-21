@@ -6,12 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import FTCEngine.Core.Auto.AutoBehavior;
 import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
+import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 
-public class WobbleGrabberI5 extends Behavior
+public class WobbleGrabberI5 extends AutoBehavior<WobbleGrabberI5.Job>
 {
 	/**
 	 * NOTE: Do not configure the electronics in the constructor, do them in the awake method!
@@ -105,11 +107,35 @@ public class WobbleGrabberI5 extends Behavior
 		float power = updatePID(currentError, opMode.time.getDeltaTime());
 
 		arm.setPower(power * 0.001f);
-		grabber.setPosition(isReleased ? 1f : 0f);
+		grabber.setPosition(isReleased ? 0.5f : 0f);
 
 //		opMode.telemetry.addData("angle", getAngle());
 //		opMode.telemetry.addData("target", targetAngle);
 //		opMode.telemetry.addData("power", power);
+	}
+
+	@Override
+	protected void updateJob()
+	{
+		Job job = getCurrentJob();
+
+		if (job instanceof Move)
+		{
+			Move move = (Move)job;
+
+			mode = move.mode;
+			apply(); //We need to actually set the target
+
+			if (Math.abs(previousError) < 8f) move.finishJob();
+		}
+
+		if (job instanceof Grab)
+		{
+			Grab grab = (Grab)job;
+
+			isReleased = !grab.grab;
+			grab.finishJob();
+		}
 	}
 
 	private float updatePID(float currentError, float deltaTime)
@@ -140,5 +166,29 @@ public class WobbleGrabberI5 extends Behavior
 		HIGH,
 		DROP,
 		GRAB
+	}
+
+	abstract static class Job extends FTCEngine.Core.Auto.Job
+	{
+	}
+
+	public static class Move extends Job
+	{
+		public Move(WobbleGrabberI5.Mode mode)
+		{
+			this.mode = mode;
+		}
+
+		public final WobbleGrabberI5.Mode mode;
+	}
+
+	public static class Grab extends Job
+	{
+		public Grab(boolean grab)
+		{
+			this.grab = grab;
+		}
+
+		public final boolean grab;
 	}
 }

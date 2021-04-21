@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Behaviors;
 
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -67,37 +68,30 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 	{
 		super.update();
 
-		Vector2 positionalInput = Vector2.zero;
-		float rotationalInput = 0f;
+		if (opMode.hasSequence()) return;
 
-		if (!opMode.hasSequence())
+		//Process input if is not in auto
+		Vector2 positionalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
+		float rotationalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
+
+		//Process input for smoother control by interpolating a polynomial curve
+		float exponent = 0.72f;
+		float multiplier = 1f;
+
+		if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.4f)
 		{
-			//Process input if is not in auto
-			positionalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.LEFT_JOYSTICK);
-			rotationalInput = opMode.input.getVector(Input.Source.CONTROLLER_1, Input.Button.RIGHT_JOYSTICK).x;
-
-			//Process input for smoother control by interpolating a polynomial curve
-			float exponent = 0.72f;
-			float multiplier = 1f;
-
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.LEFT_TRIGGER) > 0.4f)
-			{
-				exponent = 0.62f;
-				multiplier = 0.44f;
-			}
-
-			positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
-			rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * multiplier;
+			exponent = 0.62f;
+			multiplier = 0.44f;
 		}
+
+		positionalInput = positionalInput.normalize().mul((float)Math.pow(positionalInput.getMagnitude(), exponent) * multiplier);
+		rotationalInput = Mathf.normalize(rotationalInput) * (float)Math.pow(Math.abs(rotationalInput), exponent) * multiplier;
 
 		//If no rotational input, then IMU is used to counterbalance hardware inaccuracy to drive straight
 		if (!positionalInput.equals(Vector2.zero)) angleCorrection = true;
 		if (!Mathf.almostEquals(rotationalInput, 0f)) angleCorrection = false;
 
-		if (!opMode.hasSequence())
-		{
-			if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.4f) angleCorrection = false;
-		}
+		if (opMode.input.getTrigger(Input.Source.CONTROLLER_1, Input.Button.RIGHT_TRIGGER) > 0.4f) angleCorrection = false;
 
 		if (angleCorrection)
 		{
@@ -109,6 +103,11 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 			persistentAngle = getAngle();
 			setRawVelocities(positionalInput, rotationalInput);
 		}
+	}
+
+	public SampleMecanumDrive getDrive()
+	{
+		return drive;
 	}
 
 	private void setRawVelocities(Vector2 localDirection, float angularDelta)
@@ -153,15 +152,40 @@ public class DrivetrainI5 extends AutoBehavior<DrivetrainI5.Job>
 	}
 
 	@Override
+	public void onJobAdded()
+	{
+		super.onJobAdded();
+
+		Job job = getCurrentJob();
+
+		if (job instanceof Follow)
+		{
+			Follow follow = (Follow)job;
+			drive.followTrajectoryAsync(follow.trajectory);
+		}
+	}
+	@Override
 	protected void updateJob()
 	{
 		Job job = getCurrentJob();
 
+		drive.update();
 
-		if (!drive.isBusy()) job.finishJob();
+		if (!drive.isBusy())
+		{
+			job.finishJob();
+			resetMotorPositions();
+		}
 	}
 
 	static abstract class Job extends FTCEngine.Core.Auto.Job
 	{
+	}
+
+	public static class Follow extends Job
+	{
+		public Follow(Trajectory trajectory) {this.trajectory = trajectory;}
+
+		public final Trajectory trajectory;
 	}
 }
