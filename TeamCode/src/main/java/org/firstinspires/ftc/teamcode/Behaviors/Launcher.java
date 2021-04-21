@@ -127,12 +127,12 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 			prime.finishJob();
 		}
 
-		if (job instanceof Launch)
+		if (job instanceof Lift)
 		{
-			Launch launch = (Launch)job;
+			Lift lift = (Lift)job;
 
-//			hit = launch.launch;
-			launch.finishJob();
+			liftPower = lift.direction;
+			lift.finishJob();
 		}
 	}
 
@@ -152,13 +152,13 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		public final boolean primed;
 	}
 
-	public static class Launch extends Launcher.Job
+	public static class Lift extends Launcher.Job
 	{
-		public Launch(boolean launch)
+		public Lift(int direction)
 		{
-			this.launch = launch;
+			this.direction = direction;
 		}
 
-		public final boolean launch;
+		public final int direction;
 	}
 }

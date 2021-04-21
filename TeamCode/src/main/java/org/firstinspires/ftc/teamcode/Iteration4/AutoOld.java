@@ -104,18 +104,18 @@ public class AutoOld extends OpModeBase
 			execute(drivetrain, new Drivetrain.Reset());
 
 			//Launch ring 1
-			execute(launcher, new Launcher.Launch(true));
+			execute(launcher, new Launcher.Lift(true));
 			wait(1f);
 
-			execute(launcher, new Launcher.Launch(false));
+			execute(launcher, new Launcher.Lift(false));
 			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
 			wait(1f);
 
 			//Launch ring 2
-			execute(launcher, new Launcher.Launch(true));
+			execute(launcher, new Launcher.Lift(true));
 			wait(1f);
 
-			execute(launcher, new Launcher.Launch(false));
+			execute(launcher, new Launcher.Lift(false));
 			execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, true));
 
 			execute(intake, new Intake.Run(0.4f));
@@ -124,10 +124,10 @@ public class AutoOld extends OpModeBase
 			wait(0.5f);
 
 			//Launch ring 3
-			execute(launcher, new Launcher.Launch(true));
+			execute(launcher, new Launcher.Lift(true));
 			wait(1f);
 
-			execute(launcher, new Launcher.Launch(false));
+			execute(launcher, new Launcher.Lift(false));
 			execute(launcher, new Launcher.Prime(0f, false));
 
 			//Rotate back to starting rotation

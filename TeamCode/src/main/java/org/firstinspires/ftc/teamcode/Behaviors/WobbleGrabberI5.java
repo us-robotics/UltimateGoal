@@ -7,10 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import FTCEngine.Core.Auto.AutoBehavior;
-import FTCEngine.Core.Behavior;
 import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
-import FTCEngine.Math.Mathf;
 import FTCEngine.Math.Vector2;
 
 public class WobbleGrabberI5 extends AutoBehavior<WobbleGrabberI5.Job>

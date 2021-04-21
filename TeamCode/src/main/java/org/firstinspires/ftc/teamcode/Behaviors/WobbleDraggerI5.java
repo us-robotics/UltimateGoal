@@ -23,39 +23,39 @@ public class WobbleDraggerI5 extends AutoBehavior<WobbleDraggerI5.Job>
 	}
 
 	private Servo jeff;
-	private boolean grabbed = true;
+	private boolean dragging = true;
 
 	@Override
 	protected void updateJob()
 	{
 		Job job = getCurrentJob();
 
-		if (job instanceof Grab)
+		if (job instanceof Drag)
 		{
-			Grab grab = (Grab)job;
-			grabbed = grab.grab;
+			Drag drag = (Drag)job;
+			dragging = drag.drag;
 
 			apply();
-			grab.finishJob();
+			drag.finishJob();
 		}
 	}
 
 	private void apply()
 	{
-		jeff.setPosition(grabbed ? 0f : 0.7f);
+		jeff.setPosition(dragging ? 0f : 0.7f);
 	}
 
 	abstract static class Job extends FTCEngine.Core.Auto.Job
 	{
 	}
 
-	public static class Grab extends Job
+	public static class Drag extends Job
 	{
-		public Grab(boolean grab)
+		public Drag(boolean drag)
 		{
-			this.grab = grab;
+			this.drag = drag;
 		}
 
-		public final boolean grab;
+		public final boolean drag;
 	}
 }

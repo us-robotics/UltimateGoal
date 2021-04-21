@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Iteration4;
 
-import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
 import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
@@ -41,47 +40,47 @@ public abstract class CommonSequence extends JobSequence
 
 	protected void powerShots()
 	{
-		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
-		Launcher launcher = opMode.getBehavior(Launcher.class);
-
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(drivetrain, new Drivetrain.Obstacle(54f));
-		execute(drivetrain, new Drivetrain.Line());
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
-
-		//Launch first ring
-		execute(launcher, new Launcher.Launch(true));
-		wait(0.75f);
-
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.015f, true));
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(drivetrain, new Drivetrain.Obstacle(72f));
-		execute(drivetrain, new Drivetrain.Line());
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
-
-		//Launch second ring
-		execute(launcher, new Launcher.Launch(true));
-		wait(0.75f);
-
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.01f, true));
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(drivetrain, new Drivetrain.Obstacle(90f));
-		execute(drivetrain, new Drivetrain.Line());
-
-		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
-
-		//Launch third ring
-		execute(launcher, new Launcher.Launch(true));
-		wait(0.75f);
-
-		execute(launcher, new Launcher.Launch(false));
-		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
+//		Drivetrain drivetrain = opMode.getBehavior(Drivetrain.class);
+//		Launcher launcher = opMode.getBehavior(Launcher.class);
+//
+//		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+//
+//		execute(launcher, new Launcher.Lift(false));
+//		execute(drivetrain, new Drivetrain.Obstacle(54f));
+//		execute(drivetrain, new Drivetrain.Line());
+//
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
+//
+//		//Launch first ring
+//		execute(launcher, new Launcher.Lift(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.015f, true));
+//
+//		execute(launcher, new Launcher.Lift(false));
+//		execute(drivetrain, new Drivetrain.Obstacle(72f));
+//		execute(drivetrain, new Drivetrain.Line());
+//
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
+//
+//		//Launch second ring
+//		execute(launcher, new Launcher.Lift(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER - 0.01f, true));
+//
+//		execute(launcher, new Launcher.Lift(false));
+//		execute(drivetrain, new Drivetrain.Obstacle(90f));
+//		execute(drivetrain, new Drivetrain.Line());
+//
+//		execute(drivetrain, new Drivetrain.Move(new Vector2(0f, 4f), 0.88f));
+//
+//		//Launch third ring
+//		execute(launcher, new Launcher.Lift(true));
+//		wait(0.75f);
+//
+//		execute(launcher, new Launcher.Lift(false));
+//		execute(launcher, new Launcher.Prime(Launcher.HIGH_POWER, false));
 	}
 
 //	protected void grabWobble2()
