@@ -20,7 +20,7 @@ public abstract class CommonSequence extends JobSequence
 		super(opMode);
 	}
 
-	protected Pose2d dropWobbles(Pose2d start, Vector2d center)
+	protected Pose2d dropWobbles(Pose2d start, Vector2d center, Vector2d grabPoint)
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
 		WobbleGrabberI5 grabber = opMode.getBehavior(WobbleGrabberI5.class);
@@ -29,17 +29,19 @@ public abstract class CommonSequence extends JobSequence
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Trajectory wobbleDrop1 = drive.trajectoryBuilder(start)
-				.splineTo(new Vector2d(6d, -12d).plus(center), Math.toRadians(0d)).build();
+				.splineTo(new Vector2d(-3d, -9d).plus(center), Math.toRadians(0d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(wobbleDrop1));
+
+		wait(0.3f);
 
 		execute(dragger, new WobbleDraggerI5.Drag(false));
 		execute(grabber, new WobbleGrabberI5.Grab(false));
 
-		wait(0.3f);
+		wait(0.5f);
 
 		Trajectory pickUpWobble = drive.trajectoryBuilder(wobbleDrop1.end(), true)
-				.splineToSplineHeading(new Pose2d(-38.5d, 32.5d, Math.toRadians(-45d)), Math.toRadians(-135d)).build();
+				.splineToLinearHeading(new Pose2d(grabPoint, Math.toRadians(-45d)), Math.toRadians(-135d)).build();
 
 		buffer(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.GRAB));
 		buffer(drivetrain, new DrivetrainI5.Follow(pickUpWobble));
@@ -52,9 +54,7 @@ public abstract class CommonSequence extends JobSequence
 		wait(0.5f);
 
 		Trajectory wobbleDrop2 = drive.trajectoryBuilder(pickUpWobble.end())
-				.splineTo(new Vector2d(-4d, -16d).plus(center), Math.toRadians(0d)).build();
-
-		//.splineToSplineHeading(new Pose2d(new Vector2d(-4d, -16d).plus(center), Math.toRadians(180d)), Math.toRadians(0d)).build();
+				.splineToSplineHeading(new Pose2d(new Vector2d(-2d, -20d).plus(center), Math.toRadians(180d)), Math.toRadians(0d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(wobbleDrop2));
 		execute(grabber, new WobbleGrabberI5.Grab(false));
@@ -76,36 +76,36 @@ public abstract class CommonSequence extends JobSequence
 
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+		execute(launcher, new Launcher.Prime(true));
 		execute(launcher, new Launcher.Lift(-1));
 
 		Trajectory goLaunch1 = drive.trajectoryBuilder(start)
-				.splineToSplineHeading(new Pose2d(2d, 28d, Math.toRadians(180d)), Math.toRadians(90d)).build();
+				.lineToConstantHeading(new Vector2d(0d, 29d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(goLaunch1));
 		execute(launcher, new Launcher.Lift(1));
 
-		wait(0.7f);
+		wait(0.95f);
 
 		execute(launcher, new Launcher.Lift(0));
 
 		Trajectory goLaunch2 = drive.trajectoryBuilder(goLaunch1.end())
-				.strafeTo(new Vector2d(2d, 20.5d)).build();
+				.strafeTo(new Vector2d(0d, 21.5d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(goLaunch2));
 		execute(launcher, new Launcher.Lift(1));
 
-		wait(0.7f);
+		wait(0.95f);
 
 		execute(launcher, new Launcher.Lift(0));
 
 		Trajectory goLaunch3 = drive.trajectoryBuilder(goLaunch2.end())
-				.strafeTo(new Vector2d(2d, 13d)).build();
+				.strafeTo(new Vector2d(0d, 14d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(goLaunch3));
 		execute(launcher, new Launcher.Lift(1));
 
-		wait(0.5f);
+		wait(0.95f);
 
 		execute(launcher, new Launcher.Prime(false));
 		execute(launcher, new Launcher.Lift(-1));

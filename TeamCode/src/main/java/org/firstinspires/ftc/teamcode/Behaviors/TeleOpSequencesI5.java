@@ -86,7 +86,7 @@ public class TeleOpSequencesI5 extends Behavior
 
 			execute(launcher, new Launcher.Lift(1));
 
-			wait(2f);
+			wait(2.2f);
 
 			execute(launcher, new Launcher.Lift(-1));
 			execute(launcher, new Launcher.Prime(false));

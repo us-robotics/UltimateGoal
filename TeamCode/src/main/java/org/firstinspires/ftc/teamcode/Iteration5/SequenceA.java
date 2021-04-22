@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.google.blocks.ftcrobotcontroller.util.CurrentGame;
 
 import org.firstinspires.ftc.teamcode.Behaviors.DrivetrainI5;
+import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleDraggerI5;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberI5;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -24,6 +25,7 @@ public class SequenceA extends CommonSequence
 	protected void queueJobs()
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
+		Launcher launcher = opMode.getBehavior(Launcher.class);
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Pose2d position = new Pose2d(-63d, 53d, 0d);
@@ -31,7 +33,10 @@ public class SequenceA extends CommonSequence
 
 		drive.setPoseEstimate(position);
 
-		position = dropWobbles(position, center);
+		execute(launcher, new Launcher.Lift(-1));
+		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+
+		position = dropWobbles(position, center, new Vector2d(-39.5d, 33.5d));
 		position = powerShots(position);
 
 		Trajectory park = drive.trajectoryBuilder(position, true)
