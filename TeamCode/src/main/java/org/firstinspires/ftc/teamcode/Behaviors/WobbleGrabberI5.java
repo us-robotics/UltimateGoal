@@ -34,6 +34,8 @@ public class WobbleGrabberI5 extends AutoBehavior<WobbleGrabberI5.Job>
 
 		arm.setDirection(DcMotorSimple.Direction.REVERSE);
 		arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 	}
 
 	private DcMotor arm;
@@ -56,7 +58,7 @@ public class WobbleGrabberI5 extends AutoBehavior<WobbleGrabberI5.Job>
 
 		if (!opMode.hasSequence())
 		{
-			isReleased = opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.RIGHT_TRIGGER) > 0.4f;
+			isReleased = opMode.input.getButton(Input.Source.CONTROLLER_2, Input.Button.RIGHT_BUMPER);
 
 			float magnitude = opMode.input.getMagnitude(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);
 			Vector2 direction = opMode.input.getDirection(Input.Source.CONTROLLER_2, Input.Button.LEFT_JOYSTICK);

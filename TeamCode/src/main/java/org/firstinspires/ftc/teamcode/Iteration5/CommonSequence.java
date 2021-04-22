@@ -39,7 +39,7 @@ public abstract class CommonSequence extends JobSequence
 		wait(0.3f);
 
 		Trajectory pickUpWobble = drive.trajectoryBuilder(wobbleDrop1.end(), true)
-				.splineToSplineHeading(new Pose2d(-38.5d, 34.5d, Math.toRadians(-45d)), Math.toRadians(-135d)).build();
+				.splineToSplineHeading(new Pose2d(-38.5d, 32.5d, Math.toRadians(-45d)), Math.toRadians(-135d)).build();
 
 		buffer(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.GRAB));
 		buffer(drivetrain, new DrivetrainI5.Follow(pickUpWobble));
@@ -49,10 +49,12 @@ public abstract class CommonSequence extends JobSequence
 		execute(dragger, new WobbleDraggerI5.Drag(true));
 		execute(grabber, new WobbleGrabberI5.Grab(true));
 
-		Trajectory wobbleDrop2 = drive.trajectoryBuilder(pickUpWobble.end())
-				.splineToSplineHeading(new Pose2d(new Vector2d(-4d, -16d).plus(center), Math.toRadians(180d)), Math.toRadians(0d)).build();
+		wait(0.5f);
 
-		wait(0.3f);
+		Trajectory wobbleDrop2 = drive.trajectoryBuilder(pickUpWobble.end())
+				.splineTo(new Vector2d(-4d, -16d).plus(center), Math.toRadians(0d)).build();
+
+		//.splineToSplineHeading(new Pose2d(new Vector2d(-4d, -16d).plus(center), Math.toRadians(180d)), Math.toRadians(0d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(wobbleDrop2));
 		execute(grabber, new WobbleGrabberI5.Grab(false));
@@ -62,7 +64,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.HIGH));
 		execute(grabber, new WobbleGrabberI5.Grab(true));
 
-		buffer(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.HIGH));
+		buffer(grabber, new WobbleGrabberI5.Move(WobbleGrabberI5.Mode.FOLD));
 
 		return wobbleDrop2.end();
 	}
@@ -74,16 +76,16 @@ public abstract class CommonSequence extends JobSequence
 
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
-		buffer(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
-		buffer(launcher, new Launcher.Lift(-1));
+		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
+		execute(launcher, new Launcher.Lift(-1));
 
 		Trajectory goLaunch1 = drive.trajectoryBuilder(start)
-				.splineTo(new Vector2d(2d, 28d), Math.toRadians(180d)).build();
+				.splineToSplineHeading(new Pose2d(2d, 28d, Math.toRadians(180d)), Math.toRadians(90d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(goLaunch1));
 		execute(launcher, new Launcher.Lift(1));
 
-		wait(0.5f);
+		wait(0.7f);
 
 		execute(launcher, new Launcher.Lift(0));
 
@@ -93,7 +95,7 @@ public abstract class CommonSequence extends JobSequence
 		execute(drivetrain, new DrivetrainI5.Follow(goLaunch2));
 		execute(launcher, new Launcher.Lift(1));
 
-		wait(0.5f);
+		wait(0.7f);
 
 		execute(launcher, new Launcher.Lift(0));
 

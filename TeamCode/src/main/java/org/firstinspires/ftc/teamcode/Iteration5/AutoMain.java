@@ -31,7 +31,7 @@ public class AutoMain extends OpModeBase
 		behaviorList.add(new InertialMeasurementUnit(this));
 	}
 
-	CameraVision.Position targetZone;
+	private CameraVision.Position targetZone;
 
 	@Override
 	protected void appendConfigOptions(List<ConfigOption> options)
@@ -90,7 +90,9 @@ public class AutoMain extends OpModeBase
 
 		if (targetZone == null) return;
 
-		getBehavior(CameraVision.class).closeCamera();
+		CameraVision vision = getBehavior(CameraVision.class);
+		if (vision != null) vision.closeCamera();
+
 		assignZone();
 	}
 
@@ -99,7 +101,7 @@ public class AutoMain extends OpModeBase
 	{
 		CameraVision vision = getBehavior(CameraVision.class);
 
-		if (vision.available())
+		if (vision != null && vision.available())
 		{
 			targetZone = vision.getPosition();
 

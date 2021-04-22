@@ -1,26 +1,20 @@
-package org.firstinspires.ftc.teamcode.Iteration4;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Behaviors.CameraVision;
-import org.firstinspires.ftc.teamcode.Behaviors.ColorSensors;
-import org.firstinspires.ftc.teamcode.Behaviors.DistanceSensors;
-import org.firstinspires.ftc.teamcode.Behaviors.Drivetrain;
 import org.firstinspires.ftc.teamcode.Behaviors.DrivetrainI5;
 import org.firstinspires.ftc.teamcode.Behaviors.InertialMeasurementUnit;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
-import org.firstinspires.ftc.teamcode.Behaviors.TeleOpSequences;
-import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabber;
+import org.firstinspires.ftc.teamcode.Behaviors.TeleOpSequencesI5;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberI5;
 
 import java.util.List;
 
 import FTCEngine.Core.Auto.ConfigOption;
 import FTCEngine.Core.Behavior;
-import FTCEngine.Core.Input;
 import FTCEngine.Core.OpModeBase;
 
 @TeleOp(name = "Ultimate Goal TeleOpMain")
@@ -33,8 +27,8 @@ public class TeleOpMain extends OpModeBase
 		behaviorList.add(new Launcher(this));
 		behaviorList.add(new Intake(this));
 		behaviorList.add(new WobbleGrabberI5(this));
+		behaviorList.add(new TeleOpSequencesI5(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
-		behaviorList.add(new TeleOpSequences(this));
 	}
 
 	@Override

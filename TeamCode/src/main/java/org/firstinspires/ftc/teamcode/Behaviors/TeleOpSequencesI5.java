@@ -50,8 +50,8 @@ public class TeleOpSequencesI5 extends Behavior
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) opMode.assignSequence(new PowerShotsSequence(opMode));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.Y)) opMode.assignSequence(new WobbleDropSequence(opMode));
 
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, false));
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, false));
 		}
 	}
 
@@ -73,7 +73,7 @@ public class TeleOpSequencesI5 extends Behavior
 			SampleMecanumDrive drive = drivetrain.getDrive();
 
 			execute(launcher, new Launcher.Prime(true));
-			Pose2d launchPoint = new Pose2d(0, 0, Math.toRadians(180d)); //TODO
+			Pose2d launchPoint = new Pose2d(0d, 39d, Math.toRadians(180d));
 
 			if (reset) drive.setPoseEstimate(launchPoint);
 			else
@@ -86,7 +86,7 @@ public class TeleOpSequencesI5 extends Behavior
 
 			execute(launcher, new Launcher.Lift(1));
 
-			wait(1f);
+			wait(2f);
 
 			execute(launcher, new Launcher.Lift(-1));
 			execute(launcher, new Launcher.Prime(false));

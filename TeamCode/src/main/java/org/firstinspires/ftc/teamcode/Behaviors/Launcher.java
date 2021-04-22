@@ -76,7 +76,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 		if (!opMode.hasSequence())
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
-			float direction = opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
+			float direction = -opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
 
 			boolean rest = Mathf.almostEquals(direction, 0f);
 
