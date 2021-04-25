@@ -60,7 +60,7 @@ public class Intake extends AutoBehavior<Intake.Job>
 		{
 			Intake.Run run = (Intake.Run)job;
 
-			intake.setPower(run.power);
+			power = run.power;
 			run.finishJob();
 		}
 	}

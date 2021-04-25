@@ -73,23 +73,17 @@ public class TeleOpSequencesI5 extends Behavior
 			SampleMecanumDrive drive = drivetrain.getDrive();
 
 			execute(launcher, new Launcher.Prime(true));
-			Pose2d launchPoint = new Pose2d(0d, 39d, Math.toRadians(180d));
 
-			if (reset) drive.setPoseEstimate(launchPoint);
+			if (reset) drive.setPoseEstimate(LAUNCH_POINT);
 			else
 			{
 				TrajectoryBuilder builder = drive.trajectoryBuilder(drive.getPoseEstimate());
-				Trajectory path = builder.splineTo(launchPoint.vec(), launchPoint.getHeading()).build();
+				Trajectory path = builder.lineToLinearHeading(LAUNCH_POINT).build();
 
 				execute(drivetrain, new DrivetrainI5.Follow(path));
 			}
 
-			execute(launcher, new Launcher.Lift(1));
-
-			wait(2.6f);
-
-			execute(launcher, new Launcher.Lift(-1));
-			execute(launcher, new Launcher.Prime(false));
+			launchRings();
 		}
 	}
 

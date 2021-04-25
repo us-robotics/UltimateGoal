@@ -25,7 +25,6 @@ public class SequenceA extends CommonSequence
 	protected void queueJobs()
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
-		Launcher launcher = opMode.getBehavior(Launcher.class);
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Pose2d position = new Pose2d(-63d, 53d, 0d);
@@ -33,11 +32,8 @@ public class SequenceA extends CommonSequence
 
 		drive.setPoseEstimate(position);
 
-		execute(launcher, new Launcher.Lift(-1));
-		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
-
-		position = dropWobbles(position, center, new Vector2d(-39d, 34d));
-		position = powerShots(position);
+		position = dropFirst(position, center);
+		position = dropSecond(position, center, new Vector2d(-39d, 30d));
 
 		Trajectory park = drive.trajectoryBuilder(position, true)
 				.splineTo(new Vector2d(12d, 32d), Math.toRadians(150d)).build();
