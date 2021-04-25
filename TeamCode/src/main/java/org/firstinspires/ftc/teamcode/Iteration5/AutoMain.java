@@ -29,6 +29,7 @@ public class AutoMain extends OpModeBase
 		behaviorList.add(new WobbleGrabberI5(this));
 		behaviorList.add(new WobbleDraggerI5(this));
 		behaviorList.add(new InertialMeasurementUnit(this));
+		behaviorList.add(new CameraVision(this));
 	}
 
 	private CameraVision.Position targetZone;

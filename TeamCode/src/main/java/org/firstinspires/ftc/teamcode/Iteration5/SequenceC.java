@@ -25,14 +25,14 @@ public class SequenceC extends CommonSequence
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Pose2d position = new Pose2d(-63d, 53d, 0d);
-		Vector2d center = new Vector2d(60d, 60d);
+		Vector2d center = new Vector2d(60d, 63d);
 
 		drive.setPoseEstimate(position);
 
 		execute(launcher, new Launcher.Lift(-1));
 		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
 
-		position = dropWobbles(position, center, new Vector2d(-39d, 35d));
+		position = dropWobbles(position, center, new Vector2d(-38d, 34d));
 		position = powerShots(position);
 
 		Trajectory park = drive.trajectoryBuilder(position)

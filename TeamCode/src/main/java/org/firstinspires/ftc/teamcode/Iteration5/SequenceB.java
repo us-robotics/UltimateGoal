@@ -33,11 +33,11 @@ public class SequenceB extends CommonSequence
 		execute(launcher, new Launcher.Lift(-1));
 		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
 
-		position = dropWobbles(position, center, new Vector2d(-41d, 30d));
+		position = dropWobbles(position, center, new Vector2d(-39d, 33d));
 		position = powerShots(position);
 
 		Trajectory park = drive.trajectoryBuilder(position, true)
-				.splineTo(new Vector2d(12d, 32d), Math.toRadians(150d)).build();
+				.splineTo(new Vector2d(12d, 0d), Math.toRadians(240d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(park));
 	}

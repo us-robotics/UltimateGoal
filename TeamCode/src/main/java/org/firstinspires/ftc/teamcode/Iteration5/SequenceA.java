@@ -36,7 +36,7 @@ public class SequenceA extends CommonSequence
 		execute(launcher, new Launcher.Lift(-1));
 		execute(launcher, new Launcher.Prime(Launcher.SHOT_POWER, true));
 
-		position = dropWobbles(position, center, new Vector2d(-39.5d, 33.5d));
+		position = dropWobbles(position, center, new Vector2d(-39d, 34d));
 		position = powerShots(position);
 
 		Trajectory park = drive.trajectoryBuilder(position, true)
