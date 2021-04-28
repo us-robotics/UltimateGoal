@@ -26,14 +26,14 @@ public class SequenceC extends CommonSequence
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Pose2d position = new Pose2d(-63d, 53d, 0d);
-		Vector2d center = new Vector2d(60d, 63d);
+		Vector2d center = new Vector2d(60d, 60d);
 
 		drive.setPoseEstimate(position);
 
 		position = dropFirst(position, center);
 		position = intakeRings(position);
 
-		execute(intake, new Intake.Run(0.3f));
+		execute(intake, new Intake.Run(0.5f));
 
 		position = dropSecond(position, center);
 

@@ -2,16 +2,27 @@ package org.firstinspires.ftc.teamcode.Iteration5;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
 import com.acmerobotics.roadrunner.profile.VelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 
 import org.firstinspires.ftc.teamcode.Behaviors.DrivetrainI5;
 import org.firstinspires.ftc.teamcode.Behaviors.Intake;
 import org.firstinspires.ftc.teamcode.Behaviors.Launcher;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleDraggerI5;
 import org.firstinspires.ftc.teamcode.Behaviors.WobbleGrabberI5;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 import FTCEngine.Core.Auto.JobSequence;
 import FTCEngine.Core.OpModeBase;
@@ -36,7 +47,7 @@ public abstract class CommonSequence extends JobSequence
 
 		execute(launcher, new Launcher.Lift(-1));
 
-		Trajectory wobbleDrop = drive.trajectoryBuilder(start).forward(48f)
+		Trajectory wobbleDrop = drive.trajectoryBuilder(start).forward(40f)
 				.splineTo(new Vector2d(-3d, -12d).plus(center), Math.toRadians(0d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(wobbleDrop));
@@ -95,8 +106,14 @@ public abstract class CommonSequence extends JobSequence
 		Trajectory intakeRings = drive.trajectoryBuilder(start)
 				.lineToLinearHeading(new Pose2d(0d, 35d, Math.toRadians(180d))).build();
 
+//		TrajectoryVelocityConstraint velocityConstraint = new MinVelocityConstraint(Arrays.asList(new TranslationalVelocityConstraint(0.5d), new AngularVelocityConstraint(0.5d)));
+//		TrajectoryAccelerationConstraint accelerationConstraint = new ProfileAccelerationConstraint(0.5d);
+//
+//		Trajectory driveForward = drive.trajectoryBuilder(intakeRings.end())
+//				.forward(35d, velocityConstraint, accelerationConstraint).build();
+
 		Trajectory driveForward = drive.trajectoryBuilder(intakeRings.end())
-				.forward(38d).build();
+				.forward(35d).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(intakeRings));
 		execute(drivetrain, new DrivetrainI5.Follow(driveForward));
