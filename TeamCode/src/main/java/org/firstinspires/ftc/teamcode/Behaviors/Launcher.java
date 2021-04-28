@@ -60,8 +60,9 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 	private Servo locker;
 
-	public static final float HIGH_POWER = 0.7425f; //Power for high goal
-	public static final float SHOT_POWER = 0.6625f; //Power for power shots
+	public static final float HIGH_POWER = 0.7525f; //Power for high goal
+	public static final float SHOT_POWER = 0.6725f; //Power for power shots
+	public static final float UNSTUCK_POWER = -0.45f; //Power for power shots
 
 	private float flywheelPower = HIGH_POWER;
 
@@ -78,6 +79,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.LEFT_BUMPER)) primed = !primed;
 			float direction = -opMode.input.getVector(Input.Source.CONTROLLER_2, Input.Button.RIGHT_JOYSTICK).x;
 
+			if (direction > -0.3f) direction = 0f;
 			boolean rest = Mathf.almostEquals(direction, 0f);
 
 			if (direction > 0f && !rest) liftPower = direction;
@@ -90,6 +92,7 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_RIGHT)) flywheelPower = HIGH_POWER;
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.DPAD_LEFT)) flywheelPower = SHOT_POWER;
+			if (opMode.input.getTrigger(Input.Source.CONTROLLER_2, Input.Button.LEFT_TRIGGER) > 0.5f) flywheelPower = UNSTUCK_POWER;
 		}
 
 		opMode.debug.addData("Flywheel Power", flywheelPower);

@@ -51,7 +51,7 @@ public class TeleOpSequencesI5 extends Behavior
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.Y)) opMode.assignSequence(new WobbleDropSequence(opMode));
 
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, false));
+			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
 		}
 	}
 

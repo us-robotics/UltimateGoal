@@ -32,10 +32,10 @@ public class SequenceB extends CommonSequence
 
 		position = dropFirst(position, center);
 		position = intakeRings(position);
-		position = dropSecond(position, center, new Vector2d(-37d, 25d));
+		position = dropSecond(position, center);
 
-		Trajectory park = drive.trajectoryBuilder(position, true)
-				.splineTo(new Vector2d(12d, 0d), Math.toRadians(240d)).build();
+		Trajectory park = drive.trajectoryBuilder(position)
+				.splineToLinearHeading(new Pose2d(12d, 0d, Math.toRadians(45d)), Math.toRadians(225d)).build();
 
 		execute(drivetrain, new DrivetrainI5.Follow(park));
 	}

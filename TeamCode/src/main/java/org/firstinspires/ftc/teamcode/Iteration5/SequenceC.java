@@ -22,6 +22,7 @@ public class SequenceC extends CommonSequence
 	protected void queueJobs()
 	{
 		DrivetrainI5 drivetrain = opMode.getBehavior(DrivetrainI5.class);
+		Intake intake = opMode.getBehavior(Intake.class);
 		SampleMecanumDrive drive = drivetrain.getDrive();
 
 		Pose2d position = new Pose2d(-63d, 53d, 0d);
@@ -31,7 +32,10 @@ public class SequenceC extends CommonSequence
 
 		position = dropFirst(position, center);
 		position = intakeRings(position);
-		position = dropSecond(position, center, new Vector2d(-39d, 27d));
+
+		execute(intake, new Intake.Run(0.3f));
+
+		position = dropSecond(position, center);
 
 		Trajectory park = drive.trajectoryBuilder(position)
 				.splineToSplineHeading(new Pose2d(12d, 36d, Math.toRadians(180d)), Math.toRadians(45f)).build();
