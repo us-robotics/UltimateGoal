@@ -33,7 +33,7 @@ public class SequenceA extends CommonSequence
 		drive.setPoseEstimate(position);
 
 		position = dropFirst(position, center);
-		position = dropSecond(position, center);
+		position = dropSecond(position, center, new Vector2d(-41d, 34d));
 
 		Trajectory park = drive.trajectoryBuilder(position, true)
 				.splineTo(new Vector2d(12d, 32d), Math.toRadians(150d)).build();

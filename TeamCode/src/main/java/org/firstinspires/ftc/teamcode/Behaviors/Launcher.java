@@ -60,14 +60,14 @@ public class Launcher extends AutoBehavior<Launcher.Job>
 
 	private Servo locker;
 
-	public static final float HIGH_POWER = 0.7525f; //Power for high goal
+	public static final float HIGH_POWER = 0.7975f; //Power for high goal
 	public static final float SHOT_POWER = 0.6725f; //Power for power shots
 	public static final float UNSTUCK_POWER = -0.45f; //Power for power shots
 
 	private float flywheelPower = HIGH_POWER;
 
-	private boolean primed;
-	private float liftPower;
+	private boolean primed = false;
+	private float liftPower = -1f;
 
 	@Override
 	public void update()

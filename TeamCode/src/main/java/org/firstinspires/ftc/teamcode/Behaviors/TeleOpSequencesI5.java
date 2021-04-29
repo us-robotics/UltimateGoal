@@ -33,9 +33,7 @@ public class TeleOpSequencesI5 extends Behavior
 		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.B);
 		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.X);
 		opMode.input.registerButton(Input.Source.CONTROLLER_2, Input.Button.Y);
-
 		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER);
-		opMode.input.registerButton(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER);
 	}
 
 	@Override
@@ -49,9 +47,7 @@ public class TeleOpSequencesI5 extends Behavior
 		{
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.X)) opMode.assignSequence(new PowerShotsSequence(opMode));
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_2, Input.Button.Y)) opMode.assignSequence(new WobbleDropSequence(opMode));
-
 			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.LEFT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
-			if (opMode.input.getButtonDown(Input.Source.CONTROLLER_1, Input.Button.RIGHT_BUMPER)) opMode.assignSequence(new LaunchSequence(opMode, true));
 		}
 	}
 

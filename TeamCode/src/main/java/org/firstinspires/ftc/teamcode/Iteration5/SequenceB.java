@@ -31,8 +31,7 @@ public class SequenceB extends CommonSequence
 		drive.setPoseEstimate(position);
 
 		position = dropFirst(position, center);
-		position = intakeRings(position);
-		position = dropSecond(position, center);
+		position = dropSecond(position, center, new Vector2d(-41d, 33d));
 
 		Trajectory park = drive.trajectoryBuilder(position)
 				.splineToLinearHeading(new Pose2d(12d, 0d, Math.toRadians(45d)), Math.toRadians(225d)).build();
